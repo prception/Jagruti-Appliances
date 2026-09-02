@@ -1,0 +1,53 @@
+<!--
+  Shared navbar source of truth.
+  Edit this file, then run: node assets/js/build-partials.js
+  That script injects this content into every page's NAVBAR marker block,
+  rewriting the __ROOT__ token to the correct relative path prefix for each page's folder depth.
+  Do not edit the navbar block inside individual pages directly, it will be overwritten.
+-->
+<header class="site-header">
+  <div class="container">
+    <a href="__ROOT__index.html" class="logo">
+      <div>
+        <div class="logo-mark">JAGRUTI</div>
+        <span class="logo-tag">Every Home Need&hellip;</span>
+      </div>
+    </a>
+    <nav class="main-nav">
+      <ul>
+        <li class="has-dropdown">
+          <button class="nav-link nav-dropdown-btn">Products <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="dropdown-panel"><a href="__ROOT__products/domestic-flour-mill.html"><strong>Domestic Flour Mills</strong><span>For Your Home</span></a><a href="__ROOT__products/commercial-flour-mill.html"><strong>Commercial Flour Mills</strong><span>For Your Business</span></a><a href="__ROOT__products/pulverizer.html"><strong>Pulverizer Machines</strong><span>Food Processing</span></a><a href="__ROOT__products/food-processing-machinery.html"><strong>Food Processing Machinery</strong><span>Food Processing</span></a><a href="__ROOT__products/roti-maker-machine.html"><strong>Roti Maker Machines</strong><span>Making Rotis</span></a><a href="__ROOT__products/kitchen-appliances.html"><strong>Kitchen Appliances</strong><span>Everyday Kitchen</span></a><a class="view-all" href="__ROOT__products/products.html">View All Products &rarr;</a></div>
+        </li>
+        <li><a class="nav-link__ACTIVE_COMPARE__" href="__ROOT__compare.html">Compare</a></li>
+        <li><a class="nav-link__ACTIVE_WHY_JAGRUTI__" href="__ROOT__why-jagruti.html">Why Jagruti</a></li>
+        <li><a class="nav-link__ACTIVE_ABOUT__" href="__ROOT__about.html">About</a></li>
+        <li class="has-dropdown">
+          <button class="nav-link nav-dropdown-btn">Resources <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="dropdown-panel"><a href="__ROOT__blog/blog.html"><strong>Blog</strong><span>Guides, tips & product articles</span></a><a href="__ROOT__blog/buying-guides.html"><strong>Buying Guides</strong><span>Choosing the right machine</span></a><a href="__ROOT__faq.html"><strong>FAQ</strong><span>Answers to common questions</span></a><a href="__ROOT__catalogue.html"><strong>Catalogue</strong><span>Download our product catalogue</span></a></div>
+        </li>
+        <li><a class="nav-link__ACTIVE_SUPPORT__" href="__ROOT__support.html">Support</a></li>
+        <li><a class="nav-link__ACTIVE_CONTACT__" href="__ROOT__contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <a class="header-search-btn" href="__ROOT__products/products.html" aria-label="Search products"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></a>
+      <a class="btn btn-whatsapp btn-sm" href="https://wa.me/917070705922?text=Hi%20Jagruti%20Appliances%2C%20I%27d%20like%20to%20know%20more%20about%20your%20products%20and%20current%20pricing." target="_blank" rel="noopener"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.01 3C9.38 3 4 8.38 4 15.01c0 2.35.66 4.55 1.8 6.43L4 29l7.76-1.72a11.94 11.94 0 0 0 4.25.78h.01c6.63 0 12-5.38 12-12.01C28.02 8.38 22.64 3 16.01 3zm0 21.8h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-4.6 1.02 1-4.48-.24-.37a9.83 9.83 0 0 1-1.52-5.33c0-5.46 4.44-9.9 9.9-9.9 2.64 0 5.13 1.03 6.99 2.9a9.82 9.82 0 0 1 2.9 6.99c0 5.46-4.45 9.76-9.01 9.76zm5.42-7.36c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg> Get Price</a>
+      <button class="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="mobile-nav">
+  <div class="mobile-nav-panel">
+    <button class="close-btn" aria-label="Close menu">&times;</button>
+    <ul>
+      <li><details><summary>Products</summary><ul><a href="__ROOT__products/domestic-flour-mill.html"><strong>Domestic Flour Mills</strong><span>For Your Home</span></a><a href="__ROOT__products/commercial-flour-mill.html"><strong>Commercial Flour Mills</strong><span>For Your Business</span></a><a href="__ROOT__products/pulverizer.html"><strong>Pulverizer Machines</strong><span>Food Processing</span></a><a href="__ROOT__products/food-processing-machinery.html"><strong>Food Processing Machinery</strong><span>Food Processing</span></a><a href="__ROOT__products/roti-maker-machine.html"><strong>Roti Maker Machines</strong><span>Making Rotis</span></a><a href="__ROOT__products/kitchen-appliances.html"><strong>Kitchen Appliances</strong><span>Everyday Kitchen</span></a><a class="view-all" href="__ROOT__products/products.html">View All Products &rarr;</a></ul></details></li>
+      <li><a class="__ACTIVE_COMPARE__" href="__ROOT__compare.html">Compare</a></li>
+      <li><a class="__ACTIVE_WHY_JAGRUTI__" href="__ROOT__why-jagruti.html">Why Jagruti</a></li>
+      <li><a class="__ACTIVE_ABOUT__" href="__ROOT__about.html">About</a></li>
+      <li><details><summary>Resources</summary><ul><a href="__ROOT__blog/blog.html"><strong>Blog</strong><span>Guides, tips & product articles</span></a><a href="__ROOT__blog/buying-guides.html"><strong>Buying Guides</strong><span>Choosing the right machine</span></a><a href="__ROOT__faq.html"><strong>FAQ</strong><span>Answers to common questions</span></a><a href="__ROOT__catalogue.html"><strong>Catalogue</strong><span>Download our product catalogue</span></a></ul></details></li>
+      <li><a class="__ACTIVE_SUPPORT__" href="__ROOT__support.html">Support</a></li>
+      <li><a class="__ACTIVE_CONTACT__" href="__ROOT__contact.html">Contact</a></li>
+    </ul>
+  </div>
+</div>
