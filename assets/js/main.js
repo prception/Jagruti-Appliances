@@ -396,6 +396,7 @@
     var scenes = Array.prototype.slice.call(stage.querySelectorAll(".hero-scene"));
     var copies = Array.prototype.slice.call(stage.querySelectorAll(".hero-copy"));
     var tabs   = Array.prototype.slice.call(stage.querySelectorAll(".hero-dots .hd"));
+    var cue    = stage.querySelector(".hero-scrollcue");
     if (scenes.length < 2) return;
 
     var HOLD = 4000;      // matches the 4s beat the scenes were designed on
@@ -420,6 +421,8 @@
         el.classList.toggle("is-current", i === next);
         el.setAttribute("aria-selected", i === next ? "true" : "false");
       });
+      // Nothing left to advance to once the last scene is showing.
+      if (cue) cue.hidden = next >= scenes.length - 1;
 
       if (isFirst) {
         scenes[next].classList.add("is-current", "is-first");
@@ -452,6 +455,12 @@
       apply(i, false);
       // A manual jump ends the automatic run - the visitor is steering now.
       paused = true;
+    }
+
+    if (cue) {
+      cue.addEventListener("click", function () {
+        if (current < scenes.length - 1) goTo(current + 1);
+      });
     }
 
     tabs.forEach(function (tab, i) {

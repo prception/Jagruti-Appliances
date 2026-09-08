@@ -1234,20 +1234,35 @@ body.menu-open { overflow: hidden; }
 .hero-dots .hd.is-current { color: #fff; }
 .hero-dots .hd.is-current i { background: var(--blue-400); height: 20px; }
 
+/* Sits in the bottom-right corner, mirroring the scene indicator opposite
+   it on the same gutter and baseline. The homepage has no floating
+   WhatsApp button, so nothing crowds this corner. Doubles as the "next
+   scene" control. */
 .hero-scrollcue {
   position: absolute; z-index: 6;
-  /* Clears the floating WhatsApp button that sits in the bottom-right. */
-  right: calc(var(--gutter) + 76px);
+  right: var(--gutter);
   bottom: clamp(18px, 4vh, 44px);
+  appearance: none; background: none; border: 0; font: inherit;
+  padding: 4px 2px; cursor: pointer; border-radius: 4px;
   display: flex; align-items: center; gap: .8em;
   color: rgba(255,255,255,.82); font-size: .8125em;
   text-shadow: 0 1px 10px rgba(0,32,52,.5);
+  transition: color .2s ease;
 }
+.hero-scrollcue:hover { color: #fff; }
+.hero-scrollcue:hover .hs-arrow {
+  border-color: rgba(255,255,255,.85);
+  background: rgba(255,255,255,.12);
+}
+.hero-scrollcue:focus-visible { outline: 2px solid var(--blue-400); outline-offset: 3px; }
+/* On the last scene there is nothing to advance to. */
+.hero-scrollcue[hidden] { display: none; }
 .hero-scrollcue .hs-arrow {
   width: 2.2em; height: 2.2em; border-radius: 50%;
   border: 1px solid rgba(255,255,255,.42);
   display: grid; place-items: center;
   animation: hsBob 2.4s ease-in-out infinite;
+  transition: border-color .2s ease, background .2s ease;
 }
 .hero-scrollcue svg { width: 60%; height: 60%; }
 @keyframes hsBob {
@@ -1365,6 +1380,33 @@ body.menu-open { overflow: hidden; }
 .btn-hero-ghost:hover { background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.34); }
 
 /* --- Category strip --- */
+/* --- CTA row shared by the hero and inner-page bands --- */
+.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* --- Floating WhatsApp button (all pages) ---
+   Fixed to the bottom-right corner above page content. */
+.float-wa {
+  position: fixed; right: 22px; bottom: 22px; z-index: 60;
+  width: 56px; height: 56px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--whatsapp); color: #fff;
+  box-shadow: 0 6px 20px rgba(0,0,0,.24);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.float-wa svg { width: 30px; height: 30px; }
+.float-wa:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,.3); }
+
+/* --- Mobile sticky action bar: hidden until the narrow breakpoint --- */
+.mobile-bar { display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 55; }
+.mobile-bar .row { display: grid; grid-template-columns: 1fr 1fr; }
+.mobile-bar a {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 8px; font-weight: 500; font-size: .9375em; color: #fff;
+}
+.mobile-bar svg { width: 20px; height: 20px; }
+.call-btn { background: var(--blue-700); }
+.wa-btn   { background: var(--whatsapp); }
+
 .hero-cats {
   flex: none;
   /* Narrower than the container and centred, so it reads as a contained
@@ -1990,12 +2032,25 @@ body.menu-open { overflow: hidden; }
   .hero-dots .hd.is-current i { background: var(--blue-600); }
   .hero-dots .hd:hover { color: var(--ink-700); }
 
-  /* The scroll cue has nothing to point at once the hero is short. */
-  .hero-scrollcue { display: none; }
+  /* The cue is a real control now, not decoration, so it stays - moved
+     into flow on the same row as the indicator, right-aligned. */
+  .hero-scrollcue {
+    position: static; order: 4;
+    align-self: flex-end;
+    /* Its own row beneath the indicator - overlapping the labels on one
+       line is too tight at phone widths. */
+    margin: 0 var(--gutter) 16px 0;
+    color: var(--ink-700); text-shadow: none;
+  }
+  .hero-scrollcue:hover { color: var(--ink-900); }
+  .hero-scrollcue .hs-arrow { border-color: rgba(18,36,46,.3); }
+  .hero-scrollcue:hover .hs-arrow {
+    border-color: rgba(18,36,46,.55); background: rgba(18,36,46,.06);
+  }
   .hero-dots {
     position: static; order: 3;
     flex-direction: row; gap: 1.4em;
-    padding: 2px var(--gutter) 16px;
+    padding: 2px var(--gutter) 4px;
     text-shadow: none;
   }
 }
