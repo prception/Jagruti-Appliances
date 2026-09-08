@@ -924,7 +924,11 @@ body.menu-open { overflow: hidden; }
 /* ===================================================================
    HERO PARALLAX STAGE
    =================================================================== */
-.hero-parallax { background: #bfe4f7; }
+/* Matched to the average colour along the scene artwork's top and bottom
+   edges (~rgb(85,155,205)), not the pale sky. Anything that ever shows
+   between or behind the scenes then reads as part of the picture rather
+   than as a light gap. */
+.hero-parallax { background: #559bcd; }
 /* The photographic layers replace the old single background image; only the
    left-column scrim below is kept, and it is redefined further down. */
 .hero-parallax::after { content: none; }
@@ -937,10 +941,16 @@ body.menu-open { overflow: hidden; }
   perspective: 1200px;
   transform-style: preserve-3d;
 }
-/* Each scene clips to its own bounds: layers are deliberately over-scaled
-   (1.03 - 1.10) to hide their drift at the edges, so a scene parked below
-   the frame would otherwise poke back up into view as a strip. */
+/* Layers are deliberately over-scaled (1.03 - 1.10) to hide their edges, so
+   a scene PARKED below the frame would poke back up into view as a strip -
+   hence the clip. But the clip must not apply to a scene that is on screen:
+   while the outgoing scene scales up during a handover, clipping it to its
+   own box cropped its over-scaled artwork and let the section ground show
+   as a flat band along the top edge. Only parked scenes are clipped. */
 .hero-scene { position: absolute; inset: 0; overflow: hidden; }
+.hero-scene.is-current,
+.hero-scene.is-entering,
+.hero-scene.is-leaving { overflow: visible; }
 .hero-scene .hl {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
@@ -993,15 +1003,18 @@ body.menu-open { overflow: hidden; }
   from { transform: translateY(100%); }
   to   { transform: translateY(0); }
 }
-/* Scales inward only very slightly: the arriving scene covers from the
-   bottom up, so the outgoing scene's top stays visible during the climb and
-   a larger scale-down would expose the section ground at its edges. */
+/* The outgoing scene pushes AWAY from the viewer rather than shrinking on
+   screen. Scaling it below 1 shrank it inside its own box and exposed a
+   band of the section's pale ground at the top and bottom edges - visible
+   as a light gap for the whole 1.2s climb. Scaling UP keeps it covering the
+   frame edge to edge while still reading as receding behind the arriving
+   scene, and a small downward drift adds the parallax. */
 .js .hero-scene.is-leaving {
   animation: heroSceneOut 1200ms cubic-bezier(.4,0,.2,1) both;
 }
 @keyframes heroSceneOut {
-  from { transform: scale(1); }
-  to   { transform: scale(.985); }
+  from { transform: scale(1)     translateY(0); }
+  to   { transform: scale(1.045) translateY(1.5%); }
 }
 .js .hero-scene.is-current { transform: none; }
 
@@ -1022,6 +1035,12 @@ body.menu-open { overflow: hidden; }
      +860   left cluster bursts from behind the product
      +1000  right cluster follows                                        */
 .js .hero-scene .hl { opacity: 0; }
+/* An outgoing scene keeps its layers fully painted at their landed state.
+   Without this they fall back to the transparent default the moment the
+   scene stops being current, and the section ground shows through the strip
+   the arriving scene has not climbed over yet - a flat blue band along the
+   top edge for the whole handover. */
+.js .hero-scene.is-leaving .hl { opacity: 1; animation: none; }
 
 /* Backgrounds. Scene 1 on first load fades up from nothing; any scene that
    arrives by climbing must NOT fade, or the scene below shows through its
@@ -1567,11 +1586,12 @@ body.menu-open { overflow: hidden; }
   object-fit: cover; object-position: center bottom;
   transition: transform .5s ease;
 }
-/* The two kitchen stills are framed with a tall run of empty wall above the
-   product, so centring them leaves the tile reading half-empty next to the
-   tighter shots beside it. Pulling the crop down puts the machine on the
-   same line as its neighbours and fills the card. */
-.need-tile video { object-position: center center; }
+/* All four tiles are 16:9 clips dropped into a 3/4 frame, so `cover` crops
+   them hard on the sides and the vertical framing is all that's left to
+   choose. `center bottom` seats the machine on the foot of the card; the
+   food-processing shot sits higher in its frame and needs centring instead
+   (.need-tile--center), or its subject runs off the bottom edge. */
+.need-tile--center video { object-position: center center; }
 
 .need-tile::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
