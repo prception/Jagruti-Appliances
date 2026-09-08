@@ -870,8 +870,10 @@ body.menu-open { overflow: hidden; }
   /* JS settles on the last scene and adds no further classes; everything
      here just removes the movement and shows that scene's resting state. */
   .js .hero-scene .hl,
+  .js .hero-plate,
   .js .hero-copy,
   .js .hero-scene { animation: none !important; }
+  .js .hero-plate { transform: none; }
   .js .hero-scene .hl { opacity: 1; }
   .js .hero-scene.is-current { visibility: visible; transform: none; }
   .js .hero-copy.is-current { opacity: 1; transform: translateY(-50%); }
@@ -948,9 +950,14 @@ body.menu-open { overflow: hidden; }
    own box cropped its over-scaled artwork and let the section ground show
    as a flat band along the top edge. Only parked scenes are clipped. */
 .hero-scene { position: absolute; inset: 0; overflow: hidden; }
+/* An ENTERING scene must clip: its plate counter-translates upward, so
+   without the clip the artwork would spill above the window instead of
+   being revealed by it. A current or leaving scene must NOT clip, or its
+   deliberately over-scaled layers get cropped and the section ground shows
+   through at the edges. */
 .hero-scene.is-current,
-.hero-scene.is-entering,
 .hero-scene.is-leaving { overflow: visible; }
+.hero-scene.is-entering { overflow: hidden; }
 .hero-scene .hl {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
@@ -996,11 +1003,27 @@ body.menu-open { overflow: hidden; }
    underneath shows through the incoming scene's own opaque sky and it reads
    as a pane of glass sliding up. Pure transform keeps the group opaque, and
    each background PNG (verified 100% alpha) occludes by itself. */
+/* The scene slides up, but the ARTWORK INSIDE IT DOES NOT MOVE.
+   The scene box is the window; .hero-plate inside it runs the exact
+   opposite translate, cancelling the scene's movement so the picture stays
+   pinned to the viewport while the window uncovers it from the bottom up.
+   The image is revealed rather than carried along - the incoming scene
+   reads as already in place behind the outgoing one, and only the edge
+   between them travels. Both must share duration and easing exactly, or
+   the artwork visibly drifts. */
+.hero-plate { position: absolute; inset: 0; }
 .js .hero-scene.is-entering {
   animation: heroSceneUp 1200ms cubic-bezier(.22,.7,.24,1) both;
 }
+.js .hero-scene.is-entering .hero-plate {
+  animation: heroPlateHold 1200ms cubic-bezier(.22,.7,.24,1) both;
+}
 @keyframes heroSceneUp {
   from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+@keyframes heroPlateHold {
+  from { transform: translateY(-100%); }
   to   { transform: translateY(0); }
 }
 /* The outgoing scene pushes AWAY from the viewer rather than shrinking on
