@@ -2117,3 +2117,96 @@ body.menu-open { overflow: hidden; }
     background: none; box-shadow: none;
   }
 }
+
+
+/* ==========================================================================
+   PRELOADER
+   The homepage hero paints its layers from opacity:0 and its artwork is a
+   stack of large PNGs, so the first frame of the page is an empty coloured
+   band. This overlay covers that window: it is painted immediately (the
+   .preloading class is set by an inline script in <head>, before first
+   paint) and main.js removes it once the first scene's images have decoded
+   — or after a hard cap, so a slow connection never traps the visitor.
+   ========================================================================== */
+.preloader {
+  position: fixed; inset: 0; z-index: 999;
+  display: grid; place-items: center;
+  background: var(--gradient-deep), var(--blue-900);
+  /* No transition here: the fade is driven by .is-done so the overlay never
+     animates on the way IN. */
+}
+/* Without JS the class is never set, so the overlay must not exist as a
+   permanent blocker. But this must NOT hide the overlay during the handover:
+   finish() drops html.preloading and adds .is-done in the same frame, and a
+   plain html:not(.preloading) rule would snap the element to display:none
+   instantly, skipping the fade entirely. Excluding .is-done lets the exit
+   transition play, after which JS removes the node outright. */
+html:not(.preloading) .preloader:not(.is-done) { display: none; }
+
+/* The page underneath must not scroll behind the overlay, and must not be
+   read out by assistive tech while it is still assembling. */
+html.preloading, html.preloading body { overflow: hidden; }
+
+.pl-inner {
+  text-align: center;
+  color: #fff;
+  padding: 0 var(--gutter);
+  /* The mark is the whole animation now — it grows from the centre to its
+     true size on entry, so the scale origin must be the element's own middle
+     rather than the page's. */
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+  animation: plMarkIn 1.1s cubic-bezier(.16, .84, .32, 1) both;
+}
+
+.pl-mark {
+  font-weight: 700;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  /* Tracking opens up alongside the scale, so the wordmark settles into its
+     spacing instead of arriving pre-formed and merely getting bigger. */
+  letter-spacing: .16em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Starts small and transparent at the centre, then eases out to full size.
+   Slightly overshooting the 1.0 mark is what gives it weight — it lands
+   rather than stopping dead. */
+@keyframes plMarkIn {
+  0%   { opacity: 0; transform: scale(.35); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Handover: the mark retreats exactly the way it arrived — back down to the
+   same .35 it grew from, so the intro closes on itself. Its own fade is
+   slower than the overlay's, which is what makes the shrink legible rather
+   than lost behind the curtain. main.js removes the node when it finishes. */
+.preloader.is-done {
+  opacity: 0;
+  /* Slightly longer than the mark's .55s retreat, and eased so the ground
+     lingers early on: the wordmark must finish shrinking before the overlay
+     is gone, or the gesture gets cut off mid-way. */
+  transition: opacity .6s cubic-bezier(.6, 0, .9, .5);
+  pointer-events: none;
+}
+.preloader.is-done .pl-inner {
+  /* The entrance animation holds its final frame via `both`, which would win
+     over a plain transform here — so the exit is its own animation. */
+  animation: plMarkOut .55s cubic-bezier(.55, 0, .85, .4) both;
+}
+@keyframes plMarkOut {
+  0%   { opacity: 1; transform: scale(1); }
+  /* Opacity is held most of the way down so the shrink is actually seen —
+     fading in step with the scale would blank the mark while it is still
+     near full size, and the retreat would never register. */
+  55%  { opacity: .55; }
+  100% { opacity: 0; transform: scale(.35); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* No growth for visitors who ask for stillness: the mark simply appears,
+     and the overlay still fades on handover. */
+  .pl-inner { animation: none; }
+  .preloader.is-done .pl-inner { animation: none; opacity: 0; transition: opacity .3s ease; }
+}

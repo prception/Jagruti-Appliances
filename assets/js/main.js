@@ -399,7 +399,10 @@
     var cue    = stage.querySelector(".hero-scrollcue");
     if (scenes.length < 2) return;
 
-    var HOLD = 4000;      // matches the 4s beat the scenes were designed on
+    /* A scene is fully settled 1470ms after its cue (1200ms reveal, with the
+       machine and clusters landing by +1470). HOLD is measured from cue to
+       cue, so it leaves HOLD-1470 of stillness: 3000 gives ~1.5s. */
+    var HOLD = 3000;
     var RISE = 1200;      // scene climb duration, must match the CSS
     var current = 0;
     var timer = null;
@@ -421,8 +424,7 @@
         el.classList.toggle("is-current", i === next);
         el.setAttribute("aria-selected", i === next ? "true" : "false");
       });
-      // Nothing left to advance to once the last scene is showing.
-      if (cue) cue.hidden = next >= scenes.length - 1;
+      // The sequence loops, so there is always a next scene - the cue stays.
 
       if (isFirst) {
         scenes[next].classList.add("is-current", "is-first");
@@ -444,22 +446,26 @@
     function schedule() {
       clearTimeout(timer);
       if (paused || quiet) return;
-      // Stop at the last scene: the sequence plays once, it does not loop.
-      if (current >= scenes.length - 1) return;
-      timer = setTimeout(function () { apply(current + 1, false); schedule(); }, HOLD);
+      // Runs continuously: past the last scene it wraps back to the first.
+      timer = setTimeout(function () {
+        apply((current + 1) % scenes.length, false);
+        schedule();
+      }, HOLD);
     }
 
     function goTo(i) {
       if (i === current) return;
       clearTimeout(timer);
       apply(i, false);
-      // A manual jump ends the automatic run - the visitor is steering now.
-      paused = true;
+      // The loop keeps running after a manual jump - it just restarts its
+      // hold from the scene the visitor chose, so their pick gets a full
+      // beat on screen before the sequence moves on.
+      schedule();
     }
 
     if (cue) {
       cue.addEventListener("click", function () {
-        if (current < scenes.length - 1) goTo(current + 1);
+        goTo((current + 1) % scenes.length);
       });
     }
 
@@ -494,6 +500,106 @@
     }
   }
 
+  /* ---------------- Preloader ----------------
+     The hero's layers start at opacity:0 and its artwork is a stack of large
+     PNGs, so the page's first painted frame is an empty coloured band. The
+     overlay (shown by html.preloading, set before first paint in <head>)
+     covers that window and lifts once the FIRST hero scene has decoded.
+
+     Only scene 1 is waited on: it is all the visitor can see, and blocking
+     on all three would hold the curtain for artwork that is not due for
+     several seconds. Two escape hatches keep this from ever stranding
+     anyone: a hard cap, and window.load.
+
+     Timing has a floor as well as a ceiling. On a warm cache the artwork can
+     decode in under 200ms, and a curtain that flashes past reads as a glitch
+     rather than an intro — so the overlay is held to MIN before it lifts.
+     Both bounds are measured from NAVIGATION start, not from this function,
+     so they describe what the visitor actually experiences. */
+  function initPreloader(onDone) {
+    var root = document.documentElement;
+    var el = document.getElementById("preloader");
+
+    function finish() {
+      if (!root.classList.contains("preloading")) return;   // already lifted
+      root.classList.remove("preloading");
+      if (el) {
+        el.classList.add("is-done");
+        // Must outlast the exit in CSS (.55s mark retreat, .6s overlay fade)
+        // or the node is torn out mid-gesture; the extra margin keeps a dead
+        // full-screen layer out of the tree without clipping the animation.
+        setTimeout(function () {
+          if (el.parentNode) el.parentNode.removeChild(el);
+        }, 700);
+      }
+      if (typeof onDone === "function") onDone();
+    }
+
+    // The head script's cap may already have lifted the curtain before this
+    // file even parsed (slow link). If so there is nothing left to wait for —
+    // start the hero immediately rather than holding it for images that are
+    // no longer hiding anything.
+    if (!el || !root.classList.contains("preloading")) {
+      root.classList.remove("preloading");
+      if (typeof onDone === "function") onDone();
+      return;
+    }
+
+    // MIN: the shortest the curtain is allowed to stay up, so a fast load
+    // still gets a deliberate-feeling intro instead of a flicker.
+    // CAP:  the longest, so a slow one is never held hostage. CAP must stay
+    //       above MIN or the ceiling would fire while the floor still blocks.
+    var MIN = 2200;
+    var CAP = 4000;
+
+    function since() {
+      return (window.performance && performance.now) ? performance.now() : 0;
+    }
+
+    // The head-armed cap bounds the wait from first paint; take it over here
+    // so the full handover — including starting the hero — runs on expiry.
+    if (window.__plCap) { clearTimeout(window.__plCap); window.__plCap = null; }
+    var capTimer = setTimeout(finish, Math.max(0, CAP - since()));
+
+    // Images may be ready well before MIN; hold the result and release it
+    // when the floor is reached rather than lifting the moment they land.
+    function done() {
+      clearTimeout(capTimer);
+      var wait = MIN - since();
+      if (wait > 0) { setTimeout(finish, wait); return; }
+      finish();
+    }
+
+    var first = document.querySelector(".hero-scene");
+    if (!first) { done(); return; }
+
+    var imgs = Array.prototype.slice.call(first.querySelectorAll("img"));
+    if (!imgs.length) { done(); return; }
+
+    var left = imgs.length;
+    function tick() { if (--left <= 0) done(); }
+
+    imgs.forEach(function (img) {
+      // decode() resolves when the bitmap is ready to paint, not merely when
+      // the bytes have landed — which is the moment that actually matters
+      // for a fade-in. Fall back to load/error events where it is missing,
+      // and treat a failed image as satisfied: a broken layer must not hold
+      // the whole page hostage.
+      if (img.complete && img.naturalWidth > 0) { tick(); return; }
+      if (img.decode) {
+        img.decode().then(tick, tick);
+      } else {
+        img.addEventListener("load", tick, { once: true });
+        img.addEventListener("error", tick, { once: true });
+      }
+    });
+
+    // Belt and braces: if a decode promise never settles, load still fires.
+    // finish() is a no-op once the curtain is already up, so this can never
+    // re-show the overlay or double-run the handover.
+    window.addEventListener("load", function () { done(); }, { once: true });
+  }
+
   /* ---------------- Year stamp ---------------- */
   function initYear() {
     document.querySelectorAll("[data-year]").forEach(function (el) { el.textContent = new Date().getFullYear(); });
@@ -508,6 +614,10 @@
     initContactForm();
     initYear();
     initScrollReveal();
-    initHeroScenes();
+
+    // The hero's opening entrance is the first thing a visitor should see, so
+    // it starts only once the curtain is on its way up — otherwise scene 1
+    // would play out behind the overlay and be over before the page appears.
+    initPreloader(initHeroScenes);
   });
 })();

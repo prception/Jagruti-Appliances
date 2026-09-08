@@ -3,6 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Set before first paint so scroll-reveal targets are hidden without a
+     flash of visible content. JS off => class absent => nothing hidden. -->
+<script>
+  document.documentElement.classList.add("js");
+  /* The hero's artwork is a stack of large PNGs that fade in from opacity:0,
+     so the first paint is an empty coloured band until they arrive. Marking
+     the document here — before first paint — lets the preloader cover that
+     gap; main.js clears it once scene 1 has actually decoded.
+
+     The hard time cap is armed HERE rather than in main.js, and this block
+     sits ABOVE the stylesheet links on purpose: a render-blocking <link>
+     ahead of it delays this script by seconds on a slow connection, so the
+     cap would only start counting long after the visitor began waiting.
+     First statement in <head> => the cap bounds the real, felt wait.
+     main.js reads window.__plCap and cancels it once it takes over. */
+  document.documentElement.classList.add("preloading");
+  window.__plCap = setTimeout(function () {
+    var el = document.getElementById("preloader");
+    document.documentElement.classList.remove("preloading");
+    if (el) {
+      el.classList.add("is-done");
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 500);
+    }
+    // No flag needed for the hero: main.js sees html.preloading already gone
+    // and starts the sequence immediately instead of waiting on decodes.
+    window.__plCap = null;
+    // Kept in step with CAP in main.js's initPreloader — this is the same
+    // ceiling, armed early in case main.js has not parsed yet.
+  }, 4000);
+</script>
 <title>Jagruti Appliances | Flour Mills, Pulverizers & Food Processing Machines</title>
 <meta name="description" content="Jagruti Appliances manufactures domestic & commercial flour mills, pulverizers, food processing machinery and automatic roti making machines from Rajkot, Gujarat since 1995.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%2212%22 r=%2211%22 fill=%22%230d8ac4%22/></svg>">
@@ -11,11 +41,17 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="assets/css/style.css">
 
-<!-- Set before first paint so scroll-reveal targets are hidden without a
-     flash of visible content. JS off => class absent => nothing hidden. -->
-<script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
+
+<!-- PRELOADER: held until the first hero scene's layers have decoded, for a
+     minimum of 2.2s (so it reads as an intro, not a flicker) and a maximum of
+     4s, so visitors never land on the bare hero ground or wait unbounded. -->
+<div class="preloader" id="preloader" role="status" aria-live="polite" aria-label="Loading">
+  <div class="pl-inner">
+    <div class="pl-mark">JAGRUTI</div>
+  </div>
+</div>
 
 <!-- NAVBAR:START -->
 <header class="site-header">
