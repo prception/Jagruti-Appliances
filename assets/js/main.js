@@ -293,6 +293,12 @@
 
     var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    // Posterless reveal videos get their opening frame decoded up front, so the
+    // tile shows the clip's own still — not a blank box — through its hold.
+    document.querySelectorAll("video[data-reveal-play]:not([poster])").forEach(function (v) {
+      primeFirstFrame(v);
+    });
+
     function show(el) {
       var kids = el.querySelectorAll("[data-reveal-child]");
       kids.forEach(function (kid, i) {
@@ -333,6 +339,18 @@
     function onScreen(el) {
       var r = el.getBoundingClientRect();
       return r.bottom > 0 && r.top < (window.innerHeight || document.documentElement.clientHeight);
+    }
+
+    // With no poster, a video paints nothing until it has decoded a frame, so
+    // the tile would open on a black box during its hold. Seeking to the very
+    // start as soon as metadata lands forces that first frame to render, which
+    // gives the card the still it should read as before the motion begins.
+    function primeFirstFrame(video) {
+      function seek() {
+        try { video.currentTime = 0.001; } catch (e) {}
+      }
+      if (video.readyState >= 1) { seek(); return; }
+      video.addEventListener("loadedmetadata", seek, { once: true });
     }
 
     // Plays the video the next time it is scrolled into view, once.

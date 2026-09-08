@@ -1395,20 +1395,42 @@ body.menu-open { overflow: hidden; }
 
 /* --- Closing stat row --- */
 /* --- Stats strip: its own band directly below the hero --- */
+/* Runs on the page canvas with no band of its own, so the figures read as
+   part of the page rather than a separate bar. The colour lift on scroll-in
+   is what carries the section instead: each stat rises, and its number
+   settles from the light brand blue into full ink. */
 .stats-strip {
-  background: #001b2c;
-  border-top: 1px solid rgba(255,255,255,.08);
-  padding: 22px 0;
-  color: #fff;
+  background: transparent;
+  border-top: 0;
+  padding: 34px 0 30px;
+  color: var(--ink-900);
 }
 .hero-stats { display: grid; grid-template-columns: repeat(5, 1fr); }
-.hero-stats > div { display: flex; align-items: center; justify-content: center; gap: 12px; text-align: left; padding: 4px 12px; border-right: 1px solid rgba(255,255,255,.12); }
+.hero-stats > div { display: flex; align-items: center; justify-content: center; gap: 12px; text-align: left; padding: 4px 12px; border-right: 1px solid var(--blue-100); }
 .hero-stats > div:last-child { border-right: 0; }
 .hero-stats .ic { flex: none; color: var(--blue-500); }
 .hero-stats .ic svg { width: 34px; height: 34px; }
 .hero-stats div div { display: flex; flex-direction: column; line-height: 1.25; }
-.hero-stats strong { color: #fff; font-size: 1.0625em; /* 17px */ font-weight: 500; }
-.hero-stats span { color: rgba(255,255,255,.70); font-size: .7812em; /* 12.5px */ }
+.hero-stats strong { color: var(--ink-900); font-size: 1.0625em; /* 17px */ font-weight: 600; }
+.hero-stats span { color: var(--ink-500); font-size: .7812em; /* 12.5px */ }
+
+/* Reveal: the stat lands in brand blue and resolves to ink a beat later, so
+   the eye is pulled to the figure as it arrives. The colour transition is
+   deliberately slower than the lift and shares the same stagger delay that
+   main.js writes onto [data-reveal-child]. Gated on html.js like every other
+   reveal, so with JS off the final colours are what render. */
+.js .stats-strip[data-reveal] [data-reveal-child] {
+  transition: opacity .7s cubic-bezier(.22, .61, .36, 1),
+              transform .7s cubic-bezier(.22, .61, .36, 1);
+}
+.js .stats-strip[data-reveal] [data-reveal-child] strong,
+.js .stats-strip[data-reveal] [data-reveal-child] .ic {
+  color: var(--blue-500);
+  transition: color .9s ease .25s;
+}
+.js .stats-strip[data-reveal] [data-reveal-child] span { transition: color .9s ease .25s; }
+.js .stats-strip[data-reveal].is-revealed [data-reveal-child] strong { color: var(--ink-900); }
+.js .stats-strip[data-reveal].is-revealed [data-reveal-child] .ic { color: var(--blue-600); }
 
 /* page hero (inner pages) */
 .page-hero { background: var(--gradient-deep); color: #fff; padding: 58px 0 68px; text-align: center; }
@@ -1476,6 +1498,11 @@ body.menu-open { overflow: hidden; }
   .js [data-reveal] [data-reveal-child] {
     opacity: 1 !important; transform: none !important; transition: none !important;
   }
+  .js .stats-strip[data-reveal] [data-reveal-child] strong { color: var(--ink-900) !important; }
+  .js .stats-strip[data-reveal] [data-reveal-child] .ic { color: var(--blue-600) !important; }
+  .js .stats-strip[data-reveal] [data-reveal-child] strong,
+  .js .stats-strip[data-reveal] [data-reveal-child] .ic,
+  .js .stats-strip[data-reveal] [data-reveal-child] span { transition: none !important; }
 }
 
 /* ---------- Shop By Need — full-bleed image tiles ----------
@@ -1495,8 +1522,14 @@ body.menu-open { overflow: hidden; }
 .need-tile img,
 .need-tile video {
   position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; transition: transform .5s ease;
+  object-fit: cover; object-position: center bottom;
+  transition: transform .5s ease;
 }
+/* The two kitchen stills are framed with a tall run of empty wall above the
+   product, so centring them leaves the tile reading half-empty next to the
+   tighter shots beside it. Pulling the crop down puts the machine on the
+   same line as its neighbours and fills the card. */
+.need-tile video { object-position: center center; }
 
 .need-tile::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
