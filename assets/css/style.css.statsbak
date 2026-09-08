@@ -876,12 +876,10 @@ body.menu-open { overflow: hidden; }
   .js .hero-plate { transform: none; }
   .js .hero-scene .hl { opacity: 1; }
   .js .hero-leafframe .hlf { animation: none !important; opacity: 1; }
-  /* All four corners now settle at the desktop leaf plane's resting 1.10;
-     only each plate's own mirror still has to survive. */
-  .js .hero-leafframe .hlf-tl { transform: scale(1.10); }
-  .js .hero-leafframe .hlf-tr { transform: scaleX(-1) scale(1.10); }
-  .js .hero-leafframe .hlf-bl { transform: scaleX(-1) scale(1.10); }
-  .js .hero-leafframe .hlf-br { transform: scale(1.10); }
+  .js .hero-leafframe .hlf-tl,
+  .js .hero-leafframe .hlf-tr { transform: none; }
+  .js .hero-leafframe .hlf-bl,
+  .js .hero-leafframe .hlf-br { transform: scaleY(-1); }
   .js .hero-scene.is-current { visibility: visible; transform: none; }
   .js .hero-copy.is-current { opacity: 1; transform: translateY(-50%); }
   .hero-scrollcue .hs-arrow { animation: none; }
@@ -1939,43 +1937,15 @@ body.menu-open { overflow: hidden; }
   .hero .hero-cta { margin-top: 28px; }
   .hero-cats { grid-template-columns: 1fr 1fr; gap: 6px 0; }
   .hero-cats > a:nth-child(2n) { border-right: 0; }
-  /* Stats on tablets: five items never split evenly across a row, so the
-     dividers are dropped for a tile grid - 2 up, with the fifth stat
-     spanning the full width so no orphan is left dangling. */
-  .hero-stats { grid-template-columns: 1fr 1fr; gap: 12px; }
-  .hero-stats > div {
-    border-right: 0;
-    justify-content: flex-start;
-    gap: 14px;
-    padding: 16px 18px;
-    background: var(--blue-50);
-    border: 1px solid var(--blue-100);
-    border-radius: 14px;
-  }
-  .hero-stats > div:last-child { grid-column: 1 / -1; justify-content: center; }
+  .hero-stats { grid-template-columns: repeat(3, 1fr); gap: 16px 0; }
+  .hero-stats > div:nth-child(3n) { border-right: 0; }
   .compare-select-row { grid-template-columns: 1fr; }
   .mobile-bar { display: block; }
   :root { --mobile-bar-h: 50px; }
   /* The home page drops the sticky call/WhatsApp bar, so the hero cue and
-     dots sit against the true viewport bottom there.
-
-     Hidden in CSS rather than deleted from the markup on purpose: the footer
-     is a shared partial, and assets/js/build-partials.js rewrites every
-     page's FOOTER block from footer.html, so any markup removed here is put
-     straight back the next time that script runs. Editing footer.html would
-     instead drop the bar from every page, which is not what is wanted. */
+     dots sit against the true viewport bottom there. */
   :root:has(.hero-parallax) { --mobile-bar-h: 0px; }
-  :root:has(.hero-parallax) .mobile-bar { display: none; }
-  /* The floating WhatsApp bubble is dropped on tablet and mobile. The
-     sticky call/WhatsApp bar above already carries the same action at this
-     width, so the bubble was a duplicate of it sitting in the corner - and
-     on the home page, which hides that bar, the hero's own scroll cue and
-     scene dots occupy this corner instead.
-
-     Hidden in CSS rather than removed from the markup for the same reason
-     the bar is: build-partials.js rewrites each page's shared blocks, so
-     deleted markup comes straight back the next time it runs. */
-  .float-wa { display: none; }
+  .float-wa { bottom: 76px; }
   body { padding-bottom: 0; }
   .form-row-2 { grid-template-columns: 1fr; }
 }
@@ -2039,28 +2009,8 @@ body.menu-open { overflow: hidden; }
   .hero-cats { grid-template-columns: 1fr; }
   .hero-cats > a { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.12); padding: 12px 16px; }
   .hero-cats > a:last-child { border-bottom: 0; }
-  /* Phones: the same tile grid, tightened - icon above the figure so each
-     tile is a compact square block, and the fifth stat runs full width as a
-     wide footer tile rather than sitting alone in a half-empty row. */
-  .hero-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .hero-stats > div {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 8px;
-    padding: 16px 12px;
-  }
-  .hero-stats div div { align-items: center; }
-  .hero-stats .ic svg { width: 28px; height: 28px; }
-  .hero-stats strong { font-size: 1em; }
-  .hero-stats > div:last-child {
-    grid-column: 1 / -1;
-    flex-direction: row;
-    gap: 12px;
-    padding: 14px 16px;
-  }
-  .hero-stats > div:last-child div { align-items: flex-start; text-align: left; }
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .hero-stats > div:nth-child(2n) { border-right: 0; }
 }
 
 /* --- FULL-BLEED PORTRAIT HERO (phones + portrait tablets) ----------------
@@ -2210,17 +2160,9 @@ body.menu-open { overflow: hidden; }
      dedicated corner plates, which are independent of the canvas. */
   .hl-leaf { display: none; }
 
-  /* Above the ::before scrim (z-index 4), not below it. The scrim is a dark
-     blue wash whose densest band is along the TOP edge - exactly where the
-     two upper leaf clusters sit - so painting it over the foliage drained
-     the greens and read as the leaves being washed out. It is there to keep
-     the white copy legible against the bright sky, which only requires it to
-     sit over the SKY; the copy is lifted to z-index 6 and so clears both.
-     Putting the frame above it lets the foliage keep its own colour while
-     the scrim goes on doing its job behind it. */
   .hero-leafframe {
     display: block;
-    position: absolute; inset: 0; z-index: 5;
+    position: absolute; inset: 0; z-index: 3;
     pointer-events: none;
     overflow: hidden;
   }
@@ -2233,9 +2175,7 @@ body.menu-open { overflow: hidden; }
      vertically so their fronds reach up and in rather than down and out.
      --leaf-w tunes how far into the frame the foliage reaches. */
   .hero-leafframe {
-    /* How far each plate reaches in from its corner. Wider plates put more
-       foliage over the frame rather than clinging to the very edge. */
-    --leaf-w: 72%;
+    --leaf-w: 58%;
   }
   .hero-leafframe .hlf {
     position: absolute;
@@ -2244,90 +2184,83 @@ body.menu-open { overflow: hidden; }
     /* The plates are 16:9 rectangles laid over the scene, and their PNG
        ground is not perfectly clear where it meets the section's scrim - the
        plate's own bottom edge showed as a straight line across the hero.
-       Fading each one out towards its inner edge removes that boundary.
-
-       The ramp is deliberately LATE and SHORT. It only has to hide the
-       plate's own edge, so it stays fully opaque across the whole foliage
-       region and does its fading in the last stretch of empty ground. The
-       earlier 55%->100% ramp spread the falloff over most of the plate,
-       which washed the fronds out and drained their colour - the leaves
-       were being masked, not just their edge. */
-    -webkit-mask-image: linear-gradient(180deg, #000 88%, transparent 100%);
-            mask-image: linear-gradient(180deg, #000 88%, transparent 100%);
+       Fading each one out towards its inner edge removes that boundary while
+       leaving the foliage at the corner untouched. */
+    -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+            mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
   }
-  /* The bottom pair carries its foliage in the LOWER half of the plate, so
-     the top-down fade above would erase exactly the part that shows. Theirs
-     runs the other way: solid at the bottom, fading out towards the centre
-     of the frame. */
-  .hlf-bl, .hlf-br {
-    -webkit-mask-image: linear-gradient(0deg, #000 88%, transparent 100%);
-            mask-image: linear-gradient(0deg, #000 88%, transparent 100%);
-  }
-  /* Page1L1 carries clusters top-left AND bottom-left; Page1R1 carries one
-     bottom-right only. So the two TOP corners both use the L plate - the
-     right one mirrored horizontally - which puts a dense cluster in each
-     top corner, and the two BOTTOM corners use the R plate, the left one
-     mirrored, putting its bottom cluster in each lower corner. Every corner
-     then gets real foliage rather than the empty half of a plate. */
-  .hlf-tl { top: 0; left: 0;  transform: scale(1.10); transform-origin: center; }
-  .hlf-tr { top: 0; right: 0; transform: scaleX(-1) scale(1.10); transform-origin: center; }
+  .hlf-tl { top: 0;    left: 0;  transform-origin: left top; }
+  .hlf-tr { top: 0;    right: 0; transform-origin: right top; }
   /* scaleY(-1) mirrors the mask along with the image, so the bottom pair
      fades towards the centre too without needing its own gradient. */
-  /* Mirrors reflect about the box's own CENTRE. With the origin on an edge
-     instead, the flip threw the plate clean out of the frame - which is why
-     only the top pair was showing. */
-  .hlf-bl { bottom: 0; left: 0;  transform: scaleX(-1) scale(1.10); transform-origin: center; }
-  .hlf-br { bottom: 0; right: 0; transform: scale(1.10); transform-origin: center; }
+  .hlf-bl { bottom: 0; left: 0;  transform: scaleY(-1); transform-origin: left bottom; }
+  .hlf-br { bottom: 0; right: 0; transform: scaleY(-1); transform-origin: right bottom; }
 
-  /* --- Entrance: the desktop leaf plane's move, exactly ---------------
-     The portrait corner plates play the SAME entrance as the desktop canvas
-     leaf plane: heroLeafIn - fade up from an over-scaled 1.20 and settle to
-     the resting 1.10, no travel and no rotation, 1200ms on
-     cubic-bezier(.22,.61,.36,1) cued at +560ms so the foliage sweeps in
-     after the machine has begun rising, just as it does on desktop.
+  /* Each plate SWINGS IN FROM ITS OWN EDGE, the same move the scene's side
+     clusters make: start pushed out past the frame, slightly under-scaled
+     and rotated away, then travel in and settle. Sharing the burst's easing
+     and 1150ms duration is what makes the frame read as part of the same
+     entrance rather than a separate fade laid on top.
 
-     It is keyed off the state classes the same way too. The frame lives
-     outside the scenes, so JS mirrors .is-current / .is-entering / .is-first
-     onto it (see initHeroScenes) - which is what makes the plates replay
-     their entrance on EVERY scene change rather than only once on load.
+     Each corner needs its own keyframes because the travel direction is
+     different for each, and because the bottom pair carries a scaleY(-1)
+     that every frame of its track has to preserve - a shared `transform`
+     would drop the flip and turn them the wrong way up mid-animation.
 
-     Each corner still needs its own keyframes: an animated `transform`
-     replaces the property outright, so a single shared track would drop the
-     corner's scaleX(-1) and flip the plate back mid-animation. The move
-     inside each is identical - only the mirror differs. */
-  .js .hero-leafframe .hlf { opacity: 0; }
-  .js .hero-leafframe.is-current .hlf,
-  .js .hero-leafframe.is-entering .hlf {
-    animation-duration: 1200ms;
-    animation-timing-function: cubic-bezier(.22,.61,.36,1);
-    animation-delay: 560ms;
+     The frame lives outside the scenes, so this plays once on load and then
+     holds through every scene change. */
+  .js .hero-leafframe .hlf {
+    animation-duration: 1150ms;
+    animation-timing-function: cubic-bezier(.16,.9,.3,1.06);
     animation-fill-mode: both;
   }
-  .js .hero-leafframe.is-current .hlf-tl,
-  .js .hero-leafframe.is-entering .hlf-tl { animation-name: heroLeafFrameTL; }
-  .js .hero-leafframe.is-current .hlf-tr,
-  .js .hero-leafframe.is-entering .hlf-tr { animation-name: heroLeafFrameTR; }
-  .js .hero-leafframe.is-current .hlf-bl,
-  .js .hero-leafframe.is-entering .hlf-bl { animation-name: heroLeafFrameBL; }
-  .js .hero-leafframe.is-current .hlf-br,
-  .js .hero-leafframe.is-entering .hlf-br { animation-name: heroLeafFrameBR; }
+  /* --- Parallax: the four corners are four DEPTHS, not one frame -------
+     The near pair (top) travels furthest, arrives last and settles slightly
+     over-scaled; the far pair (bottom) travels least, arrives first and
+     settles a touch smaller. Different distances over overlapping windows is
+     what separates them into planes - if all four shared a distance and a
+     delay they would read as one flat sheet sliding in.
 
-  /* Desktop's heroLeafIn, once per corner so each keeps its own mirror. */
-  @keyframes heroLeafFrameTL {
-    from { opacity: 0; transform: scale(1.20); }
-    to   { opacity: 1; transform: scale(1.10); }
+     Durations differ too: the near leaves take longer to cover their greater
+     distance at a comparable speed, which is the same cue that makes the
+     scene's own near and far clusters read as depth. */
+  .js .hero-leafframe .hlf-tl {
+    animation-name: heroLeafTL; animation-delay: 520ms; animation-duration: 1320ms;
   }
-  @keyframes heroLeafFrameTR {
-    from { opacity: 0; transform: scaleX(-1) scale(1.20); }
-    to   { opacity: 1; transform: scaleX(-1) scale(1.10); }
+  .js .hero-leafframe .hlf-tr {
+    animation-name: heroLeafTR; animation-delay: 610ms; animation-duration: 1320ms;
   }
-  @keyframes heroLeafFrameBL {
-    from { opacity: 0; transform: scaleX(-1) scale(1.20); }
-    to   { opacity: 1; transform: scaleX(-1) scale(1.10); }
+  .js .hero-leafframe .hlf-bl {
+    animation-name: heroLeafBL; animation-delay: 430ms; animation-duration: 1040ms;
   }
-  @keyframes heroLeafFrameBR {
-    from { opacity: 0; transform: scale(1.20); }
-    to   { opacity: 1; transform: scale(1.10); }
+  .js .hero-leafframe .hlf-br {
+    animation-name: heroLeafBR; animation-delay: 500ms; animation-duration: 1040ms;
+  }
+
+  /* Near plane: long travel, lands at 1.04 so it sits closest to the viewer. */
+  @keyframes heroLeafTL {
+    0%   { opacity: 0; transform: translate(-26%, -14%) scale(.82) rotate(-9deg); }
+    32%  { opacity: 1; }
+    100% { opacity: 1; transform: translate(0, 0)       scale(1.04) rotate(0deg); }
+  }
+  @keyframes heroLeafTR {
+    0%   { opacity: 0; transform: translate(26%, -14%) scale(.82) rotate(9deg); }
+    32%  { opacity: 1; }
+    100% { opacity: 1; transform: translate(0, 0)      scale(1.04) rotate(0deg); }
+  }
+  /* Far plane: short travel, lands at .96 so it reads as set back.
+     scaleY(-1) comes first on every frame - it is what keeps the mirrored
+     plate the right way up, and the translate after it is read in the
+     flipped axis, so a negative Y pushes it DOWN out of frame. */
+  @keyframes heroLeafBL {
+    0%   { opacity: 0; transform: scaleY(-1) translate(-11%, -6%) scale(.90) rotate(-4deg); }
+    32%  { opacity: 1; }
+    100% { opacity: 1; transform: scaleY(-1) translate(0, 0)      scale(.96) rotate(0deg); }
+  }
+  @keyframes heroLeafBR {
+    0%   { opacity: 0; transform: scaleY(-1) translate(11%, -6%) scale(.90) rotate(4deg); }
+    32%  { opacity: 1; }
+    100% { opacity: 1; transform: scaleY(-1) translate(0, 0)     scale(.96) rotate(0deg); }
   }
 
   /* Legibility for white copy over the bright sky: a soft top-down scrim
@@ -2342,7 +2275,7 @@ body.menu-open { overflow: hidden; }
 
   /* --- Copy: centred, in the upper band, over the artwork --------------- */
   .hero-parallax .hero-copywrap {
-    position: absolute; z-index: 6;
+    position: absolute; z-index: 5;
     left: 0; right: 0; top: calc(var(--header-h) + 4svh);
     display: grid;                 /* all three copies share one cell */
     pointer-events: none;
@@ -2357,38 +2290,32 @@ body.menu-open { overflow: hidden; }
     color: #fff;
     text-shadow: 0 1px 18px rgba(0,32,52,.55), 0 1px 3px rgba(0,32,52,.5);
   }
-  /* Portrait type runs a step smaller than desktop: the artwork is the hero
-     and the copy has to clear the machine below it, so the block is kept
-     short - a compact eyebrow, a two-line title, and a sub held to roughly
-     two lines by a wider measure at a smaller size rather than by wrapping
-     more often. */
   .hc-eyebrow {
-    font-size: clamp(9.5px, 2.4vw, 11px);
-    letter-spacing: .18em;
+    font-size: clamp(10px, 2.9vw, 12px);
+    letter-spacing: .2em;
     color: rgba(255,255,255,.9);
-    margin-bottom: .6em;
+    margin-bottom: .8em;
   }
   .hc-title {
-    font-size: clamp(23px, 5.6vw, 34px);
-    line-height: 1.1;
+    font-size: clamp(28px, 7.2vw, 42px);
+    line-height: 1.08;
     text-wrap: balance;
     color: #fff;
-    margin-bottom: .42em;
+    margin-bottom: .5em;
   }
   .hc-title .accent { color: #9fdfff; }
   .hc-sub {
-    font-size: clamp(12px, 2.7vw, 14px);
-    line-height: 1.45;
+    font-size: clamp(13.5px, 3.2vw, 16px);
+    line-height: 1.5;
     color: rgba(255,255,255,.92);
-    /* A wider measure at the smaller size, so the sentence lands in about
-       two lines instead of three or four and the block stops rather than
-       creeping down over the product. */
-    max-width: 25em; margin: 0 auto 1.1em;
+    /* Narrow enough that the lines clear the machine standing behind them
+       rather than running into it. */
+    max-width: 21em; margin: 0 auto 1.5em;
     text-wrap: pretty;
   }
   .hc-cta {
-    font-size: clamp(12px, 2.9vw, 14px);
-    padding: .7em 1.4em;
+    font-size: clamp(13px, 3.6vw, 16px);
+    padding: .82em 1.7em;
     pointer-events: auto;
   }
 

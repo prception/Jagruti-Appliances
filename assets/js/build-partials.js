@@ -7,6 +7,7 @@ const ROOT = path.join(__dirname, '..', '..');
 const SKIP_DIRS = new Set(['.git', 'node_modules']);
 
 const ACTIVE_TOKENS = {
+  index: '__ACTIVE_HOME__',
   about: '__ACTIVE_ABOUT__',
   compare: '__ACTIVE_COMPARE__',
   contact: '__ACTIVE_CONTACT__',

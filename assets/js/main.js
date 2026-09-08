@@ -397,6 +397,12 @@
     var copies = Array.prototype.slice.call(stage.querySelectorAll(".hero-copy"));
     var tabs   = Array.prototype.slice.call(stage.querySelectorAll(".hero-dots .hd"));
     var cue    = stage.querySelector(".hero-scrollcue");
+    /* The portrait leaf frame sits OUTSIDE the scenes (it is shared by all
+       three), so it cannot pick up their state classes by descent. Its own
+       copy of them is mirrored on here, which is what lets its corner plates
+       replay the same entrance on every scene change - exactly as the
+       desktop canvas leaf plane does from inside the scene. */
+    var leafframe = stage.querySelector(".hero-leafframe");
     if (scenes.length < 2) return;
 
     /* A scene is fully settled 1470ms after its cue (1200ms reveal, with the
@@ -414,6 +420,9 @@
     function apply(next, isFirst) {
       var prev = current;
       scenes.forEach(function (el, i) {
+        // A jump can land mid-climb, so drop any pending un-clip first - it
+        // would otherwise fire against whatever state this scene is in now.
+        clearTimeout(el._enterT);
         el.classList.remove("is-current", "is-entering", "is-leaving", "is-first");
         // The arriving scene must paint above the one it replaces, which a
         // fixed z-index order cannot express once jumps can go backwards.
@@ -426,14 +435,36 @@
       });
       // The sequence loops, so there is always a next scene - the cue stays.
 
+      // Same beat for the frame: clear, reflow, re-add, so the entrance
+      // restarts rather than being coalesced away.
+      if (leafframe) {
+        leafframe.classList.remove("is-current", "is-entering", "is-first");
+        void leafframe.offsetWidth;
+      }
+
       if (isFirst) {
         scenes[next].classList.add("is-current", "is-first");
+        if (leafframe) leafframe.classList.add("is-current", "is-first");
       } else {
         if (prev !== next) scenes[prev].classList.add("is-leaving");
         // Force a reflow so re-adding the class on the same element restarts
         // its animation rather than being coalesced away.
         void scenes[next].offsetWidth;
         scenes[next].classList.add("is-entering", "is-current");
+        if (leafframe) leafframe.classList.add("is-entering", "is-current");
+        /* is-entering exists only for the climb: it clips the scene so the
+           plate is REVEALED by the window rather than spilling above it.
+           Left on after the climb it keeps clipping a scene that has landed,
+           cropping its deliberately over-scaled layers - which is invisible
+           where the crop falls outside the viewport, but cuts straight
+           through the artwork once the portrait layout scales it up. */
+        (function (el) {
+          clearTimeout(el._enterT);
+          el._enterT = setTimeout(function () {
+            el.classList.remove("is-entering");
+            if (leafframe) leafframe.classList.remove("is-entering");
+          }, RISE);
+        })(scenes[next]);
       }
       if (copies[prev] && prev !== next) copies[prev].classList.add("is-leaving");
       if (copies[next]) {
