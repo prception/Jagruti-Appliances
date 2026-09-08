@@ -2277,12 +2277,13 @@ body.menu-open { overflow: hidden; }
     -webkit-mask-image: linear-gradient(0deg, #000 88%, transparent 100%);
             mask-image: linear-gradient(0deg, #000 88%, transparent 100%);
   }
-  /* Page1L1 carries clusters top-left AND bottom-left; Page1R1 carries one
-     bottom-right only. So the two TOP corners both use the L plate - the
-     right one mirrored horizontally - which puts a dense cluster in each
-     top corner, and the two BOTTOM corners use the R plate, the left one
-     mirrored, putting its bottom cluster in each lower corner. Every corner
-     then gets real foliage rather than the empty half of a plate. */
+  /* Page1R1 carries one cluster, bottom-right, so the two BOTTOM corners use
+     it directly with the left one mirrored. The top pair uses Page1L1top - a
+     variant of Page1L1 with its lower half cleared. The full L plate carries
+     clusters top-left AND bottom-left, and since a plate spans the whole
+     frame, that second cluster landed a third of the way down the hero as a
+     stray leaf under each top corner. Cropping to the top cluster leaves one
+     piece of foliage per corner, which is all the frame wants. */
   .hlf-tl { top: 0; left: 0;  transform: scale(1.10); transform-origin: center; }
   .hlf-tr { top: 0; right: 0; transform: scaleX(-1) scale(1.10); transform-origin: center; }
   /* scaleY(-1) mirrors the mask along with the image, so the bottom pair
