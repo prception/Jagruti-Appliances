@@ -6,6 +6,9 @@
 <title>Food Processing Machinery for Restaurants & Food Businesses | Jagruti Appliances</title>
 <meta name="description" content="A complete range of commercial food-preparation machines — gravy machines, chilly cutters, sugarcane juicers, vegetable cutters, potato peelers, potato sli">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%2212%22 r=%2211%22 fill=%22%230d8ac4%22/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="../assets/css/style.css">
 
 </head>
@@ -13,49 +16,135 @@
 
 <!-- NAVBAR:START -->
 <header class="site-header">
-  <div class="container">
+  <div class="nav-wrap">
+    <button class="menu-btn-wrap" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
+      <span class="icon-menu">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path class="ml1" d="M3 7h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path class="ml2" d="M3 12h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path class="ml3" d="M3 17h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="menu-text">menu</span>
+    </button>
+
     <a href="../index.html" class="logo">
       <div>
         <div class="logo-mark">JAGRUTI</div>
         <span class="logo-tag">Every Home Need&hellip;</span>
       </div>
     </a>
-    <nav class="main-nav">
-      <ul>
-        <li class="has-dropdown">
-          <button class="nav-link nav-dropdown-btn">Products <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="dropdown-panel"><a href="../products/domestic-flour-mill.html"><strong>Domestic Flour Mills</strong><span>For Your Home</span></a><a href="../products/commercial-flour-mill.html"><strong>Commercial Flour Mills</strong><span>For Your Business</span></a><a href="../products/pulverizer.html"><strong>Pulverizer Machines</strong><span>Food Processing</span></a><a href="../products/food-processing-machinery.html"><strong>Food Processing Machinery</strong><span>Food Processing</span></a><a href="../products/roti-maker-machine.html"><strong>Roti Maker Machines</strong><span>Making Rotis</span></a><a href="../products/kitchen-appliances.html"><strong>Kitchen Appliances</strong><span>Everyday Kitchen</span></a><a class="view-all" href="../products/products.html">View All Products &rarr;</a></div>
-        </li>
-        <li><a class="nav-link" href="../compare.html">Compare</a></li>
-        <li><a class="nav-link" href="../why-jagruti.html">Why Jagruti</a></li>
-        <li><a class="nav-link" href="../about.html">About</a></li>
-        <li class="has-dropdown">
-          <button class="nav-link nav-dropdown-btn">Resources <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="dropdown-panel"><a href="../blog/blog.html"><strong>Blog</strong><span>Guides, tips & product articles</span></a><a href="../blog/buying-guides.html"><strong>Buying Guides</strong><span>Choosing the right machine</span></a><a href="../faq.html"><strong>FAQ</strong><span>Answers to common questions</span></a><a href="../catalogue.html"><strong>Catalogue</strong><span>Download our product catalogue</span></a></div>
-        </li>
-        <li><a class="nav-link" href="../support.html">Support</a></li>
-        <li><a class="nav-link" href="../contact.html">Contact</a></li>
-      </ul>
-    </nav>
+
     <div class="header-actions">
-      <a class="header-search-btn" href="../products/products.html" aria-label="Search products"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></a>
-      <a class="btn btn-whatsapp btn-sm" href="https://wa.me/917070705922?text=Hi%20Jagruti%20Appliances%2C%20I%27d%20like%20to%20know%20more%20about%20your%20products%20and%20current%20pricing." target="_blank" rel="noopener"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.01 3C9.38 3 4 8.38 4 15.01c0 2.35.66 4.55 1.8 6.43L4 29l7.76-1.72a11.94 11.94 0 0 0 4.25.78h.01c6.63 0 12-5.38 12-12.01C28.02 8.38 22.64 3 16.01 3zm0 21.8h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-4.6 1.02 1-4.48-.24-.37a9.83 9.83 0 0 1-1.52-5.33c0-5.46 4.44-9.9 9.9-9.9 2.64 0 5.13 1.03 6.99 2.9a9.82 9.82 0 0 1 2.9 6.99c0 5.46-4.45 9.76-9.01 9.76zm5.42-7.36c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg> Get Price</a>
-      <button class="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+      <a class="btn btn-whatsapp btn-sm" href="https://wa.me/917070705922?text=Hi%20Jagruti%20Appliances%2C%20I%27d%20like%20to%20know%20more%20about%20your%20products%20and%20current%20pricing." target="_blank" rel="noopener"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.01 3C9.38 3 4 8.38 4 15.01c0 2.35.66 4.55 1.8 6.43L4 29l7.76-1.72a11.94 11.94 0 0 0 4.25.78h.01c6.63 0 12-5.38 12-12.01C28.02 8.38 22.64 3 16.01 3zm0 21.8h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-4.6 1.02 1-4.48-.24-.37a9.83 9.83 0 0 1-1.52-5.33c0-5.46 4.44-9.9 9.9-9.9 2.64 0 5.13 1.03 6.99 2.9a9.82 9.82 0 0 1 2.9 6.99c0 5.46-4.45 9.76-9.01 9.76zm5.42-7.36c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg> <span>Get Price</span></a>
     </div>
   </div>
 </header>
-<div class="mobile-nav">
-  <div class="mobile-nav-panel">
-    <button class="close-btn" aria-label="Close menu">&times;</button>
-    <ul>
-      <li><details><summary>Products</summary><ul><a href="../products/domestic-flour-mill.html"><strong>Domestic Flour Mills</strong><span>For Your Home</span></a><a href="../products/commercial-flour-mill.html"><strong>Commercial Flour Mills</strong><span>For Your Business</span></a><a href="../products/pulverizer.html"><strong>Pulverizer Machines</strong><span>Food Processing</span></a><a href="../products/food-processing-machinery.html"><strong>Food Processing Machinery</strong><span>Food Processing</span></a><a href="../products/roti-maker-machine.html"><strong>Roti Maker Machines</strong><span>Making Rotis</span></a><a href="../products/kitchen-appliances.html"><strong>Kitchen Appliances</strong><span>Everyday Kitchen</span></a><a class="view-all" href="../products/products.html">View All Products &rarr;</a></ul></details></li>
-      <li><a class="" href="../compare.html">Compare</a></li>
-      <li><a class="" href="../why-jagruti.html">Why Jagruti</a></li>
-      <li><a class="" href="../about.html">About</a></li>
-      <li><details><summary>Resources</summary><ul><a href="../blog/blog.html"><strong>Blog</strong><span>Guides, tips & product articles</span></a><a href="../blog/buying-guides.html"><strong>Buying Guides</strong><span>Choosing the right machine</span></a><a href="../faq.html"><strong>FAQ</strong><span>Answers to common questions</span></a><a href="../catalogue.html"><strong>Catalogue</strong><span>Download our product catalogue</span></a></ul></details></li>
-      <li><a class="" href="../support.html">Support</a></li>
-      <li><a class="" href="../contact.html">Contact</a></li>
-    </ul>
+
+<div class="menu-side-bar" id="site-menu" hidden>
+  <div class="menu-side-bg"></div>
+  <div class="menu-side-bar-inner">
+    <div class="close-btn-wrap">
+      <button class="close-btn" aria-label="Close menu">
+        <span class="icon-menu">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="menu-text">close</span>
+      </button>
+    </div>
+    <div class="light-divider"></div>
+
+    <div class="menu-items">
+      <div class="menu-items-wrap">
+
+        <div class="link-item">
+          <button class="menu-link-heading" aria-expanded="false">
+            <span class="icon-36"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+            <span class="menu-link-title"><span class="title-inner">Products</span></span>
+            <span class="heading-chev"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="underline"></span>
+          </button>
+          <div class="link-item_links"><div class="link-item_links-inner">
+            <a href="../products/domestic-flour-mill.html" class="nav-link"><strong>Domestic Flour Mills</strong><span>For Your Home</span></a>
+            <a href="../products/commercial-flour-mill.html" class="nav-link"><strong>Commercial Flour Mills</strong><span>For Your Business</span></a>
+            <a href="../products/pulverizer.html" class="nav-link"><strong>Pulverizer Machines</strong><span>Food Processing</span></a>
+            <a href="../products/food-processing-machinery.html" class="nav-link"><strong>Food Processing Machinery</strong><span>Food Processing</span></a>
+            <a href="../products/roti-maker-machine.html" class="nav-link"><strong>Roti Maker Machines</strong><span>Making Rotis</span></a>
+            <a href="../products/kitchen-appliances.html" class="nav-link"><strong>Kitchen Appliances</strong><span>Everyday Kitchen</span></a>
+            <a href="../products/products.html" class="nav-link view-all">View All Products &rarr;</a>
+          </div></div>
+        </div>
+
+        <div class="link-item">
+          <a class="menu-link-heading" href="../compare.html">
+            <span class="icon-36"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h7v14H4zM13 6h7v9h-7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 3v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            <span class="menu-link-title"><span class="title-inner">Compare</span></span>
+            <span class="underline"></span>
+          </a>
+        </div>
+
+        <div class="link-item">
+          <a class="menu-link-heading" href="../why-jagruti.html">
+            <span class="icon-36"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.5l2.6 5.4 5.9.85-4.25 4.15 1 5.9L12 17.05 6.75 19.8l1-5.9L3.5 9.75l5.9-.85L12 3.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+            <span class="menu-link-title"><span class="title-inner">Why Jagruti</span></span>
+            <span class="underline"></span>
+          </a>
+        </div>
+
+        <div class="link-item">
+          <a class="menu-link-heading" href="../about.html">
+            <span class="icon-36"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="7.75" r="1.15" fill="currentColor"/></svg></span>
+            <span class="menu-link-title"><span class="title-inner">About</span></span>
+            <span class="underline"></span>
+          </a>
+        </div>
+
+        <div class="link-item">
+          <button class="menu-link-heading" aria-expanded="false">
+            <span class="icon-36"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13ZM20 5.5A1.5 1.5 0 0 0 18.5 4H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+            <span class="menu-link-title"><span class="title-inner">Resources</span></span>
+            <span class="heading-chev"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="underline"></span>
+          </button>
+          <div class="link-item_links"><div class="link-item_links-inner">
+            <a href="../blog/blog.html" class="nav-link"><strong>Blog</strong><span>Guides, tips &amp; product articles</span></a>
+            <a href="../blog/buying-guides.html" class="nav-link"><strong>Buying Guides</strong><span>Choosing the right machine</span></a>
+            <a href="../faq.html" class="nav-link"><strong>FAQ</strong><span>Answers to common questions</span></a>
+            <a href="../catalogue.html" class="nav-link"><strong>Catalogue</strong><span>Download our product catalogue</span></a>
+          </div></div>
+        </div>
+
+        <div class="link-item">
+          <a class="menu-link-heading" href="../support.html">
+            <span class="icon-36"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3a7 7 0 0 0-7 7v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M19 13v-3a7 7 0 0 0-3.5-6.06" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="3" y="12.5" width="3.5" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="17.5" y="12.5" width="3.5" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M19 18.5V20a1.5 1.5 0 0 1-1.5 1.5H13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+            <span class="menu-link-title"><span class="title-inner">Support</span></span>
+            <span class="underline"></span>
+          </a>
+        </div>
+
+        <div class="link-item">
+          <a class="menu-link-heading" href="../contact.html">
+            <span class="icon-36"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="menu-link-title"><span class="title-inner">Contact</span></span>
+            <span class="underline"></span>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="menu-bottom-links-group">
+        <div class="menu-bottom-links-1">
+          <span class="menu-caps">every home need&hellip;</span>
+          <a class="menu-caps link" href="tel:+917070705922">+91 70707 05922</a>
+        </div>
+        <div class="menu-bottom-links-2">
+          <a class="menu-caps link" href="https://wa.me/917070705922" target="_blank" rel="noopener">whatsapp</a>
+          <a class="menu-caps link" href="../catalogue.html">catalogue</a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <!-- NAVBAR:END -->
@@ -212,70 +301,70 @@
 </main>
 
 <!-- FOOTER:START -->
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <div class="logo-mark" style="display:inline-block;">JAGRUTI</div>
-        <p>Fully automatic domestic &amp; commercial flour mills, pulverizers, food processing machinery and roti-making machines. Manufacturing from Rajkot, Gujarat since 1995.</p>
-        <div class="footer-social">
-          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.4c0-.87.24-1.46 1.5-1.46H16.5V4.3c-.26-.03-1.15-.11-2.18-.11-2.16 0-3.64 1.32-3.64 3.74v2.08H8.2v3h2.48V21h2.82z"/></svg></a>
-          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg></a>
-          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5.5" width="19" height="13" rx="4" stroke="currentColor" stroke-width="1.7"/><path d="M10.5 9.5l5 2.5-5 2.5v-5z" fill="currentColor"/></svg></a>
-          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM3.5 9h3v11.5h-3V9zm6 0h2.9v1.6h.04c.4-.76 1.4-1.6 2.9-1.6 3.1 0 3.7 2 3.7 4.7v6.8h-3v-6c0-1.4 0-3.3-2-3.3-2 0-2.3 1.6-2.3 3.2v6.1h-3V9z"/></svg></a>
-        </div>
-      </div>
-      <div>
-        <h5>Products</h5>
-        <ul><li><a href="../products/domestic-flour-mill.html">Domestic Flour Mills</a></li><li><a href="../products/commercial-flour-mill.html">Commercial Flour Mills</a></li><li><a href="../products/pulverizer.html">Pulverizer Machines</a></li><li><a href="../products/food-processing-machinery.html">Food Processing Machinery</a></li><li><a href="../products/roti-maker-machine.html">Roti Maker Machines</a></li><li><a href="../products/kitchen-appliances.html">Kitchen Appliances</a></li></ul>
-      </div>
-      <div>
-        <h5>Company</h5>
-        <ul>
-          <li><a href="../about.html">About Jagruti</a></li>
-          <li><a href="../why-jagruti.html">Why Jagruti</a></li>
-          <li><a href="../manufacturing.html">Manufacturing</a></li>
-          <li><a href="../compare.html">Compare Products</a></li>
-          <li><a href="../blog/blog.html">Blog</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Support</h5>
-        <ul>
-          <li><a href="../support.html">Support Home</a></li>
-          <li><a href="../support/warranty.html">Warranty</a></li>
-          <li><a href="../support/service.html">Service &amp; Repairs</a></li>
-          <li><a href="../support/spare-parts.html">Spare Parts</a></li>
-          <li><a href="../faq.html">FAQ</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Get In Touch</h5>
-        <ul>
-          <li>Iscon Industrial Area, Plot No. 13&ndash;14, Lodhika Road, Ravki, Rajkot, Gujarat &ndash; 360004, India</li>
-          <li><a href="tel:+917070705922">Customer Care: +91 70707 05922</a></li>
-          <li><a href="tel:+919512305922">Trade Inquiry: +91 95123 05922</a></li>
-          <li><a href="mailto:info@jagrutiappliances.com">info@jagrutiappliances.com</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>&copy; <span data-year></span> Jagruti Appliances LLP. All rights reserved.</span>
-      <div class="legal-links">
-        <a href="../legal/privacy-policy.html">Privacy Policy</a>
-        <a href="../legal/terms-conditions.html">Terms &amp; Conditions</a>
-        <a href="../legal/shipping-delivery.html">Shipping &amp; Delivery</a>
-        <a href="../legal/cancellation-refund.html">Cancellation &amp; Refund</a>
-      </div>
-    </div>
-  </div>
-</footer>
-<div class="mobile-bar">
-  <div class="row">
-    <a class="call-btn" href="tel:+917070705922"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5c0-.55.45-1 1-1h3.15a1 1 0 0 1 .98.8l.8 3.7a1 1 0 0 1-.27.94L8 11c1.2 2.5 3.3 4.6 5.8 5.8l1.56-1.66a1 1 0 0 1 .94-.27l3.7.8a1 1 0 0 1 .8.98V21c0 .55-.45 1-1 1h-1C9.4 22 2 14.6 2 6V5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg> Call</a>
-    <a class="wa-btn" href="https://wa.me/917070705922?text=Hi%20Jagruti%20Appliances%2C%20I%27d%20like%20to%20know%20more%20about%20your%20products%20and%20current%20pricing." target="_blank" rel="noopener"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.01 3C9.38 3 4 8.38 4 15.01c0 2.35.66 4.55 1.8 6.43L4 29l7.76-1.72a11.94 11.94 0 0 0 4.25.78h.01c6.63 0 12-5.38 12-12.01C28.02 8.38 22.64 3 16.01 3zm0 21.8h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-4.6 1.02 1-4.48-.24-.37a9.83 9.83 0 0 1-1.52-5.33c0-5.46 4.44-9.9 9.9-9.9 2.64 0 5.13 1.03 6.99 2.9a9.82 9.82 0 0 1 2.9 6.99c0 5.46-4.45 9.76-9.01 9.76zm5.42-7.36c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg> WhatsApp</a>
-  </div>
-</div>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo-mark" style="display:inline-block;">JAGRUTI</div>
+        <p>Fully automatic domestic &amp; commercial flour mills, pulverizers, food processing machinery and roti-making machines. Manufacturing from Rajkot, Gujarat since 1995.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.4c0-.87.24-1.46 1.5-1.46H16.5V4.3c-.26-.03-1.15-.11-2.18-.11-2.16 0-3.64 1.32-3.64 3.74v2.08H8.2v3h2.48V21h2.82z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5.5" width="19" height="13" rx="4" stroke="currentColor" stroke-width="1.7"/><path d="M10.5 9.5l5 2.5-5 2.5v-5z" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM3.5 9h3v11.5h-3V9zm6 0h2.9v1.6h.04c.4-.76 1.4-1.6 2.9-1.6 3.1 0 3.7 2 3.7 4.7v6.8h-3v-6c0-1.4 0-3.3-2-3.3-2 0-2.3 1.6-2.3 3.2v6.1h-3V9z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h5>Products</h5>
+        <ul><li><a href="../products/domestic-flour-mill.html">Domestic Flour Mills</a></li><li><a href="../products/commercial-flour-mill.html">Commercial Flour Mills</a></li><li><a href="../products/pulverizer.html">Pulverizer Machines</a></li><li><a href="../products/food-processing-machinery.html">Food Processing Machinery</a></li><li><a href="../products/roti-maker-machine.html">Roti Maker Machines</a></li><li><a href="../products/kitchen-appliances.html">Kitchen Appliances</a></li></ul>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul>
+          <li><a href="../about.html">About Jagruti</a></li>
+          <li><a href="../why-jagruti.html">Why Jagruti</a></li>
+          <li><a href="../manufacturing.html">Manufacturing</a></li>
+          <li><a href="../compare.html">Compare Products</a></li>
+          <li><a href="../blog/blog.html">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Support</h5>
+        <ul>
+          <li><a href="../support.html">Support Home</a></li>
+          <li><a href="../support/warranty.html">Warranty</a></li>
+          <li><a href="../support/service.html">Service &amp; Repairs</a></li>
+          <li><a href="../support/spare-parts.html">Spare Parts</a></li>
+          <li><a href="../faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Get In Touch</h5>
+        <ul>
+          <li>Iscon Industrial Area, Plot No. 13&ndash;14, Lodhika Road, Ravki, Rajkot, Gujarat &ndash; 360004, India</li>
+          <li><a href="tel:+917070705922">Customer Care: +91 70707 05922</a></li>
+          <li><a href="tel:+919512305922">Trade Inquiry: +91 95123 05922</a></li>
+          <li><a href="mailto:info@jagrutiappliances.com">info@jagrutiappliances.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span data-year></span> Jagruti Appliances LLP. All rights reserved.</span>
+      <div class="legal-links">
+        <a href="../legal/privacy-policy.html">Privacy Policy</a>
+        <a href="../legal/terms-conditions.html">Terms &amp; Conditions</a>
+        <a href="../legal/shipping-delivery.html">Shipping &amp; Delivery</a>
+        <a href="../legal/cancellation-refund.html">Cancellation &amp; Refund</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<div class="mobile-bar">
+  <div class="row">
+    <a class="call-btn" href="tel:+917070705922"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5c0-.55.45-1 1-1h3.15a1 1 0 0 1 .98.8l.8 3.7a1 1 0 0 1-.27.94L8 11c1.2 2.5 3.3 4.6 5.8 5.8l1.56-1.66a1 1 0 0 1 .94-.27l3.7.8a1 1 0 0 1 .8.98V21c0 .55-.45 1-1 1h-1C9.4 22 2 14.6 2 6V5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg> Call</a>
+    <a class="wa-btn" href="https://wa.me/917070705922?text=Hi%20Jagruti%20Appliances%2C%20I%27d%20like%20to%20know%20more%20about%20your%20products%20and%20current%20pricing." target="_blank" rel="noopener"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.01 3C9.38 3 4 8.38 4 15.01c0 2.35.66 4.55 1.8 6.43L4 29l7.76-1.72a11.94 11.94 0 0 0 4.25.78h.01c6.63 0 12-5.38 12-12.01C28.02 8.38 22.64 3 16.01 3zm0 21.8h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-4.6 1.02 1-4.48-.24-.37a9.83 9.83 0 0 1-1.52-5.33c0-5.46 4.44-9.9 9.9-9.9 2.64 0 5.13 1.03 6.99 2.9a9.82 9.82 0 0 1 2.9 6.99c0 5.46-4.45 9.76-9.01 9.76zm5.42-7.36c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg> WhatsApp</a>
+  </div>
+</div>
 <a class="float-wa" href="https://wa.me/917070705922?text=Hi%20Jagruti%20Appliances%2C%20I%27d%20like%20to%20know%20more%20about%20your%20products%20and%20current%20pricing." target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.01 3C9.38 3 4 8.38 4 15.01c0 2.35.66 4.55 1.8 6.43L4 29l7.76-1.72a11.94 11.94 0 0 0 4.25.78h.01c6.63 0 12-5.38 12-12.01C28.02 8.38 22.64 3 16.01 3zm0 21.8h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-4.6 1.02 1-4.48-.24-.37a9.83 9.83 0 0 1-1.52-5.33c0-5.46 4.44-9.9 9.9-9.9 2.64 0 5.13 1.03 6.99 2.9a9.82 9.82 0 0 1 2.9 6.99c0 5.46-4.45 9.76-9.01 9.76zm5.42-7.36c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg></a>
 <!-- FOOTER:END -->
 

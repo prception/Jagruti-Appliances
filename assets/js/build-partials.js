@@ -23,7 +23,7 @@ const PARTIALS = [
     terminalTag: '<main',
     findFreshStart: (content) => content.indexOf('<header class="site-header">'),
     findFreshEnd: (content, blockStart) => {
-      const mobStart = content.indexOf('<div class="mobile-nav">', blockStart);
+      const mobStart = content.indexOf('<div class="menu-side-bar"', blockStart);
       return mobStart === -1 ? -1 : content.indexOf('<main', mobStart);
     },
     useActiveTokens: true,
