@@ -845,8 +845,8 @@ body.menu-open { overflow: hidden; }
   .link-item_links .nav-link strong { font-size: 1.25em; }
 }
 @media (max-width: 600px) {
-  /* The label is redundant next to the icon once space is tight, and dropping
-     it keeps the wordmark centered against the action button. */
+  /* The label is redundant next to the icon once space is tight, so the bar
+     is left as the icon and the centred wordmark. */
   .menu-btn-wrap .menu-text { display: none; }
   .icon-36 { width: 1.9em; height: 1.9em; }
   /* Narrower slide so the shifted title still clears the panel edge. */
@@ -1463,6 +1463,10 @@ body.menu-open { overflow: hidden; }
 }
 .float-wa svg { width: 30px; height: 30px; }
 .float-wa:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,.3); }
+/* Same attention cue the header's Get Price button carries, which matters most
+   at the narrow widths where the bubble replaces that button outright. */
+.float-wa { animation: waPulse 2.6s ease-in-out infinite; }
+.float-wa:hover { animation-play-state: paused; }
 
 /* --- Mobile sticky action bar: hidden until the narrow breakpoint --- */
 /* Height of the sticky bar, for anything that must sit clear of it. Zero
@@ -1966,16 +1970,26 @@ body.menu-open { overflow: hidden; }
      instead drop the bar from every page, which is not what is wanted. */
   :root:has(.hero-parallax) { --mobile-bar-h: 0px; }
   :root:has(.hero-parallax) .mobile-bar { display: none; }
-  /* The floating WhatsApp bubble is dropped on tablet and mobile. The
-     sticky call/WhatsApp bar above already carries the same action at this
-     width, so the bubble was a duplicate of it sitting in the corner - and
-     on the home page, which hides that bar, the hero's own scroll cue and
-     scene dots occupy this corner instead.
+  /* On tablet and mobile the header's "Get Price" action is dropped from the
+     bar and carried by the floating WhatsApp bubble in the bottom-right
+     corner instead, so the narrow header holds only MENU and the wordmark.
 
-     Hidden in CSS rather than removed from the markup for the same reason
-     the bar is: build-partials.js rewrites each page's shared blocks, so
-     deleted markup comes straight back the next time it runs. */
-  .float-wa { display: none; }
+     Hidden in CSS rather than removed from the markup: navbar.html is a
+     shared partial and build-partials.js rewrites each page's NAVBAR block,
+     so deleted markup comes straight back the next time it runs. */
+  .header-actions { display: none; }
+
+  /* The bubble is the only WhatsApp affordance in the corner at this width;
+     it is lifted clear of the sticky call/WhatsApp bar where that bar shows
+     (--mobile-bar-h is 0 on the home page, which hides it). The hero's own
+     scroll cue and scene dots are centred at this breakpoint, so the corner
+     is free. */
+  .float-wa {
+    display: grid;
+    right: max(16px, var(--gutter));
+    bottom: calc(var(--mobile-bar-h) + 16px);
+    z-index: 60;
+  }
   body { padding-bottom: 0; }
   .form-row-2 { grid-template-columns: 1fr; }
 }

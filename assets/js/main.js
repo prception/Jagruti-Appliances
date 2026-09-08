@@ -316,6 +316,12 @@
           // data-reveal-play may carry a delay in ms: the tile holds on its
           // poster that long after arriving, so the card reads as a still
           // first and the motion starts once the eye has settled on it.
+          // These clips ship preload="none" so they cost nothing on the
+          // initial load. The tile is on screen now and will want to play in
+          // `wait` ms, so start buffering at reveal time — otherwise the hold
+          // elapses and playback then stalls waiting on the first bytes.
+          warmUp(video);
+
           var wait = parseInt(video.getAttribute("data-reveal-play"), 10);
           if (!(wait > 0)) { startVideo(video); return; }
           window.setTimeout(function () {
@@ -329,6 +335,15 @@
           }, wait);
         });
       }
+    }
+
+    // preload="none" means the browser has fetched nothing at all. Flipping
+    // the hint and calling load() begins buffering without playing, so the
+    // poster stays up while the clip arrives.
+    function warmUp(video) {
+      if (video.preload !== "none") return;   // already warmed or hinted
+      video.preload = "auto";
+      try { video.load(); } catch (e) {}
     }
 
     function startVideo(video) {
