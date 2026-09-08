@@ -1116,35 +1116,40 @@ body.menu-open { overflow: hidden; }
 }
 
 /* --- The burst -------------------------------------------------------
-   Every cluster shares duration, easing, stagger and start scale. Only the
-   travel distance differs, and it is set per cluster from that artwork's
+   Cued at 320ms, the same moment the machine begins rising, so the splash
+   and the product arrive together rather than the splash trailing it. The
+   right cluster keeps a small 80ms offset behind the left purely so the two
+   sides do not read as one symmetrical pop.
+
+   Every cluster shares duration, easing and start scale. Only the travel
+   distance differs, and it is set per cluster from that artwork's
    visual mass: the bowls carry ~82k opaque px, the fruit ~33k and the
    spices ~24k, so identical percentages would move very different amounts
    of material and read as very different energy. Lighter clusters travel
    further to land with the same weight. */
 .js .hero-scene.is-current .hl-bowlL,
 .js .hero-scene.is-entering .hl-bowlL {
-  animation: heroBowlLeftIn 1150ms cubic-bezier(.16,.9,.3,1.06) 860ms both;
+  animation: heroBowlLeftIn 1150ms cubic-bezier(.16,.9,.3,1.06) 320ms both;
 }
 .js .hero-scene.is-current .hl-bowlR,
 .js .hero-scene.is-entering .hl-bowlR {
-  animation: heroBowlRightIn 1150ms cubic-bezier(.16,.9,.3,1.06) 1000ms both;
+  animation: heroBowlRightIn 1150ms cubic-bezier(.16,.9,.3,1.06) 400ms both;
 }
 .js .hero-scene.is-current .hl-fruitL,
 .js .hero-scene.is-entering .hl-fruitL {
-  animation: heroFruitLeftIn 1150ms cubic-bezier(.16,.9,.3,1.06) 860ms both;
+  animation: heroFruitLeftIn 1150ms cubic-bezier(.16,.9,.3,1.06) 320ms both;
 }
 .js .hero-scene.is-current .hl-fruitR,
 .js .hero-scene.is-entering .hl-fruitR {
-  animation: heroFruitRightIn 1150ms cubic-bezier(.16,.9,.3,1.06) 1000ms both;
+  animation: heroFruitRightIn 1150ms cubic-bezier(.16,.9,.3,1.06) 400ms both;
 }
 .js .hero-scene.is-current .hl-spiceL,
 .js .hero-scene.is-entering .hl-spiceL {
-  animation: heroSpiceLeftIn 1150ms cubic-bezier(.16,.9,.3,1.06) 860ms both;
+  animation: heroSpiceLeftIn 1150ms cubic-bezier(.16,.9,.3,1.06) 320ms both;
 }
 .js .hero-scene.is-current .hl-spiceR,
 .js .hero-scene.is-entering .hl-spiceR {
-  animation: heroSpiceRightIn 1150ms cubic-bezier(.16,.9,.3,1.06) 1000ms both;
+  animation: heroSpiceRightIn 1150ms cubic-bezier(.16,.9,.3,1.06) 400ms both;
 }
 
 /* Burst keyframes. Every cluster shares duration, easing, stagger and start
