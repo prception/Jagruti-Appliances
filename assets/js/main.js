@@ -646,6 +646,27 @@
     window.addEventListener("load", function () { done(); }, { once: true });
   }
 
+  /* ---------------- Timeline observer ---------------- */
+  function initTimelineObserver() {
+    var items = document.querySelectorAll("[data-timeline-item]");
+    if (!items.length) return;
+
+    if (!("IntersectionObserver" in window)) {
+      items.forEach(function (el) { el.classList.add("active"); });
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("active");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -10% 0px" });
+
+    items.forEach(function (el) { observer.observe(el); });
+  }
+
   /* ---------------- Year stamp ---------------- */
   function initYear() {
     document.querySelectorAll("[data-year]").forEach(function (el) { el.textContent = new Date().getFullYear(); });
@@ -660,6 +681,7 @@
     initContactForm();
     initYear();
     initScrollReveal();
+    initTimelineObserver();
 
     // The hero's opening entrance is the first thing a visitor should see, so
     // it starts only once the curtain is on its way up — otherwise scene 1
