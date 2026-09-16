@@ -6,6 +6,47 @@
    so every component on the site inherits the same brand colour.
    ========================================================================== */
 
+/* ==========================================================================
+   Webfont — General Sans (Fontshare / Indian Type Foundry)
+   Self-hosted from assets/fonts/ rather than hotlinked from Fontshare's
+   CDN: no third-party request on page load, no visitor data leaving the
+   site, and no outage in someone else's infrastructure taking our type
+   with it. Paths are relative to THIS file (assets/css/), hence ../fonts/.
+
+   Only the four weights the stylesheet actually uses are shipped, ~96KB
+   total. `font-display: swap` renders fallback text immediately and swaps
+   General Sans in when it arrives, so copy is never invisible while the
+   font loads.
+   ========================================================================== */
+@font-face {
+  font-family: 'General Sans';
+  src: url('../fonts/GeneralSans-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('../fonts/GeneralSans-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('../fonts/GeneralSans-600.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('../fonts/GeneralSans-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
 :root {
   /* ---- Brand anchors (sampled from artwork) ---- */
   --brand-primary: #0d8ac4;  /* Jagruti Blue — fills the wordmark */
@@ -69,10 +110,16 @@
 
   /* ---- Typography ----
      Geometric grotesque with a tall x-height and near-circular bowls.
-     Aeonik (the reference face) is a paid licence, so Poppins is the
-     free stand-in with the closest construction; if the Aeonik licence
-     is ever bought, swap the first name here and nothing else changes. */
-  --font-sans: "Poppins", "Segoe UI", -apple-system, BlinkMacSystemFont,
+     General Sans (Fontshare / Indian Type Foundry) is the face, chosen as
+     the closest free stand-in for Aeonik — same geometric-grotesque
+     construction and single-storey `a`, without Aeonik's commercial
+     licence. It is self-hosted from assets/fonts/ (see the @font-face
+     blocks above), NOT hotlinked from Fontshare's CDN, so the site owns
+     its own delivery and leaks no visitor data to a third party.
+     Four weights ship: 400/500/600/700 — the exact set this stylesheet
+     uses. Anything outside that range gets synthesised by the browser,
+     so add a real file rather than reaching for 800. */
+  --font-sans: "General Sans", "Segoe UI", -apple-system, BlinkMacSystemFont,
                "Helvetica Neue", Arial, sans-serif;
 
   /* Heading colour — headings sit a step lighter than body ink, the way
@@ -83,11 +130,80 @@
      Every section on every page uses this. Do not introduce a second
      section background; use borders, cards and shadows for separation. */
   --page-bg: var(--brand-canvas);
+
+  /* ==== Type scale ====
+     One ramp for the whole site. Every size below is a step on it, and
+     nothing outside this block should invent a size of its own — reach
+     for the nearest step instead.
+
+     Deliberately `em`, not px-bounded clamp(): the fluid root on `html`
+     below already scales this whole ramp with the viewport, and px
+     bounds here would pin the result and defeat that. The px comment
+     beside each step is its delivered size at the 16px root (1440px
+     viewport), not a fixed value.
+
+     The ratio is roughly 1.25 (major third) through the body range and
+     opens up above it, so display sizes separate clearly from titles
+     while prose steps stay close enough to feel like one family. */
+  --fs-caption: .75em;   /* 12px — timestamps, form notes, fine print */
+  --fs-label:   .875em;  /* 14px — eyebrows, tags, table headers, meta */
+  --fs-small:   1em;     /* 16px — dense UI copy, card descriptions */
+  --fs-body:    1.13em;  /* 18px — running prose: p, li, blockquote */
+  --fs-lead:    1.25em;  /* 20px — intro paragraph under a title */
+  --fs-h6:      1.2em;   /* 19px */
+  --fs-h5:      1.5em;   /* 24px */
+  --fs-h4:      1.88em;  /* 30px */
+  --fs-h3:      2.19em;  /* 35px */
+  --fs-h2:      2.5em;   /* 40px */
+  --fs-h1:      3em;     /* 48px */
+  --fs-display: 3.75em;  /* 60px — hero and page-opening statements */
+
+  /* Section-head aliases. Kept as names so a section's three-part head
+     (eyebrow / title / lead) is tuned in one place; they point at the
+     ramp above rather than carrying sizes of their own. */
+  --fs-eyebrow: var(--fs-label);
+  --fs-title:   var(--fs-h2);
+
+  /* ==== Weight ====
+     Three weights carry the whole site, and the contrast between them is
+     what builds hierarchy — not size alone:
+       700 headings and display   — the only weight that reads as "bold"
+       500 labels and UI chrome   — eyebrows, tags, buttons, nav, meta
+       400 prose                  — every paragraph and list item
+     600 exists in the loaded set and stays available for the rare label
+     that must out-rank its neighbours, but prefer 500.
+
+     General Sans ships here at 400/500/600/700 only (see @font-face
+     above). 800 and 900 are NOT loaded — asking for them makes the
+     browser synthesise a smeared fake bold, so 700 is the real ceiling.
+     Anything heavier needs a real font file added first. */
+  --fw-body:    400;
+  --fw-label:   500;
+  --fw-strong:  600;
+  --fw-title:   700;
+
+  /* ==== Line height ====
+     Tight for display (large text needs less leading to look set), open
+     for prose (small text needs more to stay readable). */
+  --lh-display: 105%;
+  --lh-title:   125%;
+  --lh-body:    155%;
+  --lh-tight:   120%;
+
+  /* ==== Tracking ====
+     Large type tightens optically; small caps-y labels open up. */
+  --ls-display: -.025em;
+  --ls-title:   -.02em;
+  --ls-body:    0;
+  --ls-label:   .12em;
 }
 
 * { box-sizing: border-box; }
 html {
-  scroll-behavior: smooth;
+  /* No `scroll-behavior: smooth` here on purpose. Lenis animates the scroll
+     position itself, and the native smooth behaviour fights it: the browser
+     and Lenis both try to own the same easing, which reads as a stutter.
+     Anchor scrolling goes through lenis.scrollTo() in main.js instead. */
   /* Fluid root: the whole em-based scale below rides on this one value,
      so every heading, body size and utility step scales together with the
      viewport instead of stepping at breakpoints.
@@ -126,86 +242,107 @@ ul { list-style: none; margin: 0; padding: 0; }
 button { font-family: inherit; cursor: pointer; }
 
 /* ---------- Tag defaults ----------
-   Heading weight is 500 (Medium) throughout — never bold. Display sizes
+   Heading weight is 700 (Bold) throughout. Body copy stays at 400, so the
+   contrast between the two is what carries the hierarchy. Display sizes
    tighten optically; body sizing stays at 0 tracking. */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans);
-  font-weight: 500;
+  font-weight: 700;
   color: var(--heading-color);
 }
-h1 { margin: 0 0 1em;  font-size: 3em;    line-height: 120%; letter-spacing: -0.02em; } /* 48px */
-h2 { margin: 2em 0 .5em; font-size: 2.5em;  line-height: 130%; letter-spacing: -0.02em; } /* 40px */
-h3 { margin: 0 0 .5em; font-size: 2.19em; line-height: 130%; letter-spacing: -0.02em; } /* 35px */
-h4 { margin: 0 0 .4em; font-size: 1.88em; line-height: 130%; letter-spacing: -0.01em; } /* 30px */
-h5 { margin: 0 0 .4em; font-size: 1.5em;  line-height: 120%; letter-spacing: -0.01em; } /* 24px */
-h6 { margin: 0 0 .4em; font-size: 1.2em;  line-height: 120%; letter-spacing: -0.01em; } /* 19px */
+h1 { margin: 0 0 1em;    font-size: var(--fs-h1); line-height: var(--lh-title); letter-spacing: var(--ls-title); }
+h2 { margin: 2em 0 .5em; font-size: var(--fs-h2); line-height: var(--lh-title); letter-spacing: var(--ls-title); }
+h3 { margin: 0 0 .5em;   font-size: var(--fs-h3); line-height: var(--lh-title); letter-spacing: var(--ls-title); }
+h4 { margin: 0 0 .4em;   font-size: var(--fs-h4); line-height: var(--lh-title); letter-spacing: -0.01em; }
+h5 { margin: 0 0 .4em;   font-size: var(--fs-h5); line-height: var(--lh-tight); letter-spacing: -0.01em; }
+h6 { margin: 0 0 .4em;   font-size: var(--fs-h6); line-height: var(--lh-tight); letter-spacing: -0.01em; }
 
-p  { margin: .5em 0 1em; font-size: 1.13em; line-height: 140%; color: var(--ink-700); } /* 18px */
-li { font-size: 1.13em; line-height: 140%; color: var(--ink-700); }                      /* 18px */
+/* Prose. 400 weight, the open body leading, and the one body size — the
+   contrast against the 700 headings above is what carries the hierarchy,
+   so body copy never needs to reach for a heavier weight to be read. */
+p  { margin: .5em 0 1em; font-size: var(--fs-body); line-height: var(--lh-body); color: var(--ink-700); }
+li { font-size: var(--fs-body); line-height: var(--lh-body); color: var(--ink-700); }
 blockquote {
   margin: 0 0 10px;
   padding: 10px 20px;
   border-left: 5px solid var(--blue-400);
-  font-size: 1.13em;
-  font-weight: 500;
-  line-height: 130%;
+  font-size: var(--fs-lead);
+  font-weight: var(--fw-body);
+  line-height: var(--lh-title);
   color: var(--ink-700);
 }
-small { font-size: .875em; }
-/* The two deliberate exceptions to the 400/500 system below: <strong>/<b>
-   carry semantic emphasis inside running prose (the reference has no body
-   prose at all, so it never faces this), and .logo-mark is a wordmark, not
-   text in the scale. Everything else on the site is 400 or 500. */
+small { font-size: var(--fs-label); }
+/* Body prose is 400 and headings are 700. <strong>/<b> sits at 700 to carry
+   semantic emphasis inside running prose, and .logo-mark is a wordmark, not
+   text in the scale. The .text-*-medium utilities run at 600 so mid-level
+   labels stay visibly subordinate to the 700 headings. */
 strong, b { font-weight: 700; }
 
 /* ==========================================================================
-   Utility type scale — .text-{px}-{weight}
-   Named for the desktop px size at the 16px root. `-medium` is 500,
-   `-regular` is 400, `-caps` adds uppercase. Colour is inherited by
-   default so a utility can sit on any ground; add a colour class or a
-   parent colour to steer it.
-   ========================================================================== */
-[class*="text-"] { font-family: var(--font-sans); margin-top: 0; margin-bottom: 0; }
+   Semantic type utilities
 
-.text-11-regular  { font-size: .69em; font-weight: 400; line-height: 100%; }  /* 11px */
-.text-12-caps     { font-size: .75em; font-weight: 400; line-height: 120%; text-transform: uppercase; letter-spacing: .12em; } /* 12px */
-.text-14-regular  { font-size: .88em; font-weight: 400; line-height: 120%; }  /* 14px */
-.text-14-caps     { font-size: .9em;  font-weight: 400; line-height: 120%; text-transform: uppercase; letter-spacing: .1em; }  /* 14.4px */
-.text-16-regular  { font-size: 1em;   font-weight: 400; line-height: 120%; }  /* 16px */
-.text-16-regular-caps { font-size: 1em; font-weight: 400; line-height: 130%; text-transform: uppercase; letter-spacing: .08em; }
-.text-16-medium-caps  { font-size: 1em; font-weight: 500; line-height: 120%; text-transform: uppercase; letter-spacing: .08em; }
-.text-18-regular  { font-size: 1.13em; font-weight: 400; line-height: 130%; } /* 18px */
-.text-18-caps     { font-size: 1.13em; font-weight: 400; line-height: 120%; text-transform: uppercase; letter-spacing: .06em; }
-.text-20-regular  { font-size: 1.25em; font-weight: 400; line-height: 130%; } /* 20px */
-.text-20-medium   { font-size: 1.25em; font-weight: 500; line-height: 120%; }
-.text-22-regular  { font-size: 1.38em; font-weight: 400; line-height: 120%; } /* 22px */
-.text-22-medium   { font-size: 1.5em;  font-weight: 500; line-height: 120%; } /* 24px */
-.text-24-regular  { font-size: 1.5em;  font-weight: 400; line-height: 120%; } /* 24px */
-.text-26-regular  { font-size: 1.63em; font-weight: 400; line-height: 100%; } /* 26px */
-.text-26-medium   { font-size: 1.63em; font-weight: 500; line-height: 100%; }
-.text-27-medium   { font-size: 1.69em; font-weight: 500; line-height: 120%; letter-spacing: -.01em; } /* 27px */
-.text-30-regular  { font-size: 1.88em; font-weight: 400; line-height: 120%; } /* 30px */
-.text-30-medium   { font-size: 1.88em; font-weight: 500; line-height: 120%; }
-.text-32-regular  { font-size: 2em;    font-weight: 400; line-height: 100%; } /* 32px */
-.text-32-medium   { font-size: 2em;    font-weight: 500; line-height: 110%; letter-spacing: -.02em; }
-.text-33-medium   { font-size: 2.06em; font-weight: 500; line-height: 120%; } /* 33px */
-.text-35-regular  { font-size: 2.19em; font-weight: 400; line-height: 110%; letter-spacing: -.02em; } /* 35px */
-.text-40-regular  { font-size: 2.5em;  font-weight: 400; line-height: 120%; } /* 40px */
-.text-40-medium   { font-size: 2.5em;  font-weight: 500; line-height: 120%; letter-spacing: -.03em; }
-.text-44-medium   { font-size: 2.75em; font-weight: 500; line-height: 100%; } /* 44px */
-.text-45-regular  { font-size: 2.4em;  font-weight: 400; line-height: 100%; letter-spacing: -.02em; } /* 38.4px */
-.text-45-medium   { font-size: 2.81em; font-weight: 500; line-height: 100%; letter-spacing: -.02em; } /* 45px */
-.text-48-medium   { font-size: 3em;    font-weight: 500; line-height: 90%;  letter-spacing: -.02em; } /* 48px */
-.text-58-regular  { font-size: 3.62em; font-weight: 400; line-height: 110%; letter-spacing: -.01em; } /* 58px */
-.text-60-regular  { font-size: 3.75em; font-weight: 400; line-height: 90%;  letter-spacing: -.01em; } /* 60px */
-.text-60-medium   { font-size: 3.75em; font-weight: 500; line-height: 110%; letter-spacing: -.02em; }
-.text-71-medium   { font-size: 4.44em; font-weight: 500; line-height: 110%; letter-spacing: -.02em; } /* 71px */
-.text-80-regular  { font-size: 3.9em;  font-weight: 400; line-height: 90%;  letter-spacing: -.02em; } /* 62px */
-.text-80-medium   { font-size: 4.3em;  font-weight: 500; line-height: 90%;  letter-spacing: -.02em; } /* 69px */
-.text-90-regular  { font-size: 6.1em;  font-weight: 400; line-height: 100%; letter-spacing: -.01em; } /* 98px */
-.text-100-regular { font-size: 6.25em; font-weight: 400; line-height: 95%;  letter-spacing: -.01em; } /* 100px */
-.text-120-medium  { font-size: 7.56em; font-weight: 500; line-height: 120%; letter-spacing: -.02em; } /* 121px */
-.text-160-regular { font-size: 10em;   font-weight: 400; line-height: 110%; letter-spacing: -.02em; } /* 160px */
+   Named for the JOB the text does, not its pixel size — `.lead` stays the
+   lead paragraph after the ramp is retuned, where a `.text-20-regular`
+   would quietly become a lie. Each one is a step on the --fs-* ramp in
+   :root; none invents a size of its own.
+
+   Colour is inherited so a utility can sit on any ground; add a colour
+   class or a parent colour to steer it.
+
+   This replaced a 40-class `.text-{px}-{weight}` scale that no page ever
+   referenced — and which had drifted internally (`.text-22-medium` was
+   24px, `.text-45-regular` 38.4px). If you need a size that is not here,
+   add a step to the ramp rather than a one-off rule.
+   ========================================================================== */
+.u-display, .u-title, .u-lead, .u-body,
+.u-small, .u-label, .u-caption {
+  font-family: var(--font-sans);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Display — hero and page-opening statements. Tight leading and negative
+   tracking: at this size the default spacing reads as loose. */
+.u-display {
+  font-size: var(--fs-display); font-weight: var(--fw-title);
+  line-height: var(--lh-display); letter-spacing: var(--ls-display);
+  color: var(--heading-color);
+}
+/* Title — a section heading outside the h1–h6 flow. */
+.u-title {
+  font-size: var(--fs-title); font-weight: var(--fw-title);
+  line-height: var(--lh-title); letter-spacing: var(--ls-title);
+  color: var(--heading-color);
+}
+/* Lead — the intro paragraph under a title. One step above body, still
+   400: it earns emphasis from size, not weight. */
+.u-lead {
+  font-size: var(--fs-lead); font-weight: var(--fw-body);
+  line-height: var(--lh-body); color: var(--ink-700);
+}
+/* Body — running prose. Matches the p/li defaults, for when the element
+   is not a p (a div, a td) but should read as prose. */
+.u-body {
+  font-size: var(--fs-body); font-weight: var(--fw-body);
+  line-height: var(--lh-body); color: var(--ink-700);
+}
+/* Small — dense UI copy: card descriptions, table cells, helper text. */
+.u-small {
+  font-size: var(--fs-small); font-weight: var(--fw-body);
+  line-height: var(--lh-body); color: var(--ink-700);
+}
+/* Label — eyebrows, tags, meta, column heads. Uppercase and tracked out;
+   500 so it reads as chrome, clearly subordinate to a 700 heading. */
+.u-label {
+  font-size: var(--fs-label); font-weight: var(--fw-label);
+  line-height: var(--lh-tight); letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+}
+/* Caption — timestamps, form notes, fine print. The floor of the ramp. */
+.u-caption {
+  font-size: var(--fs-caption); font-weight: var(--fw-body);
+  line-height: var(--lh-tight); color: var(--ink-500);
+}
 
 .container { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
 .section { padding: 72px 0; background: var(--page-bg); }
@@ -216,9 +353,9 @@ strong, b { font-weight: 700; }
 .section-alt { background: var(--page-bg); }
 .eyebrow {
   display: inline-block;
-  font-size: .75em;
-  font-weight: 500;
-  letter-spacing: .12em;
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--ls-label);
   text-transform: uppercase;
   color: var(--blue-600);
   background: var(--blue-100);
@@ -229,8 +366,12 @@ strong, b { font-weight: 700; }
 .section-head { max-width: 700px; margin: 0 auto 44px; text-align: center; }
 /* h2 inside a section head loses the tag's top margin — the section
    padding already supplies the space. */
-.section-head h2 { margin-top: 0; font-size: 2.5em; line-height: 130%; letter-spacing: -.02em; }
-.section-head p  { font-size: 1.13em; line-height: 140%; }
+.section-head h2 { margin-top: 0; font-size: var(--fs-title); font-weight: var(--fw-title); line-height: var(--lh-title); letter-spacing: var(--ls-title); }
+/* The lead under a section title. 400 weight and one step above body —
+   size carries the emphasis, so it never competes with the 700 h2. */
+.section-head p  { font-size: var(--fs-lead); font-weight: var(--fw-body); line-height: var(--lh-body); }
+.need-section .section-head p,
+.ranges-section .section-head p { font-size: .875em; line-height: 1.6; }
 
 /* ---------- Buttons ----------
    One geometry for every button on the site, following the reference:
@@ -382,20 +523,33 @@ body:has(> main > .hero:first-child) main > .hero:first-child { padding-top: var
 body:has(> main > .hero:first-child) .site-header:not(.is-scrolled) .menu-btn-wrap {
   color: #fff;
 }
-/* The wordmark keeps its brand blue on every page, which the dark hero photo
-   would otherwise swallow. Rather than recolouring the mark, the pill carries
-   its own light ground: the logo reads as a solid badge on the photo and the
-   blue stays at full contrast against white instead of against the image. */
-body:has(> main > .hero:first-child) .site-header:not(.is-scrolled) .logo-mark {
-  background: rgba(255,255,255,.94);
-  box-shadow: 0 2px 12px rgba(5,61,87,.18);
+/* The logo is never altered to suit the hero: no recolour, no shadow, no
+   ground of its own. It renders as the brand artwork on every page. What
+   changes instead is the photo behind it.
+
+   The hero sky sits at roughly the logo's own blue (~1.04:1 contrast), so the
+   mark is invisible until the picture behind it is darkened. This scrim is a
+   top-down gradient across the header band only, fading out well before the
+   hero copy: the brand blue then reads against a deeper sky instead of an
+   equally bright one. It hangs off .site-header rather than .hero because the
+   header is fixed and .hero is overflow:hidden, which would clip it.
+   Full-bleed and fading to nothing, it reads as depth in the photograph
+   rather than as a panel behind the logo. */
+body:has(> main > .hero:first-child) .site-header:not(.is-scrolled)::before {
+  content: "";
+  position: absolute; left: 0; right: 0; top: 0;
+  height: calc(var(--header-h) + 46px);
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(180deg,
+    rgba(0,22,36,.86) 0%,
+    rgba(0,22,36,.74) 42%,
+    rgba(0,22,36,.46) 68%,
+    rgba(0,22,36,.16) 88%,
+    transparent 100%);
 }
-/* The tagline has no pill behind it, so on the photo it takes the light
-   treatment to stay readable beside the badge. */
-body:has(> main > .hero:first-child) .site-header:not(.is-scrolled) .logo-tag {
-  color: rgba(255,255,255,.88);
-  text-shadow: 0 1px 3px rgba(0,0,0,.45);
-}
+/* The bar's own controls sit above the scrim. */
+body:has(> main > .hero:first-child) .site-header .nav-wrap { position: relative; z-index: 1; }
 
 /* ---------- MENU button ----------
    Icon + lowercase caps label, exactly the reference's "menu" affordance.
@@ -432,6 +586,15 @@ body:has(> main > .hero:first-child) .site-header:not(.is-scrolled) .logo-tag {
    under it without shifting the baseline the other two controls share. */
 .logo { display: flex; align-items: center; align-self: center; justify-content: center; gap: 10px; flex: none; }
 .logo > div { position: relative; }
+/* The real brand logo is a single lockup: the badge already carries both the
+   wordmark and the "Every Home Need..." tagline, so no separate text sits
+   beside it. Height drives the size and width follows the 986x256 aspect,
+   which keeps it from crowding the 76px bar. */
+.logo-img {
+  display: block; height: 46px; width: auto; max-width: 100%;
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.logo:hover .logo-img { transform: translateY(-1px) scale(1.03); }
 .logo-mark {
   position: relative; overflow: hidden;
   font-weight: 700; font-size: 1.3125em; /* 21px */ letter-spacing: .02em; color: var(--blue-700);
@@ -846,8 +1009,11 @@ body.menu-open { overflow: hidden; }
 }
 @media (max-width: 600px) {
   /* The label is redundant next to the icon once space is tight, so the bar
-     is left as the icon and the centred wordmark. */
+     is left as the icon and the centred logo. */
   .menu-btn-wrap .menu-text { display: none; }
+  /* Icon + logo + WhatsApp pill share a narrow bar, so the lockup steps down
+     rather than squeezing the action off the edge. */
+  .logo-img { height: 34px; }
   .icon-36 { width: 1.9em; height: 1.9em; }
   /* Narrower slide so the shifted title still clears the panel edge. */
   .menu-link-heading:hover .menu-link-title,
@@ -982,15 +1148,21 @@ body.menu-open { overflow: hidden; }
 }
 
 /* Resting scales per plane. Held by each entrance animation's `both` fill;
-   there is no ambient drift loop - every scene comes to a complete stop. */
-.hl-bg      { transform: scale(1.06); }
-.hl-leaf    { transform: scale(1.10); }
+   there is no ambient drift loop - every scene comes to a complete stop.
+
+   Every plane rests at 1: the layers are exports of ONE shared 1920x1080
+   canvas, so they reproduce the art director's full-view composite only when
+   none of them is scaled relative to the others. Verified by rendering the
+   hero against each scene's `full view` reference across a scale sweep -
+   agreement peaks at 1 on all three scenes and falls off either side. */
+.hl-bg      { transform: scale(1); }
+.hl-leaf    { transform: scale(1); }
 .hl-juicer,
 .hl-blender,
-.hl-grinder { transform: scale(1.03); }
+.hl-grinder { transform: scale(1); }
 .hl-fruitL, .hl-fruitR,
 .hl-bowlL,  .hl-bowlR,
-.hl-spiceL, .hl-spiceR { transform: scale(1.04); }
+.hl-spiceL, .hl-spiceR { transform: scale(1); }
 
 /* The portrait-only leaf frame (see index.html). Desktop keeps the leaf
    plane that ships inside each scene's own canvas, so this stays off here. */
@@ -1089,10 +1261,10 @@ body.menu-open { overflow: hidden; }
 /* Backgrounds. Scene 1 on first load fades up from nothing; any scene that
    arrives by climbing must NOT fade, or the scene below shows through its
    own sky and the rise reads as a translucent pane. */
-@keyframes heroBgIn   { from { opacity: 0; transform: scale(1.14); }
-                        to   { opacity: 1; transform: scale(1.06); } }
-@keyframes heroBgHold { from { opacity: 1; transform: scale(1.10); }
-                        to   { opacity: 1; transform: scale(1.06); } }
+@keyframes heroBgIn   { from { opacity: 0; transform: scale(1.08); }
+                        to   { opacity: 1; transform: scale(1); } }
+@keyframes heroBgHold { from { opacity: 1; transform: scale(1.04); }
+                        to   { opacity: 1; transform: scale(1); } }
 .js .hero-scene.is-current .hl-bg,
 .js .hero-scene.is-entering .hl-bg {
   animation: heroBgHold 1100ms cubic-bezier(.22,.61,.36,1) both;
@@ -1103,17 +1275,17 @@ body.menu-open { overflow: hidden; }
 
 /* Products. */
 @keyframes heroJuicerIn {
-  from { opacity: 0; transform: translateY(9%) scale(.94); }
-  to   { opacity: 1; transform: translateY(0)  scale(1.03); }
+  from { opacity: 0; transform: translateY(9%) scale(.90); }
+  to   { opacity: 1; transform: translateY(0)  scale(1); }
 }
 /* The blender stands rather than sits, so it rises a little further. */
 @keyframes heroBlenderIn {
-  from { opacity: 0; transform: translateY(11%) scale(.93); }
-  to   { opacity: 1; transform: translateY(0)   scale(1.03); }
+  from { opacity: 0; transform: translateY(11%) scale(.88); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
 }
 @keyframes heroGrinderIn {
-  from { opacity: 0; transform: translateY(9%) scale(.94); }
-  to   { opacity: 1; transform: translateY(0)  scale(1.03); }
+  from { opacity: 0; transform: translateY(9%) scale(.90); }
+  to   { opacity: 1; transform: translateY(0)  scale(1); }
 }
 .js .hero-scene.is-current .hl-blender,
 .js .hero-scene.is-entering .hl-blender {
@@ -1129,8 +1301,8 @@ body.menu-open { overflow: hidden; }
 }
 
 /* Foreground leaves. */
-@keyframes heroLeafIn { from { opacity: 0; transform: scale(1.20); }
-                        to   { opacity: 1; transform: scale(1.10); } }
+@keyframes heroLeafIn { from { opacity: 0; transform: scale(1.09); }
+                        to   { opacity: 1; transform: scale(1); } }
 .js .hero-scene.is-current .hl-leaf,
 .js .hero-scene.is-entering .hl-leaf {
   animation: heroLeafIn 1200ms cubic-bezier(.22,.61,.36,1) 560ms both;
@@ -1147,7 +1319,12 @@ body.menu-open { overflow: hidden; }
    visual mass: the bowls carry ~82k opaque px, the fruit ~33k and the
    spices ~24k, so identical percentages would move very different amounts
    of material and read as very different energy. Lighter clusters travel
-   further to land with the same weight. */
+   further to land with the same weight.
+
+   Scene 1 is the exception: its splash is a single centred plate rather
+   than a left/right pair, so it has no side to travel from and expands
+   from the centre instead (see heroBowlLeftIn). It still takes the 320ms
+   cue, so all three scenes start their burst on the same beat. */
 .js .hero-scene.is-current .hl-bowlL,
 .js .hero-scene.is-entering .hl-bowlL {
   animation: heroBowlLeftIn 1150ms cubic-bezier(.16,.9,.3,1.06) 320ms both;
@@ -1178,36 +1355,44 @@ body.menu-open { overflow: hidden; }
    visual mass (bowls ~82k opaque px, fruit ~33k, spices ~24k). Identical
    percentages would move very different amounts of material and read as
    very different energy, so lighter clusters travel further. */
+/* Scene 1's splash is ONE centred plate, not a left/right pair, so it cannot
+   burst sideways the way the fruit and spice clusters do - a lateral travel
+   on a centred plate reads as the whole splash sliding in from one side,
+   which is what made this scene look unlike the other two. It expands from
+   the centre instead: no translate, no rotation, so the material opens
+   outward symmetrically around the machine. Duration, easing and the 320ms
+   cue are the shared ones, and the start scale sits between the paired
+   clusters' .34-.39 so the opening covers the same visual distance. */
 @keyframes heroBowlLeftIn {
-  0%   { opacity: 0; transform: translate(8.8%, 9%) scale(.34) rotate(-8deg); }
+  0%   { opacity: 0; transform: translate(0, 0) scale(.37); }
   38%  { opacity: 1; }
-  100% { opacity: 1; transform: translate(0, 0)     scale(1.04) rotate(0deg); }
+  100% { opacity: 1; transform: translate(0, 0) scale(1); }
 }
 @keyframes heroBowlRightIn {
-  0%   { opacity: 0; transform: translate(-6.3%, 8%) scale(.34) rotate(7deg); }
+  0%   { opacity: 0; transform: translate(-6.3%, 8%) scale(.39) rotate(7deg); }
   38%  { opacity: 1; }
-  100% { opacity: 1; transform: translate(0, 0)      scale(1.04) rotate(0deg); }
+  100% { opacity: 1; transform: translate(0, 0)      scale(1) rotate(0deg); }
 }
 @keyframes heroFruitLeftIn {
-  0%   { opacity: 0; transform: translate(12.5%, 11%) scale(.30) rotate(-11deg); }
+  0%   { opacity: 0; transform: translate(12.5%, 11%) scale(.34) rotate(-11deg); }
   38%  { opacity: 1; }
-  100% { opacity: 1; transform: translate(0, 0)       scale(1.04) rotate(0deg); }
+  100% { opacity: 1; transform: translate(0, 0)       scale(1) rotate(0deg); }
 }
 @keyframes heroFruitRightIn {
-  0%   { opacity: 0; transform: translate(-11.2%, 10%) scale(.30) rotate(10deg); }
+  0%   { opacity: 0; transform: translate(-11.2%, 10%) scale(.34) rotate(10deg); }
   38%  { opacity: 1; }
-  100% { opacity: 1; transform: translate(0, 0)        scale(1.04) rotate(0deg); }
+  100% { opacity: 1; transform: translate(0, 0)        scale(1) rotate(0deg); }
 }
 /* Spices are the lightest clusters of the three, so they travel furthest. */
 @keyframes heroSpiceLeftIn {
-  0%   { opacity: 0; transform: translate(12%, 11%) scale(.30) rotate(-11deg); }
+  0%   { opacity: 0; transform: translate(12%, 11%) scale(.34) rotate(-11deg); }
   38%  { opacity: 1; }
-  100% { opacity: 1; transform: translate(0, 0)     scale(1.04) rotate(0deg); }
+  100% { opacity: 1; transform: translate(0, 0)     scale(1) rotate(0deg); }
 }
 @keyframes heroSpiceRightIn {
-  0%   { opacity: 0; transform: translate(-11.3%, 10%) scale(.30) rotate(10deg); }
+  0%   { opacity: 0; transform: translate(-11.3%, 10%) scale(.34) rotate(10deg); }
   38%  { opacity: 1; }
-  100% { opacity: 1; transform: translate(0, 0)        scale(1.04) rotate(0deg); }
+  100% { opacity: 1; transform: translate(0, 0)        scale(1) rotate(0deg); }
 }
 
 /* ================= PER-SCENE COPY =================
@@ -1242,7 +1427,9 @@ body.menu-open { overflow: hidden; }
 .hc-title {
   margin: 0 0 .5em;
   font-size: clamp(24px, 2.9vw, 46px);
-  font-weight: 500; line-height: 1.08; letter-spacing: -.02em;
+  /* 700 to match the h1–h6 system. This class sets its own weight rather
+     than inheriting it, so it has to be changed here too. */
+  font-weight: 700; line-height: 1.08; letter-spacing: -.02em;
   color: #fff;
 }
 /* Brighter than --blue-400, which vanished against the sky. */
@@ -1374,8 +1561,8 @@ body.menu-open { overflow: hidden; }
   text-align: center;
   font-size: min(10.2vw, 15vh, 165px);
   /* Display-scale wordmark: keeps its viewport sizing, but takes the
-     system's 500 weight and display tracking like every other heading. */
-  font-weight: 500;
+     system's 700 weight and display tracking like every other heading. */
+  font-weight: 700;
   line-height: .95;
   letter-spacing: -.035em;
   margin: 0 0 -.04em;
@@ -1450,23 +1637,6 @@ body.menu-open { overflow: hidden; }
 /* --- Category strip --- */
 /* --- CTA row shared by the hero and inner-page bands --- */
 .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
-
-/* --- Floating WhatsApp button (all pages) ---
-   Fixed to the bottom-right corner above page content. */
-.float-wa {
-  position: fixed; right: 22px; bottom: 22px; z-index: 60;
-  width: 56px; height: 56px; border-radius: 50%;
-  display: grid; place-items: center;
-  background: var(--whatsapp); color: #fff;
-  box-shadow: 0 6px 20px rgba(0,0,0,.24);
-  transition: transform .18s ease, box-shadow .18s ease;
-}
-.float-wa svg { width: 30px; height: 30px; }
-.float-wa:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,.3); }
-/* Same attention cue the header's Get Price button carries, which matters most
-   at the narrow widths where the bubble replaces that button outright. */
-.float-wa { animation: waPulse 2.6s ease-in-out infinite; }
-.float-wa:hover { animation-play-state: paused; }
 
 /* --- Mobile sticky action bar: hidden until the narrow breakpoint --- */
 /* Height of the sticky bar, for anything that must sit clear of it. Zero
@@ -1611,8 +1781,88 @@ body.menu-open { overflow: hidden; }
               opacity .7s cubic-bezier(.22, .61, .36, 1);
 }
 
+/* Two Ranges: each card GROWS out of its own top-left corner — the card box
+   starts small and its edges sweep outward into the full frame, while the
+   photograph inside is counter-scaled so it holds its final size the whole
+   way. That combination is what reads as the frame opening up to uncover the
+   picture, rather than a small card being magnified. The right card starts
+   tighter and offset toward the left one, so the pair spreads out of the
+   section's top-left as a single movement.
+   These override the generic [data-reveal-child] translateY above (higher
+   specificity), and the script's inline transition-delay supplies the ~110ms
+   stagger that gives the left card its lead. Transform and opacity only —
+   never width/height — so the reveal stays on the compositor. */
+.js .split-grid[data-reveal] .split-card {
+  transform-origin: top left;
+  opacity: 0;
+  transform: scale(.42, .55);
+  transition: opacity .6s cubic-bezier(.16, 1, .3, 1),
+              transform 1.35s cubic-bezier(.16, 1, .3, 1);
+  will-change: transform, opacity;
+}
+/* The photograph and the copy are counter-scaled against the card's own
+   scale, anchored to the same top-left corner, so the picture stays at
+   (near) its final size while the card's edge sweeps outward across it:
+   the frame opens up to uncover the image instead of a shrunken picture
+   being blown up. Keeping the photo still is what makes this read as
+   unfolding rather than zooming.
+   Note both transitions must share one curve and duration — an eased
+   inverse of an eased value is not constant, so any mismatch shows up as
+   the photo breathing mid-flight. Same curve, same 1.05s, both here and on
+   the card above. */
+.js .split-grid[data-reveal] .split-card img,
+.js .split-grid[data-reveal] .split-card video,
+.js .split-grid[data-reveal] .split-card .content {
+  transform-origin: top left;
+  transform: scale(2.381, 1.8182);  /* 1/.42, 1/.55 */
+  transition: transform 1.35s cubic-bezier(.16, 1, .3, 1);
+  will-change: transform;
+}
+/* The copy fades in over the back half of the open, so it never appears
+   stretched while the frame is still travelling. */
+.js .split-grid[data-reveal] .split-card .content {
+  opacity: 0;
+  transition: transform 1.35s cubic-bezier(.16, 1, .3, 1),
+              opacity .5s ease .55s;
+}
+/* The right card opens from the same corner but starts a touch tighter and
+   offset toward the left card, so the pair reads as one movement spreading
+   out of the top-left of the section. */
+.js .split-grid[data-reveal] .split-card:nth-child(2) {
+  transform: scale(.38, .5) translate3d(-9%, -6%, 0);
+}
+.js .split-grid[data-reveal] .split-card:nth-child(2) img,
+.js .split-grid[data-reveal] .split-card:nth-child(2) video,
+.js .split-grid[data-reveal] .split-card:nth-child(2) .content {
+  transform: scale(2.6316, 2);  /* 1/.38, 1/.5 */
+}
+/* Settled: static, and the compositor hints are dropped so no layer is kept
+   alive after the entrance. No looping motion is left behind. */
+.js .split-grid[data-reveal].is-revealed .split-card,
+.js .split-grid[data-reveal].is-revealed .split-card img,
+.js .split-grid[data-reveal].is-revealed .split-card video,
+.js .split-grid[data-reveal].is-revealed .split-card .content,
+.js .split-grid[data-reveal].is-revealed .split-card:nth-child(2),
+.js .split-grid[data-reveal].is-revealed .split-card:nth-child(2) img,
+.js .split-grid[data-reveal].is-revealed .split-card:nth-child(2) video,
+.js .split-grid[data-reveal].is-revealed .split-card:nth-child(2) .content {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .js [data-reveal] [data-reveal-child] {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
+  .js .split-grid[data-reveal] .split-card,
+  .js .split-grid[data-reveal] .split-card:nth-child(2),
+  .js .split-grid[data-reveal] .split-card img,
+  .js .split-grid[data-reveal] .split-card video,
+  .js .split-grid[data-reveal] .split-card .content,
+  .js .split-grid[data-reveal] .split-card:nth-child(2) img,
+  .js .split-grid[data-reveal] .split-card:nth-child(2) video,
+  .js .split-grid[data-reveal] .split-card:nth-child(2) .content {
     opacity: 1 !important; transform: none !important; transition: none !important;
   }
   .js .stats-strip[data-reveal] [data-reveal-child] strong { color: var(--ink-900) !important; }
@@ -1662,7 +1912,7 @@ body.menu-open { overflow: hidden; }
 .need-tile-body h3 em { font-style: normal; color: var(--blue-400); }
 .need-tile-body p {
   margin: 0 0 16px; color: rgba(255, 255, 255, .86);
-  font-size: 1em; line-height: 140%; max-width: 22ch;
+  font-size: .875em; line-height: 1.6; max-width: 22ch;
 }
 .need-tile-link {
   display: inline-flex; align-items: center; gap: 8px;
@@ -1713,21 +1963,699 @@ body.menu-open { overflow: hidden; }
 .feature-list li .chk { flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--blue-600); color: #fff; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
 .feature-list li .chk svg { width: 11px; height: 11px; }
 
-.why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
-.why-item { text-align: center; padding: 26px 16px; }
-.why-item .icon { width: 58px; height: 58px; margin: 0 auto 14px; border-radius: 50%; background: var(--blue-100); display: flex; align-items: center; justify-content: center; color: var(--blue-700); }
-.why-item .icon svg { width: 26px; height: 26px; }
-.why-item h4 { font-size: 1em; margin-bottom: 6px; }
-.why-item p { font-size: .88em; margin: 0; }
+/* ---------- Why Jagruti — cinematic photographic section ----------
+   A full-height editorial composition, not a centred feature grid. The
+   source frame is ~2:1: clean blue wall across the left, the mill sitting
+   right of centre. The layout follows that split — the heading and a full
+   4x2 card grid occupy the left ~64%, and the right ~34% is left to the
+   machine.
+
+   The photograph is a real <img> inside .why-bg rather than a CSS
+   background, so it can be object-fit cropped per breakpoint AND
+   transformed for parallax without the section's own layout being
+   involved. .why-bg and .why-product are two separate layers over the same
+   source: the second is cropped to the machine alone and travels at its own
+   rate, which is what gives the composition its depth. */
+/* Written as .section.why-section, not .why-section, on purpose. The shared
+   responsive blocks at the foot of this file carry their own
+   `.section { padding: … }` overrides at 600px and below; those are later in
+   source order and at equal specificity, so a bare .why-section rule loses to
+   them and the section silently falls back to the generic 48px padding. The
+   doubled class outranks them without reaching for !important. Every padding
+   rule for this section below is written the same way. */
+.section.why-section {
+  position: relative;
+  overflow: hidden;              /* contains the parallax/scale overshoot */
+  isolation: isolate;            /* keeps the card shadows off the backdrop */
+  background: var(--blue-50);    /* what shows for the moment before decode */
+  /* Exactly one viewport, pinned at all three so neither content nor the
+     global .section padding can grow it. Everything inside is sized to fit
+     this box rather than the box growing to fit the content.
+
+     100svh is the unit the hero uses (.hero { height: 100svh }), so the two
+     sections measure identically — svh is the stable viewport height, so a
+     mobile browser's collapsing toolbar cannot make this box disagree with
+     the hero's. */
+  height: 100svh;
+  /* The hero does not shrink below 620px (.hero { min-height: 620px }), so
+     neither can this section: on a short desktop window a plain 100svh box
+     would keep shrinking past the hero's floor and the two would stop
+     measuring the same. The floor has to win over the 100svh min, hence
+     max() rather than a second min-height declaration. */
+  min-height: max(100svh, 620px);
+  max-height: max(100svh, 620px);
+  /* Top padding clears the fixed header. Everything below is distributed by
+     the flex column in .why-inner rather than by fixed heights — the
+     viewport sets the section height and the grid absorbs whatever is left,
+     which is what keeps row two inside the frame at every viewport. */
+  padding: var(--header-h) 0 18px;
+  margin: 0;
+  display: flex;
+  align-items: stretch;
+}
+/* Both photographic layers are stretched past the section edges so the
+   parallax always has overhang to travel into — no bare edge is ever pulled
+   into frame, and the crop on the mill never changes. */
+.why-bg {
+  position: absolute;
+  inset: -7% 0;
+  z-index: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+.why-bg img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  /* Anchored left-of-centre: this layer supplies the blue wall and light,
+     while the machine itself is carried by .why-product above. */
+  object-position: 34% 50%;
+  display: block;
+}
+/* The two layers are crops of the same photograph at different scales, so
+   where .why-bg ends and .why-product begins the wall tone steps — a hard
+   vertical seam straight down the composition. Feathering the product layer's
+   left edge dissolves that join: the machine keeps its full density and only
+   the surplus wall either side of it fades out into the layer below. */
+.why-product {
+  -webkit-mask-image: linear-gradient(90deg,
+    transparent 0%, rgba(0,0,0,.35) 12%, #000 32%, #000 100%);
+  mask-image: linear-gradient(90deg,
+    transparent 0%, rgba(0,0,0,.35) 12%, #000 32%, #000 100%);
+}
+/* The machine, as its own layer on the right third. Sized in vw so it holds
+   its share of the composition at any width, and scaled slightly past its
+   box so the parallax drift never exposes the crop seam. */
+.why-product {
+  position: absolute;
+  top: -5%; bottom: -5%;
+  right: 0;
+  width: 42%;
+  z-index: 1;
+  pointer-events: none;
+  will-change: transform;
+}
+.why-product img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  /* Frames the mill itself out of the wide source — the machine sits at
+     roughly 78% across the original, so the crop centres there. */
+  object-position: 82% 52%;
+  display: block;
+}
+/* Readability wash, left-weighted only. It lifts the copy off the
+   photograph without flattening it; the machine side stays clear, which is
+   the whole point of the shot. Deliberately stops short of the right edge. */
+.why-section::before {
+  content: "";
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background:
+    linear-gradient(100deg,
+      rgba(255,255,255,.88) 0%,
+      rgba(255,255,255,.70) 30%,
+      rgba(233,242,247,.30) 54%,
+      rgba(233,242,247,0) 70%);
+}
+/* Fills the section so the grid has a definite height to take its share of.
+   min-height:0 is what lets the grid actually shrink inside this column —
+   without it a flex child refuses to go below its content size and the last
+   row is pushed past the section edge again. */
+.why-inner {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The head sits upper-left over the clean band, not centred across the
+   machine. Capped so it never runs the full width of the section. */
+.why-section .section-head {
+  max-width: 680px;
+  /* Tight: on a 900px-tall viewport every pixel here comes out of the card
+     grid, which is what clips the longest card's last line. Pulled in from
+     clamp(20px, 2.6vh, 34px) so the heading sits higher over the clean band
+     and the reclaimed pixels go to the card track below, which needed them
+     to fit its longest copy. */
+  margin: 0 0 clamp(12px, 1.5vh, 20px);
+  text-align: left;
+  /* Never compresses: it keeps its natural height and the grid below takes
+     the remainder. Without this the head would shrink under flex pressure
+     and the heading would crush before the cards gave up any space. */
+  flex: none;
+}
+.why-section .section-head .eyebrow { margin-bottom: 16px; }
+.why-section .section-head h2 {
+  color: var(--blue-800);
+  /* Editorial rather than banner-sized: the section has to hold a heading,
+     eight cards and the machine inside one viewport, so this is capped at
+     58px and set tight. */
+  font-size: clamp(1.9rem, 2.6vw, 3.625rem);
+  line-height: 1.08;
+  letter-spacing: -.025em;
+  margin-bottom: 0;
+}
+
+/* Four across, two down, inside the left band. The right ~34% is left for
+   the machine by capping the grid's width rather than by padding it — the
+   cards then get their full share of the space instead of being squeezed. */
+/* Two rows of equal height, and the grid takes its height from the space the
+   section has left rather than declaring one — that is what guarantees the
+   second row lands inside the viewport instead of being pushed past it by a
+   long card, at any viewport height. */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  /* rem, matching the rem track below — a px gap would not scale with the
+     rows it separates. 1rem/1.25rem = the old 16px/20px at a 16px root. */
+  gap: 1rem 1.25rem;
+  width: 66%;
+  max-width: 1180px;
+  /* Sized in rem, because everything inside the card is.
+
+     The card's type rides the fluid root (html font-size is a clamp tuned to
+     16px at 1440px, climbing to a 20px ceiling around 1900px), so h4 at 1rem
+     delivers 16px on a 1440px screen and 20px on a wide one — about 25% more.
+     The track used to be px/vh, which cannot follow that: past ~1440px the
+     type kept growing while the box it sits in stayed put, short headings
+     ("Wide Product Range", "After-Sales Support") tipped over to a second
+     line, and each wrap pushed a paragraph line out of the glass. That is the
+     overflow — not copy length, which is why a long card like "Reliable
+     Performance" sat fine while shorter ones spilled.
+
+     In rem the track scales with the text it holds, so the fit is identical at
+     every width. 27.9rem was the old 446px at a 16px root: two rows of ~215px
+     (48px icon + margin, a two-line heading, a four-line paragraph at the
+     narrowest desktop column, 36px padding) plus the 16px row gap.
+
+     That track was still ~4px short for the four longest cards ("Advanced
+     Technology", "Reliable Performance", "Designed for Indian Kitchens",
+     "Quality-Focused Engineering"), whose last paragraph line sat just past
+     the glass — measured at 1280/1440/1600/1920 wide. Raised to 30.4rem, with
+     the extra coming from the head's tightened bottom margin and the slack
+     that was sitting unused below the grid, so the cards are both larger and
+     no longer overflowing without the section growing.
+
+     The vh term is intentionally kept as the middle value so a short window
+     still compresses the grid rather than pushing row two into the section's
+     overflow:hidden — on a short *and* wide window vh wins and the cards go
+     tight again, which is the one case still worth checking in a browser. */
+  flex: 0 1 auto;
+  height: clamp(30.4rem, 47vh, 31.9rem);
+  min-height: 0;
+}
+
+/* The glass card. Deliberately under-opaque so the blue behind stays
+   readable through the fill — that translucency is what sells the material.
+   A fixed min-height keeps the two rows even when copy lengths differ. */
+.why-item {
+  position: relative;
+  text-align: left;
+  /* No min-height: the row track sets the height now, and a min-height here
+     would fight it and re-introduce the overflow. */
+  min-height: 0;
+  /* Visible, not hidden: clipping is what disguised the overflow before.
+     If the copy ever fails to fit now it must be visible so it can be fixed
+     at the source rather than silently cut. */
+  overflow: visible;
+  /* A column so the paragraph occupies a real box in the card's flow rather
+     than spilling past a fixed row height. */
+  display: flex;
+  flex-direction: column;
+  /* rem, for the same reason as the track and the icon: fixed padding around
+     rem-scaled copy shrinks the usable box as the root grows. */
+  padding: 1.125rem 1.375rem;
+  border-radius: 24px;
+  background: rgba(255,255,255,.20);
+  -webkit-backdrop-filter: blur(20px) saturate(155%);
+  backdrop-filter: blur(20px) saturate(155%);
+  border: 1px solid rgba(255,255,255,.42);
+  box-shadow:
+    0 20px 50px rgba(5, 61, 87, .12),
+    inset 0 1px 0 rgba(255,255,255,.55);   /* top-edge reflection */
+  transition:
+    transform .35s cubic-bezier(.22,.61,.36,1),
+    box-shadow .35s cubic-bezier(.22,.61,.36,1),
+    background .35s ease,
+    border-color .35s ease;
+}
+/* Icon container: a small glass disc, same material as the card. */
+.why-item .icon {
+  position: relative;
+  flex: none;
+  /* rem, to match the rem-sized track and type above: a px icon would hold
+     its 48px while the copy around it grew with the fluid root, eating the
+     card's budget from the top on wide screens. */
+  width: 3rem; height: 3rem; margin: 0 0 .625rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,.34);
+  border: 1px solid rgba(255,255,255,.55);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--blue-700);
+  box-shadow: 0 6px 16px rgba(19,167,236,.16);
+  transition: box-shadow .35s ease, color .35s ease;
+}
+.why-item .icon svg { width: 1.5rem; height: 1.5rem; position: relative; z-index: 1; }
+/* Sized in rem, not em: the card is a small-typed context and an em-based
+   heading would compound down into the hyphenation the old layout showed. */
+.why-item h4 {
+  font-size: .9375rem;       /* 15px */
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 6px;
+  color: var(--blue-800);
+  /* The headings are short noun phrases — never break them mid-word. */
+  hyphens: none;
+  overflow-wrap: normal;
+}
+.why-item p {
+  font-size: .875em;
+  line-height: 1.6;
+  margin: 0;
+  color: var(--ink-700);
+  hyphens: none;
+}
+
+/* Hover: a 6px lift and a touch of scale, a brighter rim, a slightly denser
+   fill and more glow on the icon. Nothing here changes layout. */
+@media (hover: hover) {
+  .why-item:hover {
+    transform: translateY(-6px) scale(1.015);
+    background: rgba(255,255,255,.30);
+    border-color: rgba(255,255,255,.62);
+    box-shadow:
+      0 28px 60px rgba(5, 61, 87, .18),
+      inset 0 1px 0 rgba(255,255,255,.7);
+  }
+  .why-item:hover .icon {
+    box-shadow: 0 8px 22px rgba(19,167,236,.34), 0 0 0 6px rgba(19,167,236,.10);
+    color: var(--blue-600);
+  }
+}
+
+/* ---- Entrance ----
+   Gated on html.js so content is never hidden without the script, and driven
+   by .is-in, which main.js adds AND removes — so the sequence replays when
+   the section is scrolled back into. Per-element delays are custom properties
+   written inline by the script (see initWhyReveal), which is what sequences
+   the phases: photograph, then eyebrow, then heading lines, then cards.
+
+   Card entry is 3D, so the grid needs a shared perspective for the rotateX
+   to read as depth rather than as a squash. */
+.js .why-section[data-why] .why-bg,
+.js .why-section[data-why] .why-product,
+.js .why-section[data-why] .section-head .eyebrow,
+.js .why-section[data-why] .why-line > span {
+  opacity: 0;
+  transition:
+    opacity .95s cubic-bezier(.22,.61,.36,1) var(--why-delay, 0ms),
+    transform .95s cubic-bezier(.22,.61,.36,1) var(--why-delay, 0ms);
+}
+/* Phase 1 — the photograph and the machine emerge, the product drifting in
+   from the right so it reads as arriving rather than fading up. */
+.js .why-section[data-why] .why-bg { transform: scale(1.08); }
+.js .why-section[data-why] .why-product { transform: scale(1.08) translateX(40px); }
+/* Phase 2 / 3 — eyebrow, then the heading line by line. Each line rides in
+   its own overflow-clipped row, so it wipes upward instead of just fading. */
+.js .why-section[data-why] .section-head .eyebrow { transform: translateY(30px); }
+.js .why-section[data-why] .why-line { display: block; overflow: hidden; }
+.js .why-section[data-why] .why-line > span { display: block; transform: translateY(100%); }
+/* The cards deliberately have no entrance animation: they are simply present
+   from the start, so only the photograph and the heading play on scroll. */
+
+.js .why-section[data-why].is-in .why-bg,
+.js .why-section[data-why].is-in .why-product,
+.js .why-section[data-why].is-in .section-head .eyebrow,
+.js .why-section[data-why].is-in .why-line > span {
+  opacity: 1;
+  transform: none;
+}
+/* The parallax layers are driven by the script once settled, so their
+   entrance transition must not fight the per-frame transform writes. */
+.js .why-section[data-why].is-settled .why-bg,
+.js .why-section[data-why].is-settled .why-product { transition: none; }
+
+/* Stillness: everything at its settled state, no entrance, no parallax.
+   initWhyReveal also returns early, so no transform is ever written. */
+@media (prefers-reduced-motion: reduce) {
+  .js .why-section[data-why] .why-bg,
+  .js .why-section[data-why] .why-product,
+  .js .why-section[data-why] .section-head .eyebrow,
+  .js .why-section[data-why] .why-line > span {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
+}
+
+/* ---- Why Jagruti, narrower ----
+   Kept with the section rather than in the shared responsive block at the
+   foot of the file: the columns, the crop and the entrance distances all
+   have to move together. An older `.why-grid { grid-template-columns }`
+   rule in that shared block is exactly what broke the previous layout. */
+@media (max-width: 1400px) {
+  /* The grid needs a larger share before the cards get tight, so the
+     machine's band narrows first. */
+  .why-grid { width: 72%; }
+  .why-product { width: 36%; }
+}
+@media (max-width: 1200px) {
+  /* Tablet: two columns, four rows. The machine stays a real presence on
+     the right rather than being dropped.
+     The section is taller than the viewport here, so it no longer centres
+     its content — align to the top and carry enough top padding to clear
+     the fixed header, or the heading lands underneath it. */
+  /* Below 1200px the one-viewport lock is released: eight cards in two
+     columns (and one on a phone) cannot fit a 100vh box without crushing the
+     copy, so the section becomes content-driven again and the page scrolls
+     normally. The desktop height/max-height must be cleared explicitly or
+     they keep squeezing the rows. */
+  .section.why-section {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    align-items: flex-start;
+    padding: calc(var(--header-h) + 48px) 0 80px;
+  }
+  /* The desktop flex column exists to divide a fixed viewport between head
+     and grid. Here there is no fixed height to divide, so it is unwound —
+     height:100% against an auto-height parent and a flex:1 grid would both
+     fight the content-driven layout this breakpoint wants. */
+  .why-inner { height: auto; display: block; }
+  .why-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;      /* rows size to their content again */
+    height: auto;
+    /* Releases the desktop `flex: 1`: with .why-inner unwound to a block
+       above this is inert, but left in place it would resurface the moment
+       anything re-established a flex column here. */
+    flex: none;
+    width: 64%;
+    gap: 18px;
+  }
+  .why-item { overflow: visible; }
+  .why-product { width: 36%; }
+  .why-product img { object-position: 78% 52%; }
+  .why-section .section-head { margin-bottom: 44px; }
+}
+@media (max-width: 900px) {
+  /* The two columns now need most of the width to stay readable, so the
+     machine moves behind them and the wash carries the contrast. */
+  .why-grid { width: 100%; max-width: 640px; }
+  .why-product { width: 58%; opacity: .55; }
+  .why-section::before {
+    background:
+      linear-gradient(115deg,
+        rgba(255,255,255,.92) 0%,
+        rgba(255,255,255,.80) 45%,
+        rgba(233,242,247,.50) 75%,
+        rgba(233,242,247,.25) 100%);
+  }
+}
+@media (max-width: 760px) {
+  /* Phone: a single column over the photograph. The machine is not hidden —
+     the section opens with a band of clear photograph at the top, the mill
+     sitting in it at full strength, and the cards begin below that. Travel is
+     shortened and the script tightens the stagger to match. */
+  .section.why-section {
+    padding: calc(var(--header-h) + 296px) 0 64px;
+    align-items: flex-start;
+  }
+  .why-bg img { object-position: 40% 50%; }
+  /* Held in the opening band rather than washed out behind the cards: full
+     opacity, its own crop centred on the mill, and a mask that feathers both
+     the left edge and the foot so the band settles into the wash instead of
+     ending on a line. Wider and pushed further right than the desktop layer
+     so the machine reads at this size rather than becoming a sliver. */
+  /* The source is ~2:1, so a short band across a 390px viewport can only ever
+     show a slice of the machine. The band is given real height instead and
+     sits full-bleed, which is what lets the mill read at this size. */
+  .why-product {
+    width: 100%; right: 0;
+    top: calc(var(--header-h) + 40px); bottom: auto;
+    height: 320px;
+    opacity: 1;
+    -webkit-mask-image:
+      linear-gradient(180deg, #000 60%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, #000 22%);
+    mask-image:
+      linear-gradient(180deg, #000 60%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, #000 22%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+  /* Centred on the machine itself (~78% across the source), now that the band
+     is full-width and tall enough to hold it. */
+  .why-product img { object-position: 78% 45%; }
+  /* The head sits in that same opening band, over the clear left of it. */
+  .why-section .section-head { margin-bottom: 26px; }
+  .why-section::before {
+    background:
+      linear-gradient(180deg,
+        rgba(255,255,255,.42) 0%,
+        rgba(255,255,255,.72) 30%,
+        rgba(255,255,255,.90) 52%,
+        rgba(233,242,247,.92) 100%);
+  }
+  .why-grid { grid-template-columns: 1fr; gap: 14px; width: 100%; max-width: none; }
+  .why-item { min-height: 0; padding: 20px 20px 22px; border-radius: 22px; }
+  .why-item .icon { width: 44px; height: 44px; margin-bottom: 12px; }
+  .why-item .icon svg { width: 22px; height: 22px; }
+  .why-section .section-head { margin-bottom: 32px; }
+
+  .js .why-section[data-why] .why-bg { transform: scale(1.04); }
+  .js .why-section[data-why] .why-product { transform: scale(1.04) translateX(20px); }
+}
 
 /* split (domestic vs commercial etc.) */
-.split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.split-card { position: relative; border-radius: var(--radius-lg); overflow: hidden; min-height: 300px; display: flex; align-items: flex-end; box-shadow: var(--shadow-md); }
-.split-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.split-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(23,32,38,.86), rgba(23,32,38,.15) 60%); }
-.split-card .content { position: relative; z-index: 2; padding: 30px; color: #fff; }
+/* ---------- Two Ranges — paired image cards ----------
+   Two large photographic cards side by side on a light cool wash. The
+   images carry the section, so the cards stay tall and the copy sits on
+   the photograph itself, lifted off the bottom-left corner. Height is
+   fluid between the desktop bounds so the pair keeps its proportions
+   across viewport widths without a step at every breakpoint. */
+.split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.split-card {
+  position: relative; border-radius: 14px; overflow: hidden;
+  height: clamp(390px, 32vw, 430px);
+  display: flex; align-items: flex-end; box-shadow: var(--shadow-md);
+}
+/* Both source frames are 16:9 and the machine sits right of centre, so a
+   default centre crop on the taller card would push the product toward the
+   edge and start clipping it. The crop is biased right to follow the
+   machine, and a little above centre so the product clears the copy block
+   and the deepest part of the scrim at the foot. */
+.split-card img,
+.split-card video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: 62% 42%;
+}
+/* Brand-blue scrim rising from the foot: deep enough under the copy for
+   white text, clear of the machine in the upper half of the frame. */
+.split-card::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(0deg, rgba(8, 46, 66, .88) 0%, rgba(8, 46, 66, .58) 32%, rgba(8, 46, 66, .12) 62%, rgba(8, 46, 66, 0) 100%);
+}
+.split-card .content { position: relative; z-index: 2; padding: 34px; color: #fff; }
 .split-card h3 { color: #fff; font-size: 1.5em; }  /* 24px */
 .split-card p { color: rgba(255,255,255,.85); }
+
+/* ---------- Two Ranges — pinned full-bleed 50/50 panels ----------
+   Each panel is a runway; the .range-pin inside it is one viewport tall
+   and is held in place by ScrollTrigger while the runway scrolls past, so
+   the split stays still and then hands over to the next one. Media and
+   copy swap sides between the two panels (--flip), which is what makes the
+   pair read as one alternating movement rather than two repeats. */
+.ranges-section { padding-bottom: 0; }
+.ranges-section .section-head { margin-bottom: 56px; }
+
+/* Every layer in the pinned chain carries the SAME dark ground. A pin is
+   engaged and released by taking the element out of flow and putting it
+   back, and at each of those boundaries whatever sits behind it paints for
+   a frame. With the page's near-white --page-bg behind a near-black panel
+   that one frame reads as a white flash. Painting the runway and the
+   section itself the same colour means there is nothing lighter to expose,
+   whatever the pin does. */
+.ranges-section { background: var(--white); }
+
+.range-panel {
+  /* The runway. The sticky child inside is one viewport tall, so the hold
+     lasts for this height MINUS that viewport — 200vh here gives ~one
+     screen of hold per panel. Raise it for a longer hold; at 100vh the
+     panel is exactly as tall as its pin and there is no hold at all. */
+  height: 200vh;
+  position: relative;
+  background: var(--white);
+}
+/* position:sticky, after the reference. The panel above is the runway; this
+   child holds the screen while that runway scrolls past, exactly as
+   .stage-pin and .services-pin already do in this file. No JS owns the
+   hold, so there is no pin engage/release boundary to flash at — which is
+   what the ScrollTrigger pin this replaced had to paint around. */
+.range-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--white);
+  isolation: isolate;
+
+  /* The push. --split is the media's width, scrubbed 100vw -> 50vw by
+     initTwoRanges while the pin is held: the video fills the view on
+     arrival, then is pushed aside as the copy is revealed beside it. On the
+     flipped panel the children are ordered the other way, so the same
+     single value pushes the video right instead.
+
+     A FLEX row, after the reference (farmminerals.com/promo builds this as
+     .numbers-wrap-sticky: sticky, 100vh, overflow hidden, display flex).
+     The media is a flex:none item whose width IS --split, scrubbed
+     100vw -> 50vw; the copy is a fixed 50vw sibling that simply waits off
+     the edge until the video vacates the space. Grid tracks were the wrong
+     tool: at --split:100% a companion track still had to resolve against
+     leftover space, which is what made the flipped panel slide sideways to
+     settle before the push began. Two fixed widths in a row overflowing a
+     hidden box have nothing to negotiate, so both panels start genuinely
+     full-bleed and the push is the first movement in either direction. */
+  --split: 100vw;
+  display: flex;
+  flex-wrap: nowrap;
+}
+/* No JS / reduced motion: the split is simply the settled 50/50. */
+.range-panel.is-static .range-pin { --split: 50vw; }
+/* Flipped panel: copy left, media right — as a REVERSED row, not an order
+   swap. The two are not equivalent here. With order:1/order:2 the row still
+   lays out from the left edge, so the copy painted at the left from the
+   first frame and the 100vw media began 50vw off to the right with only its
+   left half on screen — the video slid in past standing copy instead of
+   filling the screen and pushing the copy in. row-reverse lays the row out
+   from the RIGHT edge instead: the media anchors to the right and fills
+   leftward at 100vw, the copy waits clipped off the LEFT edge, and the same
+   --split scrub pushes it in from that side. An exact mirror of the
+   unflipped panel, driven by the identical tween.
+
+   DOM order stays media-then-copy in both panels (row-reverse flips only
+   the visual main axis), so the reading order the order-swap was protecting
+   is unchanged. */
+.range-panel--flip .range-pin { flex-direction: row-reverse; }
+
+/* flex:none so the width is exactly --split and nothing shrinks it; the
+   reference's .numbers-video-new is the same (flex:none, width:50vw). */
+.range-media { position: relative; overflow: hidden; flex: none; width: var(--split); }
+/* object-fit:cover, matching the reference's .farmer-video. cover is what
+   lets the video FILL the screen at the 100vw start with no letterboxing —
+   the shrink is carried by the BOX narrowing around it, not by fitting the
+   picture inside the box. (contain would letterbox badly at full-bleed,
+   since the frame's aspect ratio there is the viewport's, not the video's.)
+   The height:120% overspill gives cover somewhere to crop from vertically,
+   so the framing tightens rather than the picture sliding. */
+.range-media video,
+.range-media img {
+  position: absolute; left: 0; width: 100%;
+  top: 50%; height: 120%; transform: translateY(-50%);
+  object-fit: cover; object-position: 50% 42%;
+}
+/* No wash over the media. A white gradient from the copy side was laying a
+   light shade across the video for the whole push; the video is meant to
+   read as clean at every width. */
+
+/* Fixed 50vw, flex:none — the settled half. It sits off the right edge
+   (clipped by the pin's overflow:hidden) for as long as the media is wider
+   than 50vw, so the copy is genuinely PUSHED into view as the video
+   retreats, rather than being squeezed open from zero width. Mirrors the
+   reference's .numbers-content-new / .carbon-content-new at width:50vw. */
+.range-content {
+  display: flex; align-items: center;
+  flex: none; width: 50vw; min-width: 0;
+  padding: 0 clamp(28px, 5vw, 80px);
+  background: var(--white); color: var(--ink-900);
+}
+.range-content-inner { max-width: 30em; }
+.range-content-inner .eyebrow {
+  color: var(--blue-600); background: var(--blue-50);
+}
+.range-content-inner h3 {
+  margin: 0 0 18px;
+  color: var(--ink-900);
+  font-size: clamp(1.9em, 3.2vw, 2.6em);
+  font-weight: var(--fw-title);
+  line-height: 122%; letter-spacing: -.02em;
+}
+.range-content-inner p {
+  margin: 0 0 30px;
+  color: var(--ink-700);
+  font-size: .875em; line-height: 1.6;
+}
+/* Per-character split: words stay whole so lines break normally. */
+.range-word { display: inline-block; white-space: nowrap; }
+.range-char { display: inline-block; }
+
+/* The copy starts hidden BEFORE first paint, gated on html.js the same way
+   the hero scenes are. Without this the block paints fully visible, then
+   GSAP snaps it to opacity 0 on its first frame and animates it back in —
+   which is the flash. Anything JS cannot reach stays visible, so the
+   no-script and no-GSAP paths are unaffected. */
+.js .range-content-inner > * {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+/* Once the panel has played, the compositor hint is dropped. */
+.js .range-panel.is-revealed .range-content-inner > * { will-change: auto; }
+/* No GSAP / reduced motion: never hide it in the first place. */
+.js .range-panel.is-static .range-content-inner > * { opacity: 1; will-change: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .range-content-inner > * { opacity: 1 !important; will-change: auto; }
+}
+
+/* No GSAP / reduced motion: everything is simply present, and the pin
+   becomes an ordinary block (no sticky, nothing to hand over). */
+.range-panel.is-static { height: auto; }
+.range-panel.is-static .range-pin {
+  position: relative; height: auto;
+  /* Stacked, like the other two fallback paths: the children carry fixed
+     widths off --split, so dropping the pin without turning the row into a
+     column would leave a half-width video beside a half-width copy at the
+     56vh media height below — not the plain block this path intends. */
+  flex-direction: column;
+}
+.range-panel.is-static .range-media { height: 56vh; min-height: 300px; width: 100%; }
+.range-panel.is-static .range-content { width: 100%; }
+
+@media (max-width: 900px) {
+  /* Stacked: no pin, no runway — a pinned full-height panel on a phone
+     fights the scroll. Media on top, copy beneath, as a normal block. */
+  .range-panel { height: auto; }
+  /* Stacked as a flex column. Both children carry fixed widths off --split
+     (100vw and 50vw), so the direction change has to be joined by width
+     resets or the pair would simply sit side by side and overflow. */
+  .range-pin,
+  .range-panel--flip .range-pin {
+    position: relative; height: auto;
+    flex-direction: column;
+    /* Nothing is pinned here, so keeping a full-screen layer alive costs
+       memory for no benefit. */
+    will-change: auto;
+  }
+  .range-media { height: 56vh; min-height: 300px; width: 100%; }
+  .range-content { width: 100%; padding: 44px clamp(18px, 6vw, 40px) 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .range-panel { height: auto; }
+  /* Both selectors, and the widths reset: --split stays at its 100vw start
+     when no scrub runs, so without this the media fills the row and the
+     copy is pushed off the edge entirely. Stacked is the right
+     reduced-motion shape anyway — the push is the motion being opted out
+     of. */
+  .range-pin,
+  .range-panel--flip .range-pin {
+    position: relative; height: auto;
+    flex-direction: column;
+  }
+  .range-media { height: 56vh; min-height: 300px; width: 100%; }
+  .range-content { width: 100%; }
+}
 
 /* steps */
 .steps-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; counter-reset: step; }
@@ -1765,6 +2693,23 @@ body.menu-open { overflow: hidden; }
 .pd-top { padding: 42px 0 20px; }
 .pd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: flex-start; }
 .pd-gallery img { width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--blue-100); box-shadow: var(--shadow-sm); }
+/* Transparent PNG/WebP cut-outs have no photographic ground of their own,
+   so the bordered card that suits a rectangular photo would draw a box
+   around a floating machine. These sit on the section wash instead and
+   carry a soft contact shadow, the way the homepage stage handles them. */
+.pd-gallery img.is-cutout {
+  border: none; box-shadow: none; background: none;
+  padding: 10px 0;
+  filter: drop-shadow(0 18px 26px rgba(5, 61, 87, .16));
+}
+/* Cards crop to a landscape window with object-fit: cover, which would
+   slice the top and bottom off an upright machine. A cut-out is contained
+   and centred on the card wash instead, so the whole product reads. */
+.product-card .thumb img.is-cutout {
+  object-fit: contain;
+  padding: 12px;
+  background: var(--blue-50);
+}
 .pd-gallery .cap { text-align: center; font-size: .7812em; /* 12.5px */ color: var(--ink-500); margin-top: 10px; }
 .pd-info .cat-tag { font-size: .75em; /* 12px */ font-weight: 400; text-transform: uppercase; letter-spacing: .07em; color: var(--blue-600); }
 .pd-info h1 { font-size: 2.25em; /* 36px */ margin-top: 8px; }
@@ -1821,7 +2766,13 @@ body.menu-open { overflow: hidden; }
 .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .contact-info-card { background: var(--blue-50); border: 1px solid var(--blue-100); border-radius: var(--radius-lg); padding: 26px; margin-bottom: 18px; }
 .contact-info-card h4 { font-size: .88em; text-transform: uppercase; letter-spacing: .05em; color: var(--blue-600); margin-bottom: 10px; }
-.contact-info-card .val { font-size: 1.0625em; /* 17px */ font-weight: 500; color: var(--ink-900); }
+.contact-info-card .val { font-size: 1.0625em; /* 17px */ font-weight: var(--fw-label); color: var(--ink-900); }
+/* The address wraps to several lines, so it sits one step down from the
+   single-line phone/email values; the email keeps the root size so a long
+   address does not force the whole card's type larger. Both were inline
+   style= overrides before. */
+.contact-info-card .val-address { font-size: var(--fs-small); font-weight: var(--fw-strong); line-height: var(--lh-body); }
+.contact-info-card .val-email   { font-size: var(--fs-small); }
 .map-embed { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--blue-100); }
 .map-embed iframe { width: 100%; height: 320px; border: 0; display: block; }
 .form-note { font-size: .7812em; /* 12.5px */ color: var(--ink-500); margin-top: 10px; }
@@ -1837,10 +2788,40 @@ body.menu-open { overflow: hidden; }
 /* Container stays at the root size so the `em` values on its children
    resolve against 16px instead of compounding. */
 .article-body { max-width: 760px; margin: 0 auto; }
-.article-body p, .article-body li { font-size: 1.13em; line-height: 140%; } /* 18px */
-.article-body h2 { font-size: 1.5em; /* 24px */ margin-top: 38px; color: var(--blue-800); }
-.article-body h3 { font-size: 1.2em; margin-top: 26px; }
+/* Article headings run a step below the global h1–h3: a 760px measure
+   column does not need 48px display type, and the tighter ramp keeps the
+   heading-to-prose contrast the same as everywhere else. This replaces an
+   identical inline `font-size:clamp(26px,3.4vw,40px)` that had been
+   pasted onto the h1 of all nine article pages. */
+.article-body h1 { font-size: var(--fs-h3); line-height: var(--lh-title); letter-spacing: var(--ls-title); margin: 0 0 .4em; }
+.article-body p, .article-body li { font-size: var(--fs-body); line-height: var(--lh-body); }
+.article-body h2 { font-size: var(--fs-h5); margin-top: 38px; color: var(--blue-800); }
+.article-body h3 { font-size: var(--fs-h6); margin-top: 26px; }
+/* The category label above an article headline. `.cat-tag` previously had
+   rules only under .product-card, .pd-info and .stage-copy — so the bare
+   one used on all nine article pages matched nothing and rendered as
+   unstyled default text. This is the label step of the ramp. */
+.article-body .cat-tag,
+.cat-tag {
+  font-size: var(--fs-caption); font-weight: var(--fw-label);
+  line-height: var(--lh-tight); letter-spacing: var(--ls-label);
+  text-transform: uppercase; color: var(--blue-600);
+  margin-bottom: 10px;
+}
 .article-body ul { margin: 0 0 18px; padding-left: 22px; list-style: disc; }
+
+/* ---------- Pull quote + attribution (About) ----------
+   Was three inline style= blocks, one of which asked for font-weight:800
+   — a weight General Sans does not ship, so the browser faked it with a
+   synthetic bold. 700 is the real ceiling and is what renders here. */
+.quote-copy { font-style: italic; color: var(--ink-900); }
+.attribution { margin-top: 18px; font-weight: var(--fw-title); color: var(--blue-700); }
+.attribution-role {
+  display: inline-block; margin-top: 2px;
+  font-size: var(--fs-label); font-weight: var(--fw-label);
+  color: var(--ink-500);
+}
+.footnote { margin-top: 26px; color: var(--ink-500); }
 .article-body li { margin-bottom: 8px; color: var(--ink-700); }
 .article-meta { display: flex; gap: 16px; align-items: center; color: var(--ink-500); font-size: .8438em; /* 13.5px */ margin-bottom: 30px; }
 
@@ -1856,19 +2837,169 @@ body.menu-open { overflow: hidden; }
 .timeline-item h4 { font-size: 1em; color: var(--blue-700); margin-bottom: 4px; }
 .timeline-item p { font-size: .875em; /* 14px */ margin: 0; }
 
-/* ---------- Footer ---------- */
-.site-footer { background: var(--gradient-deep); color: rgba(255,255,255,.78); padding: 64px 0 0; }
-.footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1.2fr; gap: 30px; padding-bottom: 44px; border-bottom: 1px solid rgba(255,255,255,.12); }
-.footer-grid h5 { color: #fff; font-size: .8438em; /* 13.5px */ text-transform: uppercase; letter-spacing: .06em; margin-bottom: 16px; }
-.footer-grid li { margin-bottom: 10px; font-size: .875em; /* 14px */ }
-.footer-grid a:hover { color: #fff; }
-.footer-brand .logo-mark { color: #fff; border-color: rgba(255,255,255,.5); }
-.footer-brand p { color: rgba(255,255,255,.65); font-size: .875em; /* 14px */ margin-top: 14px; max-width: 280px; }
-.footer-social { display: flex; gap: 10px; margin-top: 16px; }
-.footer-social a { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.08); display: flex; align-items: center; justify-content: center; }
+/* ---------- Footer ----------
+   Full-viewport footer, laid out as three stacked bands: signup + link
+   columns on top, the oversized wordmark in the middle, legal/social and
+   the copyright line at the base.
+
+   The one-screen lock follows SECTION-HEIGHTS.md. It is safe here because
+   the wordmark row is the flexible element — it takes whatever height the
+   other two bands leave and scales its own type to fit, so the content
+   flexes to the box rather than the box to the content. Released below
+   1200px, where the link columns have to stack and one screen stops being
+   achievable. */
+.site-footer {
+  background: var(--gradient-deep);
+  color: rgba(255,255,255,.78);
+  height: 100svh;
+  min-height: max(100svh, 620px);
+  max-height: max(100svh, 620px);
+  padding: 0;
+  overflow: hidden;
+}
+.site-footer > .container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 58px;
+  padding-bottom: 26px;
+}
+
+/* --- Top band: signup left, link columns right --- */
+.footer-top {
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) auto;
+  gap: 40px 60px;
+  align-items: start;
+}
+.footer-signup h2 {
+  color: #fff;
+  font-size: 1.75em;  /* 28px */
+  line-height: 1.25;
+  letter-spacing: -.01em;
+  margin: 0 0 26px;
+  max-width: 460px;
+}
+/* The underlined inline field: no box, just a rule with the arrow parked
+   at its right end. */
+.signup-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 460px;
+  border-bottom: 1.5px solid rgba(255,255,255,.45);
+  padding-bottom: 10px;
+  transition: border-color .25s ease;
+}
+.signup-form:focus-within { border-bottom-color: #fff; }
+.signup-form input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1.0625em;  /* 17px */
+}
+.signup-form input::placeholder { color: rgba(255,255,255,.55); }
+.signup-form input:focus { outline: none; }
+.signup-form button {
+  flex: none;
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  background: none; border: 0; cursor: pointer;
+  color: #fff;
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.signup-form button:hover { transform: translateX(3px); }
+.signup-form svg { width: 22px; height: 22px; }
+
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, max-content));
+  gap: 30px 44px;
+}
+.footer-nav h5 {
+  color: #fff;
+  font-size: .8438em;  /* 13.5px */
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 16px;
+}
+.footer-nav li { margin-bottom: 9px; font-size: .875em; /* 14px */ }
+.footer-nav a { color: rgba(255,255,255,.78); transition: color .2s ease; }
+.footer-nav a:hover { color: #fff; }
+.footer-addr {
+  color: rgba(255,255,255,.6);
+  max-width: 230px;
+  line-height: 1.5;
+  margin-top: 14px;
+}
+
+/* --- Middle band: the oversized wordmark ---
+   flex:1 hands it the leftover height; the clamp keeps the glyphs filling
+   the container width across desktop sizes without ever outgrowing the
+   band it sits in. */
+.footer-wordmark {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 0;
+  user-select: none;
+}
+.footer-wordmark span {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-weight: 700;
+  font-size: clamp(4rem, 19.5vw, 19rem);
+  line-height: .82;
+  letter-spacing: .01em;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* --- Base band: legal links left, social right, then the copyright --- */
+.footer-base {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px 24px;
+  padding-bottom: 18px;
+}
+.footer-base .legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  font-size: .8125em;  /* 13px */
+}
+.footer-base .legal-links a { color: rgba(255,255,255,.8); }
+.footer-base .legal-links a:hover { color: #fff; text-decoration: underline; }
+.footer-social { display: flex; gap: 10px; }
+.footer-social a {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  transition: background .2s ease, transform .2s ease;
+}
+.footer-social a:hover { background: rgba(255,255,255,.18); transform: translateY(-2px); }
 .footer-social svg { width: 16px; height: 16px; }
-.footer-bottom { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; flex-wrap: wrap; gap: 10px; font-size: .8em; /* 12.8px */ color: rgba(255,255,255,.55); }
-.footer-bottom .legal-links { display: flex; gap: 18px; }
+.footer-copy {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 24px;
+  border-top: 1px solid rgba(255,255,255,.14);
+  padding-top: 16px;
+  font-size: .8em;  /* 12.8px */
+  color: rgba(255,255,255,.55);
+}
 
 /* ---------- Legal ---------- */
 .legal-body { max-width: 800px; margin: 0 auto; }
@@ -1883,16 +3014,73 @@ body.menu-open { overflow: hidden; }
 .divider { height: 1px; background: var(--blue-100); margin: 40px 0; }
 
 /* ---------- Responsive ---------- */
+/* The footer's one-screen lock is released here, at 1200px, not at the
+   1080px breakpoint below. SECTION-HEIGHTS.md sets the release at 1200px,
+   and the two must agree: between 1201px and 1081px the layout has already
+   reflowed while the lock would still be pinning the box to 100svh, and
+   `overflow: hidden` then clips everything below the fold — the whole
+   footer renders as an empty band with only the middle of the wordmark
+   showing. Keep this block above the 1080px one and do not fold it in. */
+@media (max-width: 1200px) {
+  .site-footer {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
+  }
+  .site-footer > .container { padding-top: 52px; padding-bottom: 24px; }
+  .footer-top { grid-template-columns: 1fr; gap: 40px; }
+  .footer-nav { grid-template-columns: repeat(4, minmax(120px, 1fr)); }
+  .footer-wordmark { padding: 34px 0; }
+  .footer-wordmark span { font-size: clamp(3.5rem, 20vw, 13rem); }
+}
 @media (max-width: 1080px) {
-  .why-grid { grid-template-columns: repeat(2, 1fr); }
+  /* The four link columns fall to two once the signup has stacked above
+     them and there is no longer width to keep them side by side. */
+  .footer-nav { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+  /* .why-grid deliberately has no rule here. Its columns, width, crop and
+     entrance distances all move together and live in the Why Jagruti block
+     above — an override at this breakpoint is what previously collapsed
+     that grid into a narrow strip. */
   .related-strip { grid-template-columns: repeat(2, 1fr); }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
   .fit-grid { grid-template-columns: repeat(3, 1fr); }
+  /* Tablet keeps the two columns — there is still width for them — with the
+     cards and gutter stepped down proportionally. */
+  .split-grid { gap: 20px; }
+  .split-card { height: clamp(320px, 38vw, 390px); }
+  .split-card .content { padding: 26px; }
 }
 @media (max-width: 900px) {
   /* Gutter tightens with the viewport; every .container follows. */
   :root { --gutter: 24px; }
   .pd-grid, .split-grid, .contact-grid, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  /* Stacked: each card takes the full column width and keeps its own
+     top-left-anchored open, but shorter and with no sideways travel — the
+     diagonal offset only makes sense against a neighbouring column. */
+  .split-grid { gap: 18px; }
+  .split-card { height: clamp(280px, 56vw, 340px); border-radius: 12px; }
+  .split-card .content { padding: 24px; }
+  /* Same corner-opening gesture, shorter and less extreme: a stacked card is
+     already full-width, so it only needs to open from half height. */
+  .js .split-grid[data-reveal] .split-card,
+  .js .split-grid[data-reveal] .split-card:nth-child(2) {
+    transform: scale(.55, .5);
+    transition: opacity .45s cubic-bezier(.16, 1, .3, 1),
+                transform .95s cubic-bezier(.16, 1, .3, 1);
+  }
+  .js .split-grid[data-reveal] .split-card img,
+  .js .split-grid[data-reveal] .split-card video,
+  .js .split-grid[data-reveal] .split-card .content,
+  .js .split-grid[data-reveal] .split-card:nth-child(2) img,
+  .js .split-grid[data-reveal] .split-card:nth-child(2) video,
+  .js .split-grid[data-reveal] .split-card:nth-child(2) .content {
+    transform: scale(1.8182, 2);  /* 1/.55, 1/.5 */
+    transition: transform .95s cubic-bezier(.16, 1, .3, 1);
+  }
+  .js .split-grid[data-reveal] .split-card .content {
+    transition: transform .95s cubic-bezier(.16, 1, .3, 1),
+                opacity .4s ease .4s;
+  }
   .steps-row { grid-template-columns: repeat(2, 1fr); }
   /* Hero: content stacks below 900px, so release the one-screen lock and
      let the section take its natural height instead of clipping. */
@@ -1971,25 +3159,14 @@ body.menu-open { overflow: hidden; }
   :root:has(.hero-parallax) { --mobile-bar-h: 0px; }
   :root:has(.hero-parallax) .mobile-bar { display: none; }
   /* On tablet and mobile the header's "Get Price" action is dropped from the
-     bar and carried by the floating WhatsApp bubble in the bottom-right
-     corner instead, so the narrow header holds only MENU and the wordmark.
+     bar and carried by the sticky mobile action bar instead, so the narrow
+     header holds only MENU and the wordmark.
 
      Hidden in CSS rather than removed from the markup: navbar.html is a
      shared partial and build-partials.js rewrites each page's NAVBAR block,
      so deleted markup comes straight back the next time it runs. */
   .header-actions { display: none; }
 
-  /* The bubble is the only WhatsApp affordance in the corner at this width;
-     it is lifted clear of the sticky call/WhatsApp bar where that bar shows
-     (--mobile-bar-h is 0 on the home page, which hides it). The hero's own
-     scroll cue and scene dots are centred at this breakpoint, so the corner
-     is free. */
-  .float-wa {
-    display: grid;
-    right: max(16px, var(--gutter));
-    bottom: calc(var(--mobile-bar-h) + 16px);
-    z-index: 60;
-  }
   body { padding-bottom: 0; }
   .form-row-2 { grid-template-columns: 1fr; }
 }
@@ -2014,41 +3191,25 @@ body.menu-open { overflow: hidden; }
   p, li, blockquote { font-size: 1.13em; }  /* ~15.8px at the 14px floor */
   .section-head h2 { font-size: 1.8em; }
   .section-head p  { font-size: 1.13em; }
+  .need-section .section-head p,
+  .ranges-section .section-head p { font-size: .875em; }
 
-  .text-160-regular { font-size: 3em; }
-  .text-120-medium  { font-size: 3em; }
-  .text-100-regular { font-size: 3.13em; }
-  .text-90-regular  { font-size: 4em; }
-  .text-80-medium   { font-size: 2.6em; }
-  .text-80-regular  { font-size: 2.8em; }
-  .text-71-medium   { font-size: 2.3em; line-height: 100%; }
-  .text-60-regular, .text-60-medium { font-size: 1.9em; }
-  .text-58-regular  { font-size: 2.1em; }
-  .text-48-medium   { font-size: 2em; }
-  .text-45-medium   { font-size: 1.4em; }
-  .text-45-regular  { font-size: 1.5em; }
-  .text-44-medium   { font-size: 1.6em; }
-  .text-40-medium, .text-40-regular { font-size: 1.6em; line-height: 110%; }
-  .text-35-regular  { font-size: 2em; line-height: 100%; }
-  .text-33-medium   { font-size: 1.8em; }
-  .text-32-medium, .text-32-regular { font-size: 1.6em; }
-  .text-30-medium, .text-30-regular { font-size: 1.6em; }
-  .text-27-medium   { font-size: 1.3em; line-height: 105%; }
-  .text-26-medium, .text-26-regular { font-size: 1.5em; }
-  .text-24-regular  { font-size: 1.3em; }
-  .text-22-medium   { font-size: 1.1em; }
-  .text-22-regular  { font-size: 1em; }
-  .text-20-medium   { font-size: 1.2em; }
-  .text-20-regular  { font-size: 1em; }
-  .text-18-caps     { font-size: 1em; }
-  .text-18-regular  { font-size: .97em; }
-  .text-16-regular-caps, .text-16-medium-caps { font-size: .9em; }
+  /* Display steps down hard on a phone — 60px would overflow a narrow
+     screen. The rest of the ramp rides the root's 14px floor and needs
+     no override. */
+  .u-display { font-size: 2.4em; }
+  .u-title   { font-size: 1.8em; }
 
-  .why-grid, .related-strip { grid-template-columns: 1fr 1fr; }
+  .related-strip { grid-template-columns: 1fr 1fr; }
   .feature-list { grid-template-columns: 1fr; }
   .fit-grid { grid-template-columns: repeat(2, 1fr); }
   .section { padding: 48px 0; }
-  .footer-grid { grid-template-columns: 1fr; }
+  .footer-signup h2 { font-size: 1.5em; }
+  .footer-nav { grid-template-columns: 1fr 1fr; gap: 26px 20px; }
+  .footer-addr { max-width: none; }
+  .footer-base { justify-content: flex-start; }
+  .footer-wordmark { padding: 26px 0; }
+  .footer-copy { font-size: .85em; }
   .hero-feats { grid-template-columns: 1fr; gap: 16px; }
   .hero-cats { grid-template-columns: 1fr; }
   .hero-cats > a { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.12); padding: 12px 16px; }
@@ -2494,7 +3655,11 @@ body.menu-open { overflow: hidden; }
 .preloader {
   position: fixed; inset: 0; z-index: 999;
   display: grid; place-items: center;
-  background: var(--gradient-deep), var(--blue-900);
+  /* Lighter than the deep cut this replaced, at the cost of separation: the
+     logo keeps the artwork's exact #0d8ac4, so lifting the ground toward that
+     same blue puts the mark at roughly 3:1 where it sits. Chosen deliberately
+     over re-tinting the logo — colour fidelity to the mark wins here. */
+  background: linear-gradient(160deg, #032533 0%, #053d57 55%, #064459 100%), #053d57;
   /* No transition here: the fade is driven by .is-done so the overlay never
      animates on the way IN. */
 }
@@ -2512,33 +3677,77 @@ html.preloading, html.preloading body { overflow: hidden; }
 
 .pl-inner {
   text-align: center;
-  color: #fff;
+  color: var(--brand-primary);
   padding: 0 var(--gutter);
-  /* The mark is the whole animation now — it grows from the centre to its
-     true size on entry, so the scale origin must be the element's own middle
-     rather than the page's. */
+  /* The logo no longer scales on entry — the frame drawing itself IS the
+     entrance. The inner block only fades, so the traced line starts at its
+     final size and the stroke reads at a constant weight while it travels. */
   transform-origin: 50% 50%;
-  will-change: transform, opacity;
-  animation: plMarkIn 1.1s cubic-bezier(.16, .84, .32, 1) both;
+  will-change: opacity;
+  animation: plFadeIn .4s ease both;
+}
+@keyframes plFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* The frame and the wordmark are stacked in the same box at the same aspect
+   ratio, so the drawn outline lands exactly on the artwork's own border. */
+.pl-logo {
+  position: relative;
+  width: min(52vw, 260px);
+  aspect-ratio: 986 / 256;
+  margin-inline: auto;
+}
+.pl-frame,
+.pl-wordmark {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.pl-mark {
-  font-weight: 700;
-  font-size: clamp(1.6rem, 5vw, 2.4rem);
-  /* Tracking opens up alongside the scale, so the wordmark settles into its
-     spacing instead of arriving pre-formed and merely getting bigger. */
-  letter-spacing: .16em;
-  line-height: 1;
-  white-space: nowrap;
+/* THE DRAW.
+   pathLength="100" on the rect normalises its perimeter, so the dash values
+   are plain percentages and no measuring is needed at runtime. The dash is
+   one full-length segment pushed entirely out of view by the offset; easing
+   the offset to 0 pulls the line around the path. overflow:visible keeps the
+   stroke's outer half from being clipped at the viewBox edge. */
+.pl-frame {
+  overflow: visible;
+  /* The logo's own blue — --brand-primary is already exactly the artwork's
+     rgb(13,138,196), so the drawn line and the wordmark it hands off to are
+     the same colour by definition rather than by a copied hex. */
+  color: var(--brand-primary);
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: plDraw 1.5s cubic-bezier(.65, 0, .35, 1) .15s both;
+}
+@keyframes plDraw {
+  from { stroke-dashoffset: 100; }
+  to   { stroke-dashoffset: 0; }
 }
 
-/* Starts small and transparent at the centre, then eases out to full size.
-   Slightly overshooting the 1.0 mark is what gives it weight — it lands
-   rather than stopping dead. */
-@keyframes plMarkIn {
-  0%   { opacity: 0; transform: scale(.35); }
-  60%  { opacity: 1; }
-  100% { opacity: 1; transform: scale(1); }
+/* The letterforms are raster and cannot be traced, so they resolve inside the
+   frame once it has closed — the delay is the draw's duration plus its own
+   delay, which is what makes the two read as one gesture rather than two
+   things happening at once. Blue artwork on the blue overlay would be
+   invisible, so it is knocked out to pure white. */
+.pl-wordmark {
+  object-fit: contain;
+  animation: plWordIn .7s cubic-bezier(.16, .84, .32, 1) 1.5s both;
+}
+@keyframes plWordIn {
+  from { opacity: 0; transform: scale(.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Once the logo is whole, it breathes. Without this the screen is frozen for
+   the rest of the wait — which is exactly the complaint this replaces. The
+   loop starts after the wordmark has landed and runs until handover. */
+.pl-logo {
+  animation: plBreathe 2.8s ease-in-out 2.2s infinite both;
+}
+@keyframes plBreathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.035); }
 }
 
 /* Handover: the mark retreats exactly the way it arrived — back down to the
@@ -2553,23 +3762,1415 @@ html.preloading, html.preloading body { overflow: hidden; }
   transition: opacity .6s cubic-bezier(.6, 0, .9, .5);
   pointer-events: none;
 }
+/* Handover: the logo lifts and fades as one piece. The breathe loop lives on
+   .pl-logo and holds its frame via `both`, so the exit has to be declared
+   there too or the idle animation would win over a plain transform. */
 .preloader.is-done .pl-inner {
-  /* The entrance animation holds its final frame via `both`, which would win
-     over a plain transform here — so the exit is its own animation. */
-  animation: plMarkOut .55s cubic-bezier(.55, 0, .85, .4) both;
+  animation: plLogoOut .55s cubic-bezier(.55, 0, .85, .4) both;
 }
-@keyframes plMarkOut {
+.preloader.is-done .pl-logo {
+  animation: plLogoOut .55s cubic-bezier(.55, 0, .85, .4) both;
+}
+@keyframes plLogoOut {
   0%   { opacity: 1; transform: scale(1); }
-  /* Opacity is held most of the way down so the shrink is actually seen —
-     fading in step with the scale would blank the mark while it is still
-     near full size, and the retreat would never register. */
+  /* Opacity is held most of the way so the lift is actually seen — fading in
+     step with the scale would blank the logo while it is still near full
+     size, and the gesture would never register. */
   55%  { opacity: .55; }
-  100% { opacity: 0; transform: scale(.35); }
+  100% { opacity: 0; transform: scale(1.08); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* No growth for visitors who ask for stillness: the mark simply appears,
-     and the overlay still fades on handover. */
+  /* No drawing, no breathing for visitors who ask for stillness: the frame is
+     simply whole and the logo simply present. The overlay still fades on
+     handover, which is a change of state rather than a motion effect. */
   .pl-inner { animation: none; }
-  .preloader.is-done .pl-inner { animation: none; opacity: 0; transition: opacity .3s ease; }
+  .pl-frame { animation: none; stroke-dashoffset: 0; }
+  .pl-wordmark { animation: none; }
+  .pl-logo { animation: none; }
+  .preloader.is-done .pl-inner,
+  .preloader.is-done .pl-logo { animation: none; opacity: 0; transition: opacity .3s ease; }
+}
+
+/* ==========================================================================
+   Featured — Popular Jagruti Machines
+   A pinned, fullscreen poster sequence: one machine owns the screen at a
+   time, its name set enormous behind it, cut-out props floating around it,
+   and the existing copy set small at the lower left.
+
+   There is no card here by design — no border, no panel, no thumbnail box.
+   The machines are alpha cut-outs (assets/images/showcase/) so they sit
+   directly on the ground the way an object sits in a photograph.
+
+   Colour is entirely the tokens at the top of this file: the blue scale,
+   the ink scale and --page-bg. Nothing new is introduced.
+   ========================================================================== */
+
+/* Doubled class for the same reason .section.why-section is doubled — the
+   responsive blocks at the foot of this file re-declare .section padding at
+   equal specificity and later in source order. The poster is pinned to a full
+   viewport and the Why section that follows is its own full viewport, so any
+   section padding here shows as a bare band of page background between the
+   two. They are meant to meet edge to edge. */
+.section.stage {
+  position: relative;
+  padding: 0;
+  background: var(--page-bg);
+  /* The pinned child would otherwise be clipped by any ancestor that
+     establishes a scroll container. */
+  overflow: visible;
+}
+/* Height is written by JS from the product count — one viewport of travel
+   per machine plus the intro and the release. */
+.stage-track { position: relative; }
+
+.stage-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  /* The whole poster is centred in this box; every layer inside is
+     absolutely placed against it. */
+  isolation: isolate;
+}
+
+/* --- The two section states -------------------------------------------
+   The section is either INTRO or PRODUCTS, never both. The mode is written
+   on .stage by the engine (is-intro / is-products) and every layer below
+   derives from it, so there is no state in which the section identity and
+   a machine are on screen together.
+
+   Both stages are gated symmetrically: whichever one is not the current
+   mode is opacity:0 + visibility:hidden + pointer-events:none, so it
+   neither paints nor takes part in the stacking of the other. */
+/* --- The section header ------------------------------------------------
+   The identity is NOT a state any more. It is a small standing header in
+   the top band of the stage, on screen the whole time the section is, with
+   the machines running underneath it. There is no longer a moment where
+   the section stops being itself to become the showcase.
+
+   The top band is free by construction: the giant name sits at top:46%,
+   the machine below that and the copy block lower still, so nothing the
+   scenes draw reaches up here. */
+/* --- The section identity --------------------------------------------
+   Lives INSIDE .stage-scenes as its first child, not in a panel of its
+   own: it is the top of the showcase rather than a separate thing that
+   has to hand over to it. It therefore rides up with the sheet when the
+   scenes slide in, which is the point — one object arriving, not two.
+
+   The top band is free by construction: the giant name sits at top:46%,
+   the machine below it and the copy block lower still, so nothing the
+   scenes draw reaches up here. Above the scene layers (wash 0, word 1,
+   props 2, machine 3, copy 5) so it is never covered. */
+.stage-head {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(18px, 4.2vh, 40px) var(--gutter) 0;
+  pointer-events: none;
+}
+/* Small: a label for the section, not a title competing with the machine's
+   own giant name directly below it. */
+.stage-head h2 {
+  margin: 0;
+  font-size: clamp(1.05rem, 2vw, 1.6rem);
+  font-weight: 400;
+  line-height: 118%;
+  letter-spacing: -.01em;
+  color: var(--heading-color);
+}
+
+/* The showcase does not travel. It fills the pin from the start, so there
+   is never a frame in which the section shows empty behind a sheet that
+   has not arrived yet — the machines are simply what this section IS. */
+.stage.is-intro .stage-dots,
+.stage.is-intro .stage-nav {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .3s ease, visibility 0s linear .3s;
+}
+
+/* PRODUCT STATE — the machines arrive under the header, which stays put. */
+.stage.is-products .stage-dots,
+.stage.is-products .stage-nav {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .3s ease, visibility 0s linear 0s;
+}
+.stage.is-products .stage-dots,
+.stage.is-products .stage-nav { pointer-events: auto; }
+
+/* No entrance animation: the header is simply THERE, the way a section
+   heading is there. It is part of the showcase, so it arrives with the
+   sheet and needs no reveal of its own on top of that. */
+
+/* --- Scenes ----------------------------------------------------------- */
+/* Above the intro's z-index:8, so the showcase slides up OVER the identity
+   and covers it, rather than passing beneath it where the travel would not
+   be visible at all. The scenes carry an opaque wash, so once the sheet is
+   home the intro underneath is fully hidden. */
+.stage-scenes { position: absolute; inset: 0; z-index: 9; }
+.stage-scene {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  will-change: opacity;
+}
+.stage-scene.is-live { visibility: visible; }
+
+/* LAYER 1 — a wash that tints the ground behind the current machine.
+   Built from the existing blue scale only, so each scene can feel distinct
+   without the section ever leaving the palette. */
+.stage-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 1;
+  /* A product-studio ground, not a white page with a wash over it. The
+     base is a real blue field; the centre only LIFTS that field (it is
+     still blue-tinted, never paper white) so a white machine reads against
+     it. The rim sits deeper so the frame closes. Tokens only. */
+  background:
+    /* lit pool behind the machine — blue-tinted, not white */
+    radial-gradient(52% 50% at 50% 46%, var(--blue-100) 0%, rgba(235,245,250,0) 68%),
+    /* deeper rim, closing the frame on all four sides */
+    radial-gradient(118% 108% at 50% 44%, rgba(13,138,196,0) 42%, rgba(13,138,196,.20) 78%, rgba(9,101,144,.32) 100%),
+    /* the field itself */
+    linear-gradient(168deg, var(--blue-300) 0%, var(--blue-200) 30%, var(--blue-100) 62%, var(--blue-200) 100%);
+}
+/* A soft floor under the machine so it reads as standing on something
+   rather than floating on a flat panel. */
+.stage-wash::after {
+  content: "";
+  position: absolute;
+  left: 50%; bottom: 14%;
+  width: min(760px, 62vw); height: 16vh;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(5, 61, 87, .22) 0%, rgba(5, 61, 87, 0) 70%);
+}
+
+/* LAYER 2 — the giant product name. This is artwork, not a heading: it
+   spans the viewport, and the machine is deliberately allowed to cover its
+   middle. Sized in vw so it always reaches edge to edge. */
+.stage-word {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  z-index: 1;
+  margin: 0;
+  width: max-content;
+  max-width: none;
+  white-space: nowrap;
+  font-weight: 700;
+  /* --fit is written per scene by initMachinePosters: it measures the name
+     and solves for the size that lands it at --fit-target of the viewport.
+     A name can therefore be any length and still span the screen without
+     ever reaching the edge. The clamp is only a pre-JS floor/ceiling. */
+  --fit: 14vw;
+  font-size: clamp(2.6rem, var(--fit), 20rem);
+  line-height: .78;
+  letter-spacing: -.055em;
+  text-transform: uppercase;
+  /* A deep blue from the existing scale at low opacity, so the name reads
+     as a large background GRAPHIC on the light field rather than washing
+     out against it. Near-white (--blue-50) disappeared here; --blue-700 at
+     this strength stays clearly legible while still sitting behind the
+     machine. No new colour is introduced. */
+  color: var(--blue-700);
+  opacity: .18;
+  pointer-events: none;
+  user-select: none;
+  transform: translate3d(-50%, -50%, 0);
+}
+/* Per-letter placement: each glyph carries its own drift so the name
+   assembles rather than sliding in as one block. */
+.stage-word span {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* LAYER 3 — floating cut-out props. Deliberately unequal in size and
+   position; none of them is a card. */
+.stage-props {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.stage-prop {
+  position: absolute;
+  object-fit: contain;
+  opacity: 0;
+  /* No tint, no panel, no border — just a little depth so the cut-out sits
+     in the scene. They reach full opacity at the hero beat (see main.js). */
+  filter: drop-shadow(0 18px 30px rgba(5, 61, 87, .22));
+  will-change: transform, opacity;
+}
+/* Two slots only — one each side, framing the machine with negative space
+   rather than filling every corner. Both sit in the upper half so they can
+   never reach the copy (lower left), the CTAs (lower right) or the
+   pagination (right edge, vertically centred); the max-height keeps a tall
+   asset from growing down into them. Positions are percentages of the
+   stage, so the safe zones hold at every width. */
+.stage-prop-1 {
+  left: 6%; top: 17%;
+  width: clamp(88px, 12vw, 200px);
+  max-height: 34vh;
+}
+.stage-prop-2 {
+  /* Clear of the dots column on the right edge. */
+  right: 11%; top: 22%;
+  width: clamp(78px, 10.5vw, 176px);
+  max-height: 30vh;
+}
+/* Slots 3 and 4 are retired: the composition uses a left/right pair. Any
+   markup still carrying them stays hidden rather than showing a stray. */
+.stage-prop-3,
+.stage-prop-4 { display: none; }
+
+/* LAYER 4 — the machine. Centred, large, and free-standing: the cut-outs
+   carry their own shadow instead of a box. */
+.stage-machine {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  height: clamp(280px, 62vh, 680px);
+  width: auto;
+  max-width: 82vw;
+  object-fit: contain;
+  /* A grounded contact shadow, not a card shadow — it follows the alpha
+     silhouette, so the machine reads as an object standing in the scene. */
+  filter: drop-shadow(0 34px 42px rgba(5, 61, 87, .26));
+  will-change: transform, opacity, filter;
+  transform: translate3d(-50%, -50%, 0);
+}
+/* Feathers a machine that ships as a hard rectangle (a photograph carrying
+   its own background) into the ground, rather than letting its edges cut.
+   Nothing uses this at present — every stage machine now has a real alpha
+   cut-out, Aura Plus included — but it is kept for the next product whose
+   only source art is a background photo. Never put it on a cut-out: the
+   radial mask would eat the machine's own edges. */
+.stage-machine.is-masked {
+  -webkit-mask-image: radial-gradient(62% 62% at 50% 50%, #000 58%, transparent 92%);
+          mask-image: radial-gradient(62% 62% at 50% 50%, #000 58%, transparent 92%);
+  border-radius: var(--radius-lg);
+}
+
+/* LAYER 5 — the existing copy, set small at the lower left, directly on the
+   scene. No panel, no card, no white rectangle. */
+.stage-copy {
+  position: absolute;
+  left: var(--gutter);
+  bottom: 8vh;
+  z-index: 5;
+  /* Wide enough for the longest spec string (the 58-character Supreme 900
+     one), but held to under a third of the viewport so it stops short of
+     the centred CTA block at EVERY width, not just at 1440px. The CTA is
+     centred and at most 42vw wide, so its left edge never falls below
+     29vw — this column therefore cannot reach it. */
+  width: min(420px, 27vw);
+  max-width: calc(100vw - var(--gutter) * 2);
+  text-align: left;
+}
+.stage-copy .cat-tag {
+  font-size: .6875em;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  color: var(--blue-600);
+  margin-bottom: 8px;
+}
+.stage-copy h3 {
+  margin: 0 0 8px;
+  font-size: 1.5em;
+  line-height: 120%;
+  color: var(--heading-color);
+}
+.stage-copy h3 a { color: inherit; text-decoration: none; }
+.stage-copy h3 a:hover { color: var(--blue-600); }
+.stage-copy .desc {
+  margin: 0 0 12px;
+  font-size: .94em;
+  line-height: 145%;
+  color: var(--ink-700);
+  /* Long descriptions wrap rather than truncating. */
+  overflow-wrap: break-word;
+}
+/* Chips wrap onto as many rows as they need; the 58-character Supreme 900
+   spec is the worst case and must not push anything off screen. */
+.stage-copy .spec-chip-row {
+  margin-bottom: 0;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+.stage-copy .spec-chip {
+  white-space: normal;
+  text-align: left;
+  line-height: 135%;
+}
+/* Each line lifts in on its own beat once the machine has settled. */
+.stage-copy > *,
+.stage-actions { will-change: transform, opacity; }
+
+/* LAYER 6 — the existing CTAs, unchanged in wording and destination.
+   The pair is the main action area of the scene, so it sits in the LOWER
+   CENTRE. It is centred against the whole section (left:0/right:0 with the
+   group centred inside), not against the space left over by the copy — so
+   the centre stays true however long the product name on the left runs. */
+.stage-actions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8vh;
+  z-index: 6;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* The box hugs the two buttons rather than being a wide block that
+     merely CENTRES them: a 42vw-wide box would start at 29vw and collide
+     with the copy column below ~1400px even though the buttons themselves
+     sit nowhere near it. At max-content the centred region is only as wide
+     as the pills, so both side columns get real clearance. */
+  width: max-content;
+  max-width: min(42vw, 460px);
+  margin: 0 auto;
+  /* Only the active scene accepts clicks — see .is-active below. */
+  pointer-events: none;
+}
+.stage-scene.is-active .stage-actions { pointer-events: auto; }
+/* Same rule for the product link in the copy block. */
+.stage-copy { pointer-events: none; }
+.stage-scene.is-active .stage-copy { pointer-events: auto; }
+
+/* LAYER 7 — the scroll indicator, small, lower right, above the CTAs. */
+.stage-dots {
+  position: absolute;
+  right: var(--gutter);
+  top: 50%;
+  z-index: 7;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+.stage-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 1px solid var(--blue-300);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: background .25s ease, transform .25s ease, border-color .25s ease;
+}
+.stage-dots button.is-current {
+  background: var(--blue-600);
+  border-color: var(--blue-600);
+  transform: scale(1.5);
+}
+.stage-dots button:focus-visible { outline: 3px solid var(--blue-300); outline-offset: 4px; }
+
+/* LAYER 8 — previous/next product controls, lower right.
+   These are the actual navigation; the dots above remain a progress
+   indicator only. Small and refined rather than carousel-sized, in the
+   existing blue/ink tokens. They share the CTA's baseline so the bottom
+   reads as one three-column bar: copy | CTA | arrows. */
+.stage-nav {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 8vh;
+  z-index: 7;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.stage-nav button {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--blue-300);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .55);
+  color: var(--blue-600);
+  cursor: pointer;
+  transition: background .25s ease, border-color .25s ease, color .25s ease, transform .25s ease;
+}
+.stage-nav button:hover {
+  background: var(--blue-600);
+  border-color: var(--blue-600);
+  color: #fff;
+  transform: translateY(-2px);
+}
+.stage-nav button:focus-visible { outline: 3px solid var(--blue-300); outline-offset: 4px; }
+/* At the ends of the sequence the control has nowhere to go. */
+.stage-nav button[disabled] { opacity: .38; cursor: default; transform: none; }
+.stage-nav button[disabled]:hover {
+  background: rgba(255, 255, 255, .55);
+  border-color: var(--blue-300);
+  color: var(--blue-600);
+}
+.stage-nav svg { width: 17px; height: 17px; display: block; }
+
+/* --- Mobile ----------------------------------------------------------
+   The same poster, re-composed for portrait: the copy moves under the
+   machine, the CTAs sit beneath it, and only two props survive. */
+@media (max-width: 860px) {
+  /* Size still comes from the fitter (--fit); only the floor changes. */
+  .stage-word { font-size: clamp(2rem, var(--fit), 12rem); top: 36%; }
+  .stage-machine { height: clamp(220px, 40vh, 420px); max-width: 86vw; top: 42%; }
+  /* Below this width a prop cannot sit clear of the machine, the copy and
+     the dots at a size where it still reads — so it is hidden outright
+     rather than shrunk to a smudge or cropped. */
+  .stage-props { display: none; }
+  .stage-copy {
+    left: 0; right: 0;
+    width: auto;
+    padding: 0 22px;
+    bottom: 15vh;
+    text-align: center;
+  }
+  .stage-copy h3 { font-size: 1.22em; }
+  .stage-copy .desc { font-size: .9em; }
+  .stage-copy .spec-chip-row { justify-content: center; }
+  /* Portrait keeps the same hierarchy, stacked: copy, then the centred CTA
+     pair, then the arrows beneath them. The arrows sit at the LEFT edge. */
+  .stage-actions {
+    left: 0; right: 0;
+    bottom: 11vh;
+    padding: 0 22px;
+    /* Back to a full-width band here: the desktop rule hugs its buttons to
+       keep the centre column narrow, which would otherwise stop the pills
+       from going full width when they stack below. */
+    width: auto;
+    max-width: none;
+    justify-content: center;
+  }
+  .stage-actions .btn { min-height: 44px; flex: 0 1 auto; }
+  .stage-dots { right: 10px; gap: 10px; }
+  .stage-nav {
+    left: 22px;
+    right: auto;
+    bottom: 4vh;
+    gap: 12px;
+  }
+  .stage-nav button { width: 38px; height: 38px; }
+  /* Still a small standing label here, not a title — 8vw belonged to the
+     old full-screen intro and would now land on the giant machine name. */
+  .stage-head h2 { font-size: clamp(1rem, 3.4vw, 1.3rem); }
+}
+
+@media (max-width: 430px) {
+  /* Two pills side by side get tight here, so they stack and go full width. */
+  .stage-actions { flex-direction: column; gap: 8px; align-items: stretch; }
+  .stage-actions .btn { width: 100%; }
+  .stage-copy { bottom: 21vh; }
+  .stage-copy .desc { font-size: .88em; }
+}
+
+/* --- Stillness -------------------------------------------------------
+   Reduced motion, or no JS: the section stops being a pinned animation and
+   becomes a plain vertical run of posters, every image, spec and CTA
+   present. Nothing stays hidden behind an animation that will not run. */
+@media (prefers-reduced-motion: reduce) {
+  .stage-track { height: auto !important; }
+  .stage-pin { position: static; height: auto; overflow: visible; }
+  /* The column layout has no pinned scene for the intro to cover, so both
+     stages simply stay. The mode classes are neutralised here: there is no
+     showcase to enter, so neither stage may be gated away. */
+  .stage-head,
+  .stage.is-intro .stage-head,
+  .stage.is-products .stage-head {
+    position: static;
+    padding: 56px var(--gutter) 10px;
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+    transition: none !important;
+  }
+  /* The glide-up is off here, and its resting state is opacity:0 — so the
+     children must be restored explicitly. The rules above only neutralise
+     the block, not the lines inside it, which would otherwise leave the
+     section identity blank for anyone who asked for stillness. */
+  .stage-head > *,
+  .stage.is-intro .stage-head > *,
+  .stage.is-products .stage-head > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    transition-delay: 0s !important;
+  }
+  .stage.is-intro .stage-scenes,
+  .stage.is-products .stage-scenes {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  /* The slide-up is off here, and its parked state is one viewport DOWN —
+     so the sheet must be put back, or the whole column of posters would
+     start a screen below where it belongs. z-index goes too: with nothing
+     sliding over anything, the scenes are simply the next block in flow. */
+  .stage-scenes,
+  .stage.is-intro .stage-scenes,
+  .stage.is-products .stage-scenes {
+    position: static;
+    z-index: auto;
+    transform: none !important;
+    transition: none !important;
+  }
+  .stage-scene {
+    position: static;
+    visibility: visible;
+    opacity: 1 !important;
+    min-height: 78vh;
+    padding: 40px 0 56px;
+  }
+  .stage-wash { display: none; }
+  .stage-word {
+    position: static;
+    transform: none;
+    font-size: clamp(2rem, 9vw, 4rem);
+    text-align: center;
+    margin: 0 auto 10px;
+    width: auto;
+    white-space: normal;
+  }
+  .stage-word span { opacity: 1 !important; transform: none !important; }
+  .stage-props { display: none; }
+  .stage-machine {
+    position: static;
+    display: block;
+    margin: 0 auto;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    height: auto;
+    max-height: 46vh;
+  }
+  .stage-copy,
+  .stage-actions {
+    position: static;
+    width: auto;
+    max-width: 620px;
+    margin: 18px auto 0;
+    padding: 0 var(--gutter);
+    text-align: center;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .stage-copy > * { opacity: 1 !important; transform: none !important; }
+  .stage-copy .spec-chip-row { justify-content: center; }
+  .stage-actions { justify-content: center; }
+  /* The section is a plain column here — there is no timeline left to
+     scrub, so neither control has anything to drive. */
+  .stage-dots,
+  .stage-nav { display: none; }
+}
+html:not(.js) .stage-track { height: auto; }
+html:not(.js) .stage-pin { position: static; height: auto; overflow: visible; }
+html:not(.js) .stage-head {
+  position: static; padding: 56px var(--gutter) 10px;
+  opacity: 1; visibility: visible; transform: none;
+}
+html:not(.js) .stage-head > * { opacity: 1; transform: none; }
+html:not(.js) .stage-scenes { position: static; opacity: 1; visibility: visible; }
+html:not(.js) .stage-scene { position: static; visibility: visible; min-height: 0; padding: 40px 0 56px; }
+html:not(.js) .stage-wash,
+html:not(.js) .stage-props,
+html:not(.js) .stage-nav,
+html:not(.js) .stage-dots { display: none; }
+html:not(.js) .stage-word {
+  position: static; transform: none; width: auto; white-space: normal;
+  font-size: clamp(2rem, 9vw, 4rem); text-align: center; margin: 0 auto 10px;
+}
+html:not(.js) .stage-machine {
+  position: static; display: block; margin: 0 auto; transform: none;
+  height: auto; max-height: 46vh; filter: none;
+}
+html:not(.js) .stage-copy,
+html:not(.js) .stage-actions {
+  position: static; width: auto; max-width: 620px; margin: 18px auto 0;
+  padding: 0 var(--gutter); text-align: center;
+}
+html:not(.js) .stage-actions { justify-content: center; }
+
+/* ==========================================================================
+   Journey — "From Grain to Fresh Flour"
+   --------------------------------------------------------------------------
+   An editorial mosaic rather than a diagram. The header is a two-column
+   band: an oversized display title on the left, the lead and its call to
+   action on the right. Below it a staggered grid alternates photography
+   with the four operating steps, the columns offset from one another so
+   nothing lines up into a plain table of cards.
+
+   Each photo's CARD opens FROM ITS TOP-LEFT CORNER as it enters view: the
+   tile is clipped from nothing to its full size, holding that corner fixed
+   while the opening grows right and down. The photograph inside does not
+   move at all — it is laid out at its final size from the start and the
+   frame simply uncovers it.
+   ========================================================================== */
+.journey-section {
+  padding-block: clamp(64px, 9vh, 120px);
+  overflow: hidden;
+}
+.journey-shell {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(36px, 6vh, 72px);
+}
+
+/* ---- Header band ---- */
+.journey-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(24px, 5vw, 80px);
+  align-items: end;
+}
+/* The same type as every other section title on the site — the tokens,
+   not a one-off clamp, so this heading stays in step with the rest. */
+.journey-head h2 {
+  margin: 0;
+  font-size: var(--fs-title);
+  font-weight: var(--fw-title);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-title);
+}
+.journey-head-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+  padding-bottom: 6px;
+}
+/* Held a step below --fs-lead: this sits beside the title rather than
+   under it, so it reads as supporting copy and must not rival the h2. */
+.journey-head-aside p {
+  margin: 0;
+  max-width: 38ch;
+  font-size: .875em;
+  font-weight: var(--fw-body);
+  line-height: var(--lh-body);
+  color: var(--ink-500);
+}
+
+/* ---- Mosaic ----
+   Four columns, each with its own vertical offset, so the tiles read as a
+   loose staggered wall. The offsets are pure translate — the grid rows
+   stay honest, which is what keeps the block from growing ragged edges. */
+.journey-mosaic {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 1.6vw, 22px);
+  align-items: center;
+}
+.journey-tile {
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 0;
+}
+/* No translate offset. Pushing the photographs down by a fixed amount made
+   every image start BELOW the step card beside it, so a tall photo hung off
+   the bottom of its row and read as drifting upward out of line rather than
+   standing square in it. The tiles are centred in their row instead: the
+   row is as tall as its tallest photograph, and the short step cards settle
+   against the middle of it, which is what gives the wall its offset rhythm
+   without any tile leaving its row. */
+
+/* Photography */
+.journey-tile--img {
+  margin: 0;
+  position: relative;
+  background: var(--blue-100);
+  aspect-ratio: 3 / 4;
+}
+.journey-tile--a { aspect-ratio: 3 / 4; }
+.journey-tile--c { aspect-ratio: 4 / 5; }
+.journey-tile--f { aspect-ratio: 4 / 5; }
+.journey-tile--h { aspect-ratio: 3 / 4; }
+.journey-tile--img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Step cards — the quiet counterweight to the photographs. A soft tint
+   rather than plain white: on this near-white section a white card has no
+   edge of its own and the copy reads as floating between the photos
+   instead of sitting in a tile of the same wall. */
+.journey-tile--step {
+  background: var(--blue-100);
+  border: 1px solid transparent;
+  padding: clamp(20px, 2.2vw, 32px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: clamp(180px, 20vw, 260px);
+}
+.journey-num {
+  display: block;
+  font-size: clamp(2rem, 3.4vw, 3.25rem);
+  font-weight: var(--fw-title);
+  line-height: 1;
+  letter-spacing: -.03em;
+  color: var(--blue-600);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 14px;
+}
+.journey-tile--step h4 {
+  font-size: 1.0625em;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  margin: 0 0 8px;
+  color: var(--blue-800);
+}
+.journey-tile--step p {
+  margin: 0;
+  font-size: .875em;
+  line-height: 1.6;
+  color: var(--blue-700);
+}
+
+/* ---- Corner expand ----
+   The CARD opens from its top-left corner while the photograph inside
+   stays completely still — the frame is revealing the picture, not
+   carrying it. That is why this clips rather than scales: `transform`
+   applies to the whole subtree, so scaling the tile would drag the image
+   along with it however the image was counter-scaled. `clip-path` instead
+   changes only the visible region of the tile, so the img is laid out at
+   its final size and position from the first frame and never moves.
+
+   The inset runs from the RIGHT and BOTTOM edges, which holds the top-left
+   corner fixed and lets the opening grow out of it across both axes.
+   --open runs 0 → 1, written once by main.js when the tile first crosses
+   into view. */
+.js .journey-tile--img {
+  --open: 0;
+  clip-path: inset(0 calc((1 - var(--open)) * 100%) calc((1 - var(--open)) * 100%) 0);
+  transition: clip-path .95s cubic-bezier(.16, 1, .3, 1);
+  will-change: clip-path;
+}
+.js .journey-tile--img.is-open { --open: 1; }
+
+@media (max-width: 1024px) {
+  .journey-mosaic { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .journey-tile--a, .journey-tile--e,
+  .journey-tile--c, .journey-tile--g { translate: none; }
+  .journey-tile--b, .journey-tile--f { translate: 0 clamp(14px, 3vw, 34px); }
+}
+
+@media (max-width: 720px) {
+  .journey-head {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    align-items: start;
+  }
+  .journey-head h2 { font-size: clamp(2.125rem, 10vw, 3rem); }
+  .journey-head-aside p { max-width: none; font-size: .875em; }
+  .journey-tile--step { min-height: 0; }
+}
+
+/* No motion: every tile is simply open from the start. */
+@media (prefers-reduced-motion: reduce) {
+  .js .journey-tile--img {
+    --open: 1;
+    clip-path: none;
+    transition: none;
+  }
+}
+/* ==========================================================================
+   Service showcase  (index.html — .services)
+   --------------------------------------------------------------------------
+   A PINNED HORIZONTAL RUN, after the reference site's Chapter III.
+
+   The shape of it: .services-track is a tall block that gives the section
+   its scroll travel. .services-pin is a sticky child one viewport tall, so
+   it holds the screen while the track scrolls past underneath. Inside,
+   .services-rail is a flex row wider than the screen, and initServices()
+   translates it LEFT in step with the track's progress — which is what
+   brings each card in from the RIGHT as the visitor scrolls DOWN.
+
+   Nothing here steals the wheel. The rail is a pure function of scroll
+   position, so Lenis keeps the scroll and the section cannot trap anyone
+   the way an input-capturing pin can.
+
+   Per card, the reveal is the reference's: a wash-and-image layer masked by
+   clip-path inset(100% 0 0 0) — fully closed from the bottom — opening to
+   inset(0) while the image counter-moves a few percent against it. The
+   picture reads as uncovered in place rather than slid in.
+
+   Below 768px, and under reduced motion, the rail is a plain vertical
+   stack with every shot already open: no pin, no travel, nothing hidden
+   behind an animation that will not run.
+
+   Every colour is an existing token. No new palette.
+   ========================================================================== */
+
+.services {
+  position: relative;
+  background: var(--blue-700);
+  color: var(--white);
+  /* The pinned child is clipped by any ancestor that establishes a scroll
+     container, so this one must not become one. */
+  overflow: visible;
+}
+
+/* Height is written by JS from the rail's overflow — one screen to hold,
+   plus the travel itself. This fallback keeps the section usable in the
+   moment before JS runs. */
+.services-track {
+  position: relative;
+  height: 300vh;
+}
+
+.services-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  isolation: isolate;
+}
+
+/* The rail is wider than the screen; JS moves it. will-change keeps the
+   transform on its own layer — without it the four cover images repaint
+   the whole rail on every frame. */
+.services-rail {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  padding-right: var(--gutter);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+/* ---- The heading, first panel on the rail -----------------------------
+   It travels with the cards rather than sitting above them, so the run
+   reads as one continuous band the way the reference's does. */
+.services-intro {
+  flex: 0 0 auto;
+  /* Half the viewport, so the first card's left edge lands on the same
+     line as the Two Ranges video's left edge above — that split is driven
+     by --split:50vw, so the same unit is what matches it. (A percentage
+     would resolve against .services-rail, whose width is content-driven,
+     not against the pin.) initServices derives travel from
+     rail.scrollWidth, so the run adapts on its own. */
+  width: 50vw;
+  display: flex;
+  flex-direction: column;
+  /* Label at the top, title block at the foot, the middle deliberately
+     empty — the reference's proportion. */
+  justify-content: space-between;
+  padding: calc(var(--header-h) + clamp(18px, 3vh, 40px)) clamp(32px, 4vw, 80px) clamp(28px, 5vh, 64px) var(--gutter);
+}
+.services-intro-foot { display: block; }
+.services-intro .eyebrow {
+  margin: 0;
+  align-self: flex-start;
+  color: var(--blue-200);
+  background: rgba(255, 255, 255, .10);
+}
+.services-intro h2 {
+  margin: 0;
+  font-size: clamp(2.5rem, 1.1rem + 5.2vw, 6rem);
+  font-weight: var(--fw-title);
+  line-height: 96%;
+  letter-spacing: -.035em;
+  color: var(--white);
+}
+.services-intro p {
+  margin: clamp(12px, 2vh, 20px) 0 0;
+  max-width: 44ch;
+  font-size: .875em;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, .72);
+}
+
+/* ---- A card -----------------------------------------------------------
+   Portrait panels, square-cornered: each is a window cut into the band,
+   not a card floating on it. */
+.service-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(300px, 30vw, 440px);
+  display: grid;
+  /* number / spring / title / spring / copy — the two springs are what put
+     the title on the card's middle and hold the copy at its foot. */
+  grid-template-rows: auto 1fr auto 1fr auto;
+  padding: calc(var(--header-h) + clamp(14px, 2.4vh, 30px)) clamp(22px, 2.2vw, 38px) clamp(24px, 4vh, 48px);
+  border-left: 1px solid rgba(255, 255, 255, .22);
+  text-decoration: none;
+  color: var(--white);
+  background: var(--blue-700);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* The masked layer. Closed from the bottom at rest — inset(100% 0 0 0)
+   leaves nothing visible — and opened by the hover/focus rules below. */
+.service-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  clip-path: inset(100% 0% 0% 0%);
+  transition: clip-path .8s cubic-bezier(.16, 1, .3, 1);
+}
+/* A wash over the photograph: the number and title sit on top of it and
+   have to stay legible against whatever the shot happens to be. */
+.service-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  /* Sits over the photograph once the mask opens, so the number, title and
+     copy stay legible on top of whatever the shot happens to be. It is a
+     constant: the MASK is what reveals, exactly as the reference does it. */
+  background: rgba(15, 13, 12, .55);
+}
+/* Counter-moves against the mask. The image is oversized (scale 1.1) so
+   the movement never walks a hard edge into view. */
+.service-media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: translate3d(0, 6%, 0);
+  transition: transform .8s cubic-bezier(.16, 1, .3, 1);
+}
+.service-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 42%;
+  display: block;
+  transform: scale(1.1);
+}
+
+.service-card:hover .service-bg,
+.service-card:focus-visible .service-bg { clip-path: inset(0% 0% 0% 0%); }
+.service-card:hover .service-media,
+.service-card:focus-visible .service-media { transform: translate3d(0, -3%, 0); }
+
+.service-num {
+  font-size: clamp(2rem, 1.2rem + 2.4vw, 3.4rem);
+  font-weight: var(--fw-title);
+  line-height: 1;
+  letter-spacing: -.024em;
+  color: rgba(255, 255, 255, .55);
+  transition: color .5s ease;
+}
+.service-card:hover .service-num,
+.service-card:focus-visible .service-num { color: var(--white); }
+
+.service-num   { grid-row: 1; }
+.service-title { grid-row: 3; }
+.service-copy  { grid-row: 5; }
+.service-title {
+  display: block;
+  font-size: clamp(1.25rem, .95rem + 1.1vw, 1.9rem);
+  font-weight: var(--fw-title);
+  line-height: 118%;
+  letter-spacing: -.02em;
+  color: var(--white);
+}
+.service-copy {
+  display: block;
+  font-size: .9em;
+  line-height: 145%;
+  color: rgba(255, 255, 255, .74);
+}
+
+.service-card:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: -6px;
+}
+
+/* ---- Entrance ---------------------------------------------------------
+   Each panel also fades and lifts as it arrives, so the run has some depth
+   rather than four rigid panels sliding by. .is-in is written by JS; with
+   no JS the .js guard never applies and every panel is simply present. */
+.js .service-card,
+.js .services-intro {
+  opacity: 0;
+  transform: translate3d(40px, 0, 0);
+  transition: opacity .7s cubic-bezier(.16, 1, .3, 1),
+              transform .7s cubic-bezier(.16, 1, .3, 1);
+}
+.js .service-card.is-in,
+.js .services-intro.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Phone ------------------------------------------------------------
+   No pin and no rail: a vertical stack, each shot already uncovered. A
+   horizontal run on a phone would be a second scroll direction competing
+   with the page's own. */
+@media (max-width: 767px) {
+  .services-track { height: auto; }
+  .services-pin {
+    position: static;
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+  .services-rail {
+    display: block;
+    height: auto;
+    padding: 0;
+    transform: none !important;
+    will-change: auto;
+  }
+  .services-intro {
+    width: auto;
+    padding: 48px var(--gutter) 28px;
+  }
+  .services-intro h2 { margin-top: 10px; font-size: clamp(2.25rem, 1.4rem + 4vw, 3rem); }
+
+  .service-card {
+    width: auto;
+    min-height: 54vh;
+    padding-top: 32px;
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, .22);
+    padding: 32px var(--gutter);
+  }
+  /* Open, and staying open: there is no hover to reveal it with. */
+  .service-bg { clip-path: inset(0% 0% 0% 0%); }
+  .service-wash { background: rgba(5, 61, 87, .66); }
+  .service-media { transform: none; }
+  .js .service-card,
+  .js .services-intro { opacity: 1; transform: none; }
+}
+
+/* ---- Stillness --------------------------------------------------------
+   Reduced motion: no pin, no travel, no masking. The same vertical stack
+   the phone gets, with every transition off. initServices() returns early,
+   so no transform is ever written to the rail. */
+@media (prefers-reduced-motion: reduce) {
+  .services-track { height: auto; }
+  .services-pin {
+    position: static;
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+  .services-rail {
+    display: block;
+    height: auto;
+    padding: 0;
+    transform: none !important;
+  }
+  .services-intro { width: auto; padding: 48px var(--gutter) 28px; }
+  .service-card {
+    width: auto;
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, .22);
+  }
+  .service-bg,
+  .service-media,
+  .service-num,
+  .js .service-card,
+  .js .services-intro { transition: none !important; }
+  .service-bg { clip-path: inset(0% 0% 0% 0%); }
+  .service-media { transform: none; }
+  .js .service-card,
+  .js .services-intro { opacity: 1; transform: none; }
+}
+
+/* --- LAYER 5b — the reference poster furniture -------------------------
+   Two additions that complete the Eco Pulverizer reference composition on
+   every scene: the stacked tagline at the top left, and the row of four
+   feature callouts at the lower right. Both are built from the existing
+   blue/ink tokens only — no new colour enters the palette. */
+
+/* The small stacked eyebrow at the top left. It is artwork rather than
+   content (the section already has a real heading in .stage-head), so it
+   is aria-hidden in the markup and never picked up as a heading. */
+.stage-tagline {
+  position: absolute;
+  left: var(--gutter);
+  top: 12vh;
+  z-index: 5;
+  margin: 0;
+  font-size: .6875em;
+  font-weight: 500;
+  line-height: 190%;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+  pointer-events: none;
+  user-select: none;
+  will-change: transform, opacity;
+}
+
+/* The four icon + label callouts, lower right. They share the CTA/copy
+   baseline so the bottom of the poster reads as one bar: copy+CTA on the
+   left, callouts on the right. The arrows keep the far corner, so this row
+   stops short of them (see the right offset below). */
+.stage-feats {
+  position: absolute;
+  right: calc(var(--gutter) + 108px);
+  bottom: 8vh;
+  z-index: 5;
+  display: flex;
+  gap: clamp(18px, 2.6vw, 42px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+  pointer-events: none;
+}
+.stage-feats li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  width: clamp(64px, 7vw, 92px);
+  font-size: .6875em;
+  font-weight: 500;
+  line-height: 145%;
+  color: var(--ink-700);
+  will-change: transform, opacity;
+}
+.stage-feats svg {
+  width: 26px;
+  height: 26px;
+  display: block;
+  color: var(--blue-600);
+}
+/* A hairline divider between callouts, as in the reference. */
+.stage-feats li + li { position: relative; }
+.stage-feats li + li::before {
+  content: "";
+  position: absolute;
+  left: calc(clamp(18px, 2.6vw, 42px) / -2);
+  top: 6%;
+  height: 88%;
+  border-left: 1px solid var(--blue-200);
+}
+
+/* The CTA pair now sits in the left copy column, directly under the spec
+   chips, instead of being centred at the bottom of the section. It is a
+   normal block in that column, so the old absolute centring — and the
+   collision rules that existed only to keep a centred box clear of this
+   very column — no longer apply. */
+.stage-copy .stage-actions {
+  position: static;
+  width: auto;
+  max-width: none;
+  margin: 18px 0 0;
+  justify-content: flex-start;
+}
+
+/* The left column now carries the buttons too, so it needs more room than
+   the 27vw the text alone was held to. */
+.stage-copy { width: min(460px, 34vw); }
+
+@media (max-width: 1180px) {
+  /* Four callouts plus the arrows no longer fit beside the copy column
+     here; the row drops under the machine and centres. */
+  .stage-feats {
+    left: 0; right: 0;
+    bottom: 3.5vh;
+    justify-content: center;
+    gap: clamp(14px, 2.4vw, 30px);
+  }
+}
+
+@media (max-width: 860px) {
+  /* Portrait: the tagline would crowd the machine, and the callouts become
+     a centred two-up grid beneath the stacked copy. */
+  .stage-tagline { display: none; }
+  .stage-copy { width: auto; }
+  .stage-copy .stage-actions { justify-content: center; }
+  .stage-feats {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    justify-content: center;
+    gap: 14px;
+    bottom: 3vh;
+    padding: 0 22px;
+  }
+  .stage-feats li { width: clamp(58px, 20vw, 78px); font-size: .625em; }
+  .stage-feats svg { width: 21px; height: 21px; }
+  /* The divider reads as clutter once the row is this tight. */
+  .stage-feats li + li::before { display: none; }
+}
+
+@media (max-width: 430px) {
+  /* Two rows of two, so a four-across row cannot squeeze the labels to
+     single characters. */
+  .stage-feats { grid-template-columns: repeat(2, auto); gap: 12px 20px; }
+}
+
+/* Stillness: the column layout has no pinned scene, so these simply sit in
+   flow with everything else rather than being absolutely placed. */
+@media (prefers-reduced-motion: reduce) {
+  .stage-tagline { display: none; }
+  .stage-feats {
+    position: static;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 18px auto 0;
+  }
+  /* The entrance beats never run here, so the callouts must not be left
+     sitting at the opacity the animation would otherwise have lifted. */
+  .stage-feats li { opacity: 1 !important; transform: none !important; }
+}
+
+/* ==========================================================================
+   Connect band — merged social-proof + enquiry CTA (homepage)
+   One editorial slab on the sky-tint ground: compact form on the left,
+   oversized condensed headline on the right, social row pinned bottom-left.
+   Replaces the old separate "Social Proof" and .cta-band sections.
+   ========================================================================== */
+.connect-band-section {
+  background: var(--blue-200);
+  /* Matches the hero exactly: same 100svh unit, same 620px floor. The
+     section sets the height and the grid inside absorbs whatever is left,
+     so everything stays inside one viewport frame. */
+  height: 100svh;
+  min-height: max(100svh, 620px);
+  max-height: max(100svh, 620px);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.connect-band-section .container { width: 100%; }
+.connect-band {
+  display: grid;
+  /* Form keeps a fixed left column; the copy column is pushed past centre
+     by the wide gap and the 1.25fr weighting on the right. */
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  grid-template-rows: 1fr auto;
+  gap: 32px clamp(80px, 14vw, 240px);
+  align-items: start;
+}
+.connect-form  { grid-column: 1; grid-row: 1; }
+.connect-copy  { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+.connect-social{ grid-column: 1; grid-row: 2; align-self: end; }
+
+.connect-form .eyebrow {
+  display: block; margin-bottom: 18px; color: var(--blue-800);
+  /* The band already supplies a tinted ground, so the default pill chip
+     reads as a stray white patch here — drop it back to plain text. */
+  background: none; padding: 0; border-radius: 0;
+}
+
+/* Underline-only fields, matching the reference: no boxes, no fills — just
+   a hairline rule under each input and a floating-style placeholder. */
+.connect-form .form-field { margin-bottom: 0; }
+.connect-form .form-field label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.connect-form .form-field input,
+.connect-form .form-field select,
+.connect-form .form-field textarea {
+  border: 0;
+  border-bottom: 1.5px solid rgba(23, 32, 38, .22);
+  border-radius: 0;
+  background: transparent;
+  padding: 14px 2px;
+  color: var(--ink-900);
+  transition: border-color .18s ease;
+}
+.connect-form .form-field input::placeholder,
+.connect-form .form-field textarea::placeholder { color: var(--ink-500); }
+.connect-form .form-field select { color: var(--ink-500); appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23607685' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 2px center; background-size: 18px; padding-right: 26px; }
+.connect-form .form-field input:focus,
+.connect-form .form-field select:focus,
+.connect-form .form-field textarea:focus { border-bottom-color: var(--blue-700); background-color: transparent; }
+.connect-form .form-field textarea { resize: none; }
+
+/* Two fields share a row where the reference pairs them. */
+.connect-form-fields .form-row-2 { gap: 0 28px; }
+
+.connect-consent { display: flex; align-items: center; gap: 10px; margin: 22px 0 18px; font-size: var(--fs-small); color: var(--ink-700); }
+.connect-consent input { width: 18px; height: 18px; flex: none; accent-color: var(--blue-700); }
+.connect-consent a { color: var(--blue-800); text-decoration: underline; }
+
+/* Full-width pill submit with the arrow puck on the right. */
+/* Compact pill — sized to its label rather than the column, so it matches
+   the scale of the two buttons in the right column. */
+.connect-submit {
+  border-radius: var(--radius-pill);
+  padding: 8px 8px 8px 18px;
+  display: inline-flex; align-items: center; gap: 12px;
+}
+.connect-submit .arrow {
+  width: 24px; height: 24px; border-radius: var(--radius-pill);
+  background: rgba(255,255,255,.18);
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+}
+.connect-submit .arrow svg { width: 13px; height: 13px; }
+
+/* The headline is the anchor of the whole band: tight, heavy, hard-left,
+   clamped so it stays oversized without overflowing at narrow widths. */
+.connect-headline {
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  line-height: .95;
+  letter-spacing: -.02em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--blue-900);
+  margin: 0 0 20px;
+}
+.connect-sub { color: var(--ink-700); max-width: 46ch; margin: 0 0 24px; font-size: .875em; line-height: 1.6; }
+.connect-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.connect-actions .btn { padding: 8px 18px; }
+.connect-actions .btn svg { width: 15px; height: 15px; }
+
+/* Sentence case at a smaller size across every CTA in this band — the
+   global .btn ships uppercase with wide tracking, which is too shouty
+   against the oversized headline here. */
+.connect-band .btn {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: .8125rem; /* 13px */
+}
+.connect-actions .btn-ghost { border-color: var(--blue-800); color: var(--blue-900); }
+.connect-actions .btn-ghost:hover { background: var(--blue-900); color: #fff; }
+
+.connect-social-label { display: block; font-size: var(--fs-small); color: var(--ink-700); margin-bottom: 12px; }
+.connect-social-icons { display: flex; gap: 12px; }
+.connect-social-icons a {
+  width: 40px; height: 40px; border-radius: var(--radius-pill);
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--blue-900); color: var(--blue-900);
+  transition: background .18s ease, color .18s ease;
+}
+.connect-social-icons a:hover { background: var(--blue-900); color: var(--blue-200); }
+.connect-social-icons svg { width: 19px; height: 19px; }
+
+@media (max-width: 900px) {
+  /* Below the two-column break the content no longer fits one viewport, so
+     the height lock is released and the section flows normally. */
+  .connect-band-section {
+    height: auto; min-height: 0; max-height: none;
+    display: block;
+    padding: 56px 0;
+  }
+  .connect-band {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 34px;
+  }
+  .connect-copy   { grid-column: 1; grid-row: 1; }
+  .connect-form   { grid-column: 1; grid-row: 2; }
+  .connect-social { grid-column: 1; grid-row: 3; }
 }
