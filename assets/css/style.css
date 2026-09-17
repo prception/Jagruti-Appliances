@@ -1908,16 +1908,6 @@ body.menu-open { overflow: hidden; }
 .page-hero { background: var(--gradient-deep); color: #fff; padding: 58px 0 68px; text-align: center; }
 .page-hero h1 { color: #fff; font-size: var(--fs-h1); line-height: var(--lh-title); letter-spacing: var(--ls-title); }
 .page-hero p { color: rgba(255,255,255,.9); max-width: 640px; margin: 0 auto 22px; font-size: var(--fs-lead); line-height: var(--lh-body); }
-/* Default is the light page ground — now that sections no longer alternate,
-   most breadcrumbs sit on canvas. The white variant is scoped to the dark
-   grounds that actually need it. */
-.breadcrumb { font-size: var(--fs-label); color: var(--ink-500); margin-bottom: 16px; }
-.breadcrumb a { color: var(--blue-700); font-weight: 500; }
-.breadcrumb a:hover { text-decoration: underline; }
-.breadcrumb .sep { margin: 0 6px; opacity: .6; }
-
-.page-hero .breadcrumb, .hero .breadcrumb { color: rgba(255,255,255,.8); }
-.page-hero .breadcrumb a, .hero .breadcrumb a { color: rgba(255,255,255,.85); }
 .page-hero .hero-cta { justify-content: center; }
 
 /* ---------- Trust bar ---------- */
@@ -3043,48 +3033,15 @@ body.menu-open { overflow: hidden; }
 }
 .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--blue-500); }
 .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-/* Same glass card as the homepage's "Why Jagruti" grid (.why-item): a
-   translucent white fill over a blurred backdrop, a bright rim and the same
-   soft blue drop shadow, so the two card families read as one system. The
-   section behind these sits on a light blue wash rather than a photograph, so
-   the fill is a touch denser than .why-item's .20 to hold its edge there. */
-.contact-info-card {
-  position: relative;
-  padding: 1.125rem 1.375rem;
-  margin-bottom: 18px;
-  border-radius: 24px;
-  background: rgba(255,255,255,.42);
-  -webkit-backdrop-filter: blur(20px) saturate(155%);
-  backdrop-filter: blur(20px) saturate(155%);
-  border: 1px solid rgba(255,255,255,.72);
-  box-shadow:
-    0 20px 50px rgba(5, 61, 87, .12),
-    inset 0 1px 0 rgba(255,255,255,.55);
-  transition:
-    transform .35s cubic-bezier(.22,.61,.36,1),
-    box-shadow .35s cubic-bezier(.22,.61,.36,1),
-    background .35s ease,
-    border-color .35s ease;
-}
-/* Matching the .why-item hover: a 6px lift, a brighter rim, a denser fill. */
-@media (hover: hover) {
-  .contact-info-card:hover {
-    transform: translateY(-6px) scale(1.015);
-    background: rgba(255,255,255,.58);
-    border-color: rgba(255,255,255,.88);
-    box-shadow:
-      0 28px 60px rgba(5, 61, 87, .18),
-      inset 0 1px 0 rgba(255,255,255,.7);
-  }
-}
-.contact-info-card h4 { font-size: var(--fs-label); font-weight: var(--fw-label); text-transform: none; letter-spacing: var(--ls-label-tight); color: var(--blue-600); margin-bottom: 10px; }
-.contact-info-card .val { font-size: var(--fs-card-desc); font-weight: var(--fw-label); color: var(--ink-900); }
+.contact-info-card { background: var(--blue-50); border: 1px solid var(--blue-100); border-radius: var(--radius-lg); padding: 26px; margin-bottom: 18px; }
+.contact-info-card h4 { font-size: .875rem; font-weight: 600; line-height: 1.25; text-transform: none; letter-spacing: var(--ls-label-tight); color: var(--blue-600); margin-bottom: 5px; }
+.contact-info-card .val { font-size: .8125rem; line-height: 1.45; font-weight: var(--fw-label); color: var(--ink-900); }
 /* The address wraps to several lines, so it sits one step down from the
    single-line phone/email values; the email keeps the root size so a long
    address does not force the whole card's type larger. Both were inline
    style= overrides before. */
-.contact-info-card .val-address { font-size: var(--fs-small); font-weight: var(--fw-strong); line-height: var(--lh-body); }
-.contact-info-card .val-email   { font-size: var(--fs-small); }
+.contact-info-card .val-address { font-size: .8125rem; font-weight: var(--fw-strong); line-height: 1.45; }
+.contact-info-card .val-email   { font-size: .8125rem; }
 .map-embed { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--blue-100); }
 .map-embed iframe { width: 100%; height: 320px; border: 0; display: block; }
 .form-note { font-size: var(--fs-caption); color: var(--ink-500); margin-top: 10px; }
@@ -6092,7 +6049,6 @@ body:has(> main > .connect-band-section:last-child) > main { background: var(--p
   padding: clamp(40px, 5vw, 72px) clamp(24px, 5vw, 80px);
   background: #fff;
 }
-.contact-hero-form .breadcrumb { margin-bottom: 14px; }
 .contact-hero-form .eyebrow { align-self: flex-start; margin-bottom: 12px; }
 .contact-hero-form h1 {
   font-size: clamp(1.9em, 3.2vw, 2.5em);
@@ -6206,7 +6162,7 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
    pinned bottom-left, a short positioning line bottom-right, both on the
    same baseline. Typography is the site ramp (General Sans via
    --font-sans, inherited) so it reads as the same family as the homepage
-   hero: the eyebrow/breadcrumb take the label scale, the headline the
+   hero: the eyebrow takes the label scale, the headline the
    h1 scale at the shared title weight and tracking.
    =================================================================== */
 /* One screen tall, pinned three ways — the full-viewport contract from
@@ -6355,13 +6311,23 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
    top of the row and leave the space below empty. That is what keeps the
    panel reading as the feature and the tiles as the supporting row. */
 .grid-editorial .product-card { align-self: start; }
+/* A subtle light grey ground: flat and neutral (no blue or warm cast), and
+   close enough to the page that the tile reads as a quiet panel behind the
+   product rather than a block competing with it. */
 .grid-editorial .product-card .thumb {
   display: block;
   aspect-ratio: 450/560;
   border-radius: 0;
-  background: var(--blue-50);
+  background: #e4e4e5;
 }
-.grid-editorial .product-card .thumb img { object-fit: cover; }
+/* The product sits INSIDE the tile with air around it rather than being
+   cropped to fill it: `contain` keeps the whole machine visible and the
+   padding holds it off the edges, so the tile reads as a product shot on a
+   ground — the reference's treatment — instead of a bleed crop. */
+.grid-editorial .product-card .thumb img {
+  object-fit: contain;
+  padding: 6%;
+}
 /* A slower, smaller push than the base card's .35s/1.06 — at this size the
    image is the whole tile, so the movement wants to be barely there. */
 .grid-editorial .product-card .thumb img { transition: transform .6s cubic-bezier(.22,.61,.36,1); }
