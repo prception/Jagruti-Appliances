@@ -47,6 +47,32 @@
   font-style: normal;
 }
 
+/* Marcellus (Google Fonts, OFL) — the display serif for hero headlines only.
+   Self-hosted from assets/fonts/ like General Sans, NOT hotlinked from
+   fonts.gstatic.com, so the site keeps owning its own delivery and leaks no
+   visitor data to a third party.
+
+   One weight ships (400) because that is all Marcellus has — never ask for a
+   bold, or the browser will synthesise a smeared faux-bold. Split latin /
+   latin-ext on the same unicode-range boundaries Google serves, so the
+   8.9KB ext file is only fetched by pages that actually need those glyphs. */
+@font-face {
+  font-family: 'Marcellus';
+  src: url('../fonts/Marcellus-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Marcellus';
+  src: url('../fonts/Marcellus-400-latin-ext.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 :root {
   /* ---- Brand anchors (sampled from artwork) ---- */
   --brand-primary: #0d8ac4;  /* Jagruti Blue — fills the wordmark */
@@ -132,11 +158,49 @@
      licence. It is self-hosted from assets/fonts/ (see the @font-face
      blocks above), NOT hotlinked from Fontshare's CDN, so the site owns
      its own delivery and leaks no visitor data to a third party.
-     Four weights ship: 400/500/600/700 — the exact set this stylesheet
-     uses. Anything outside that range gets synthesised by the browser,
-     so add a real file rather than reaching for 800. */
-  --font-sans: "General Sans", "Segoe UI", -apple-system, BlinkMacSystemFont,
-               "Helvetica Neue", Arial, sans-serif;
+
+     NOTE: General Sans is no longer the page face — Marcellus runs the whole
+     site (see --font-sans just below). It is still USED in exactly one place:
+     --font-stage, the home page's giant background product name, which needs
+     a real 700. The four GeneralSans-*.woff2 files and their @font-face
+     blocks therefore stay, and the whole change can be reverted by pointing
+     --font-sans back at "General Sans". */
+
+  /* ---- The page face ----
+     Marcellus, site-wide: headings, body, buttons, nav, labels.
+
+     KNOWN TRADE-OFF, made deliberately: Marcellus ships ONE weight (400).
+     The --fw-label/--fw-strong/--fw-title steps below (500/600/700) are kept
+     as they were, so the browser SYNTHESISES those bolds by smearing the 400
+     outlines. That is accepted here to preserve the existing weight
+     hierarchy; it is not an oversight. If the faux-bold ever needs to go,
+     there are two exits: flatten every --fw-* to 400 (loses the hierarchy),
+     or swap in a serif that ships real 400–700 (e.g. EB Garamond).
+
+     Georgia is the fallback: also a high-contrast old-style serif, so a
+     failed load degrades in kind rather than to a grotesque. */
+  --font-sans: Marcellus, Georgia, "Times New Roman", serif;
+
+  /* Kept as its own token so headline-only tuning (the display line-height
+     and tracking below) stays separable from the page face, even though both
+     now resolve to the same family. */
+  --font-display: Marcellus, Georgia, "Times New Roman", serif;
+  --fw-display: 400;
+
+  /* The survivor of the General Sans era, for the two places that are drawn
+     ARTWORK rather than text and need a REAL 700 at poster size:
+       .stage-word          — the viewport-spanning product name behind the
+                              machine on the home page
+       .footer-wordmark span — the JAGRUTI wordmark closing every page
+     At that scale a synthesised bold smears visibly, and the serif's hairline
+     strokes thin out badly. The GeneralSans-*.woff2 files are still shipped
+     for these two, so the cost is one extra font file per page. */
+  --font-stage: "General Sans", "Segoe UI", -apple-system, BlinkMacSystemFont,
+                "Helvetica Neue", Arial, sans-serif;
+  /* Tighter than --lh-title: a serif at display size sets closer without the
+     lines colliding, and 76/80 is the ratio the banner was tuned at. */
+  --lh-display: .95;
+  --ls-display: .005em;
 
   /* Heading colour — headings sit a step lighter than body ink, the way
      the reference greys its headings back from its body colour. */
@@ -1609,10 +1673,17 @@ html.menu-open { overflow: hidden; }
 }
 .hc-title {
   margin: 0 0 .5em;
-  font-size: clamp(24px, 2.9vw, 46px);
-  /* 700 to match the h1–h6 system. This class sets its own weight rather
-     than inheriting it, so it has to be changed here too. */
-  font-weight: 700; line-height: 1.08; letter-spacing: -.02em;
+  /* Stepped up from clamp(24px, 2.9vw, 46px): the serif at 400 reads lighter
+     and optically smaller than the 700 grotesque this slot was sized for, so
+     it needs more scale to carry the hero. */
+  font-size: clamp(30px, 4.2vw, 66px);
+  /* The display serif, as on every other hero headline on the site. Weight is
+     400 because Marcellus ships no other weight — the old 700 would be
+     synthesised into a faux-bold. */
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
   color: #fff;
 }
 /* Brighter than --blue-400, which vanished against the sky. */
@@ -1982,6 +2053,23 @@ html.menu-open { overflow: hidden; }
 /* page hero (inner pages) */
 .page-hero { background: var(--gradient-deep); color: #fff; padding: 58px 0 68px; text-align: center; }
 .page-hero h1 { color: #fff; font-size: var(--fs-h1); line-height: var(--lh-title); letter-spacing: var(--ls-title); }
+
+/* ---------- Hero headlines: the display serif ----------
+   Every page's main hero heading, whichever hero it uses — the centred
+   .page-hero (23 pages) and the full-bleed .cat-hero banner (2). Set in one
+   place so the two hero types cannot drift apart.
+
+   font-weight is forced to 400 because Marcellus ships no other weight: both
+   heroes otherwise inherit a heavier --fw-title / --fw-strong, which the
+   browser would synthesise into a smeared faux-bold. */
+.page-hero h1,
+.cat-hero h1 {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: var(--fw-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+}
 .page-hero p { color: rgba(255,255,255,.9); max-width: 640px; margin: 0 auto 22px; font-size: var(--fs-lead); line-height: var(--lh-body); }
 .page-hero .hero-cta { justify-content: center; }
 
@@ -2016,7 +2104,7 @@ html.menu-open { overflow: hidden; }
   display: flex; flex-direction: column; justify-content: flex-end;
   /* The image runs edge to edge, so the stock pale card chrome would read as
      a seam around it. */
-  background: var(--ink-900); border-color: rgba(10,26,43,.18);
+  background: var(--ink-900); border: 0;
 }
 .need-card.need-visual .need-media {
   position: absolute; inset: 0; z-index: 0; pointer-events: none;
@@ -2527,6 +2615,99 @@ html.menu-open { overflow: hidden; }
   flex: 0 1 auto;
   height: clamp(30.4rem, 47vh, 31.9rem);
   min-height: 0;
+}
+
+/* ---- Why Jagruti on the product category pages ----
+   Those pages reuse .why-grid inside a plain `.section.section-alt`, but with
+   four cards instead of the home page's eight. The base grid above is a fixed
+   4x2 whose rows are sized to divide the home page's one-screen section, so
+   with a single row of cards the second row stayed in the layout as ~15rem of
+   empty space between the cards and the footer.
+
+   Scoped by :not(.why-section) rather than by a new class so the five pages
+   need no markup change: the home page's grid always sits inside
+   .why-section, these never do. One content-sized row, and the fixed height
+   released — there is no viewport box to divide here, so the cards size to
+   their copy exactly as the neighbouring .section blocks do. */
+.section:not(.why-section) .why-grid {
+  grid-template-rows: none;
+  height: auto;
+  min-height: 0;
+  flex: none;
+}
+
+/* ---- Trust strip (product category pages) ----
+   Replaces the four .why-item glass cards those pages used to carry. Each
+   card's paragraph only restated its own heading ("ISO 9001:2015 Certified"
+   -> "Quality-controlled manufacturing at every stage"), so the copy was
+   costing 463px of page to say what four labels say. This is the same four
+   claims as one horizontal row: icon above label, no card, no paragraph.
+
+   Not a glass card like .why-item on purpose. The cards belong to the home
+   page's photographic .why-section, where the translucency reads against the
+   image behind it. Here the ground is flat --page-bg, so a blurred fill has
+   nothing to blur and would just look like a grey box. The strip carries
+   itself on rhythm and a hairline instead. */
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* No column gap: the hairline is the separator, and a gap on top of it
+     would read as two different kinds of division at once. The breathing
+     room comes from each cell's own padding-inline instead, which keeps the
+     rule centred in the space between two labels rather than offset. */
+  gap: 0;
+  align-items: start;
+  max-width: 900px;
+  margin: 0 auto;
+}
+/* Pulls the strip up under the heading. `.section-head`'s 44px is sized for
+   a block of cards beneath it; against a single 64px row it left the label
+   floating. */
+.trust-strip-head.section-head { margin-bottom: 30px; }
+.trust-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: .625rem;
+  /* Separators between items, not around them: a hairline on every item but
+     the first reads as division rather than as four boxed cells. */
+  padding-inline: 1rem;
+  border-left: 1px solid var(--blue-100);
+}
+.trust-item:first-child { border-left: 0; }
+.trust-item .icon {
+  width: 2rem; height: 2rem;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--blue-700);
+  flex: none;
+}
+.trust-item .icon svg { width: 100%; height: 100%; }
+/* The label is the whole content now, so it carries the weight the heading
+   and paragraph used to share. Kept to two lines at every width by the
+   column count below rather than by shrinking the type. */
+.trust-item h4 {
+  margin: 0;
+  font-size: .9375rem;       /* 15px */
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--blue-800);
+  hyphens: none;
+  overflow-wrap: normal;
+}
+
+@media (max-width: 860px) {
+  /* Two columns. The hairline has to move with them: it now belongs on the
+     right-hand item of each pair, not on items 2/3/4. */
+  .trust-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.25rem 0; }
+  .trust-item:nth-child(odd) { border-left: 0; }
+  .trust-item:nth-child(even) { border-left: 1px solid var(--blue-100); }
+}
+@media (max-width: 460px) {
+  /* One column on a phone. Vertical hairlines make no sense stacked, so the
+     rhythm carries it alone. */
+  .trust-strip { grid-template-columns: 1fr; gap: 1.75rem 0; }
+  .trust-item { border-left: 0 !important; padding-inline: 0; }
 }
 
 /* The glass card. Deliberately under-opaque so the blue behind stays
@@ -3374,6 +3555,10 @@ html.menu-open { overflow: hidden; }
   display: block;
   width: 100%;
   text-align: center;
+  /* The wordmark keeps General Sans, like .stage-word: it is the brand name
+     drawn as ARTWORK at 19rem, and it is the second place on the site that
+     needs a real 700 rather than the synthesised bold the serif would give. */
+  font-family: var(--font-stage);
   font-weight: 700;
   font-size: clamp(4rem, 19.5vw, 19rem);
   line-height: .82;
@@ -3993,7 +4178,7 @@ html.menu-open { overflow: hidden; }
     margin-bottom: .6em;
   }
   .hc-title {
-    font-size: clamp(23px, 5.6vw, 34px);
+    font-size: clamp(27px, 6.6vw, 42px);
     line-height: 1.1;
     text-wrap: balance;
     color: #fff;
@@ -4481,6 +4666,10 @@ html.preloading, html.preloading body { overflow: hidden; }
   width: max-content;
   max-width: none;
   white-space: nowrap;
+  /* This one element keeps General Sans (see --font-stage below), so 700 is a
+     REAL weight here, not a synthesised one — unlike everywhere else on the
+     site, which now runs the single-weight serif. */
+  font-family: var(--font-stage);
   font-weight: 700;
   /* --fit is written per scene by initMachinePosters: it measures the name
      and solves for the size that lands it at --fit-target of the viewport.
@@ -4493,6 +4682,7 @@ html.preloading, html.preloading body { overflow: hidden; }
      stay only as a pre-JS floor and a runaway guard. */
   font-size: clamp(2.6rem, var(--fit), 60rem);
   line-height: .78;
+  /* The grotesque's own display tracking, restored with the face. */
   letter-spacing: -.055em;
   text-transform: uppercase;
   /* A deep blue from the existing scale at low opacity, so the name reads
@@ -5083,23 +5273,18 @@ html:not(.js) .stage-actions { justify-content: center; }
    (gutter + card + 20px) crosses the gutter and tucks half a card deep
    behind each neighbour, with 10px of overlap per side so no seam shows
    where arc meets card. */
-/* The dotted pattern is the connector's resting look, so it is set here
-   rather than only under .js — without the script the line still reads as
-   a dotted path, just already complete instead of being drawn. */
+/* The connector's resting look — what shows without the script: the full
+   arc already drawn. The .js rules below take over the trim once the
+   scroll-driven draw is running. */
 .journey-arc {
-  /* Values are in the viewBox's own units (100 wide), and the svg renders
-     ~3.4x that, so a 0.75 stroke lands at ~2.5px on screen. A near-zero
-     dash with a round cap draws a true circle rather than a short bar, and
-     because pathLength normalises the curve the dots stay evenly spaced at
-     every viewport instead of stretching with the gutter. */
-  stroke-dasharray: 0.01 3.2;
+  /* A solid line ending in one arrow head. The stroke-width is in the
+     viewBox's own units because markerUnits is strokeWidth — the arrow is
+     sized off this number, so it cannot be a non-scaling screen pixel value
+     the way the old dotted version's was. 0.75 renders at ~2.5px at desktop
+     width, which is the weight the dots read at. */
+  stroke-width: 0.75;
   stroke-linecap: round;
-  /* non-scaling-stroke pins the dot to a real 2.5px whatever the svg's
-     scale, so the dots read identically at every breakpoint. Only the
-     SPACING (the dash gap above) is in viewBox units, which is what keeps
-     the rhythm even as the gutter stretches. */
-  vector-effect: non-scaling-stroke;
-  stroke-width: 2.5px;
+  fill: none;
 }
 .journey-arc-svg {
   position: absolute;
@@ -5321,48 +5506,41 @@ html:not(.js) .stage-actions { justify-content: center; }
   opacity: clamp(0, calc(var(--p) * 1000), .9);
 }
 
-/* The dots themselves. A near-zero dash with a round linecap renders as a
-   true circle rather than a short bar, and pathLength="100" means the
-   numbers are percentages of the curve — so the spacing stays even at
-   every viewport instead of stretching with the gutter. */
+/* Holds the colour the arc inherits through currentColor. */
 .js .journey-link .journey-arc {
-  stroke-dasharray: 0.01 3.2;
-  stroke-linecap: round;
+  stroke: currentColor;
 }
 
-/* THE DRAW: the mask retreats from 100% to 0 in step with --p, so the dots
-   are laid down by the scroll — stop half way and the line stops half way
-   across, exactly where the hand left it.
+/* THE DRAW: the visible line is TRIMMED BY ITS OWN DASH PATTERN in step
+   with --p, so the arc is laid down by the scroll — stop half way and the
+   line stops half way across, exactly where the hand left it. The mask is
+   gone: it painted out everything past the drawn tip, arrow head included.
 
    The % unit is load-bearing: a bare calc() result is rejected here and
-   resolves to 0, which would leave the mask fully open at every --p and
-   every line already drawn instead of growing. */
-.js .journey-link .journey-arc-mask {
-  stroke-dasharray: 100 100;
-  /* THE TIMING. The link's box spans three grid tracks — the card on its
-     left, the gutter, the card on its right — but only the gutter portion
-     is ever SEEN; the rest is tucked behind the two cards. Mapping --p
-     straight onto the whole path therefore spent ~39% of the beat drawing
-     invisibly behind the left card, ~22% crossing the gap, then another
-     ~39% behind the right card: the line looked like it appeared all at
-     once and then waited, which is what broke the hand-off between steps.
-     (Those three shares hold within a point or two at every width, because
-     the card cap and the gutter grow at similar rates.)
+   resolves to 0, which would leave every line already drawn instead of
+   growing.
 
-     So --p is remapped to cover only the visible crossing: the draw starts
-     already advanced to the left card's edge and finishes at the right
-     one's. The dots now begin exactly where the first card ends and land
-     exactly where the next one begins, so the movement is continuous and
-     each card is handed to the next by a line that is actually travelling.
+   THE TIMING. The link's box spans three grid tracks — the card on its
+   left, the gutter, the card on its right — but only the gutter portion
+   is ever SEEN; the rest is tucked behind the two cards. Mapping --p
+   straight onto the whole path therefore spent ~39% of the beat drawing
+   invisibly behind the left card, ~22% crossing the gap, then another
+   ~39% behind the right card. So --p is remapped to cover only the
+   visible crossing: the draw starts already advanced to the left card's
+   edge and finishes at the right one's.
 
-     --arc-from/--arc-to are the two edges as a share of the path; the
-     offset interpolates between them instead of between 100% and 0. */
+   --arc-from/--arc-to are those two edges as a share of the path. */
+.js .journey-link {
   --arc-from: 62%;
   --arc-to: 38%;
+}
+.js .journey-link .journey-arc {
+  stroke-dasharray: 100 100;
   stroke-dashoffset: calc(
     var(--arc-to) + (1 - var(--p)) * (var(--arc-from) - var(--arc-to))
   );
 }
+
 
 @media (max-width: 1024px) {
   /* Two columns and content-driven height — the one-viewport lock is
@@ -5524,7 +5702,10 @@ html:not(.js) .stage-actions { justify-content: center; }
 .services-intro h2 {
   margin: 0;
   font-size: clamp(2.5rem, 1.1rem + 5.2vw, 6rem);
-  font-weight: var(--fw-title);
+  /* A full-viewport pinned panel playing the hero's role, so it takes the
+     hero face at 400 -- Marcellus has no bold to inherit. */
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
   line-height: 96%;
   letter-spacing: var(--ls-display);
   color: var(--white);
@@ -5618,9 +5799,10 @@ html:not(.js) .stage-actions { justify-content: center; }
 .service-title {
   display: block;
   font-size: clamp(1.25rem, .95rem + 1.1vw, 1.9rem);
-  font-weight: var(--fw-title);
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
   line-height: 118%;
-  letter-spacing: -.02em;
+  letter-spacing: var(--ls-display);
   color: var(--white);
 }
 .service-copy {
@@ -6061,9 +6243,13 @@ body:has(> main > .connect-band-section:last-child) > main { background: var(--p
   color: #fff;
   margin: 0;
   font-size: clamp(1.625rem, 3.2vw, 2.375rem);
+  /* Plays the hero's role at the end of the page, so it takes the hero face.
+     1.02 is kept over --lh-display: this headline is deliberately set on two
+     short lines and the tighter ratio is what stacks them. */
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
   line-height: 1.02;
-  letter-spacing: -.02em;
-  font-weight: var(--fw-title);
+  letter-spacing: var(--ls-display);
 }
 /* The headline CTA is the site's standard pill (.btn.btn-primary.btn-sm);
    only its flex behaviour belongs here, so it keeps the shared radius,
@@ -6196,11 +6382,19 @@ body:has(> main > .connect-band-section:last-child) > main { background: var(--p
 .stage-head h2,
 .journey-head h2,
 .cta-band h2 {
-  font-family: var(--font-sans);
+  /* The display serif, as on every hero headline. Section heads are the
+     page's other tier of big type, so they take the same face — the
+     grotesque keeps everything below them (body, eyebrows, card titles).
+
+     font-weight is 400 because Marcellus ships no other weight; asking for
+     --fw-title here would have the browser synthesise a faux-bold. The serif
+     also sets tighter than the grotesque at the same size, hence the display
+     line-height and tracking rather than --lh-title / --ls-title. */
+  font-family: var(--font-display);
   font-size: var(--fs-title);
-  font-weight: var(--fw-title);
-  line-height: var(--lh-title);
-  letter-spacing: var(--ls-title);
+  font-weight: var(--fw-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
   text-transform: none;
 }
 
@@ -6431,15 +6625,15 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
    reference sets it at display scale. It stays on the ramp by taking --fs-h1
    as its floor and the shared title line-height and tracking, so it is the
    same typeface and proportions, just one step up the scale. */
+/* The face, weight, line-height and tracking now come from the shared
+   `.page-hero h1, .cat-hero h1` display-serif rule near .page-hero. They are
+   NOT repeated here: this block sits later in the file at equal specificity,
+   so restating font-weight would win over the shared 400 and leave the
+   browser synthesising a faux-bold from Marcellus's single weight. */
 .cat-hero h1 {
   margin: 0;
   color: #fff;
   font-size: clamp(var(--fs-h1), 6.2vw, 92px);
-  /* One step down from the global --fw-title: at this size the heavier weight
-     closes up the counters, and the extra scale already carries the emphasis. */
-  font-weight: var(--fw-strong);
-  line-height: var(--lh-title);
-  letter-spacing: var(--ls-title);
   max-width: 12em;
   text-wrap: balance;
   text-shadow: 0 2px 22px rgba(12,8,6,.42);
@@ -6484,6 +6678,82 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
 }
 @media (max-width: 560px) {
   .cat-hero .hero-cta .btn { min-width: 0; flex: 1 1 auto; }
+}
+
+/* ---------- Collection banner variant (.cat-hero-wide) ----------
+   The reference's collection header is a BANNER, not a full-screen hero: the
+   picture stops well above the fold so the first row of products is already
+   visible on load, which is the whole point of a collection page. So the
+   height lock drops from 100svh to a band, and the copy collapses from the
+   two-column headline/note split into one left column with the paragraph
+   sitting directly under the headline.
+
+   Everything else -- the scrims, the transparent header, the type ramp --
+   is inherited from .cat-hero unchanged. */
+.cat-hero.cat-hero-wide {
+  height: auto;
+  min-height: min(62svh, 560px);
+  max-height: none;
+  padding: calc(var(--header-h) + 40px) 0 clamp(40px, 6vh, 64px);
+}
+/* One column: the note stops being a right-hand rail and becomes the
+   standfirst under the headline, as in the reference. */
+.cat-hero-wide .cat-hero-grid {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+/* The face, weight, line-height and tracking come from the shared
+   `.page-hero h1, .cat-hero h1` rule above. Only what is specific to the
+   banner is set here: its size and its slightly-off-white ink. */
+.cat-hero-wide h1 {
+  max-width: none;
+  color: rgb(240, 240, 240);
+  /* 80px at desktop, as specified. Kept as a clamp rather than a flat 80px so
+     the headline still comes down on small screens -- a fixed 80px overflows
+     the gutter below ~460px. */
+  font-size: clamp(38px, 5.6vw, 80px);
+}
+.cat-hero-wide .cat-hero-note {
+  margin-left: 0;
+  margin-top: clamp(16px, 2.2vh, 24px);
+  /* A step under --fs-label (14px): against the 80px serif headline the
+     standfirst is deliberately the small print of the pair, and the tighter
+     measure keeps it to three short lines. */
+  font-size: 13px;
+  max-width: 30em;
+}
+/* The banner crops from higher up the frame than the standard .cat-hero's
+   50% 45%: on this picture the machine and the operator's hand sit in the
+   upper half, and the default framing pushed them down behind the headline.
+   Pulling the focal point up keeps the subject clear of the copy. */
+.cat-hero-wide .ch-img { object-position: 50% 28%; }
+
+/* The collection grid sits CLOSE under the banner rather than a full
+   --section-pad-y (up to 120px) below it: on a collection page the products
+   are the content the banner is introducing, so a full section gap reads as
+   a break between two unrelated blocks. The bottom padding stays at the
+   normal rhythm so the section still closes properly. */
+.section-editorial.section {
+  padding-top: clamp(20px, 2.6vh, 34px);
+}
+
+@media (max-width: 900px) {
+  .cat-hero.cat-hero-wide { min-height: min(56svh, 460px); }
+}
+
+/* ---------- Collection count bar (.range-bar) ----------
+   The reference sets a hairline rule above the grid carrying the product
+   count. The Filters control and the grid-density / Lookbook toggles beside
+   it are omitted deliberately: on a six-tile range they would be controls
+   with nothing to do. The count keeps the bar's purpose without the chrome. */
+.range-bar {
+  border-top: 1px solid rgba(96,118,133,.24);
+  padding: 14px 0 20px;
+  text-align: center;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--ls-label-tight);
+  color: var(--ink-500);
 }
 
 /* ===================================================================
@@ -6772,4 +7042,101 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
     aspect-ratio: 370/537;
   }
   .grid-editorial .rf-detail { width: 100%; }
+}
+
+/* ===================================================================
+   RANGE HELP BAR  (.range-help)
+   -------------------------------------------------------------------
+   Replaces the dashed .testimonial-empty placeholder that used to close
+   each collection grid. That box was a notice; this is an offer — so it
+   reads as a card with a single action rather than a fenced-off note.
+
+   Layout is one row: a round icon chip, the copy column (eyebrow /
+   question / answer), then the WhatsApp button pinned right. The copy
+   column takes the free space (1fr) so the icon and the button keep
+   their intrinsic widths and the bar reflows cleanly.
+   =================================================================== */
+.range-help {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  /* Capped and centred rather than spanning the container: at full width the
+     three items were flung to opposite edges with a lake of dead space
+     between the copy and the button. The cap keeps them as one group. */
+  max-width: 720px;
+  margin: 28px auto 0;
+  padding: 16px 20px;
+  background: var(--white);
+  border: 1px solid var(--blue-100);
+  border-radius: var(--radius-md);
+  /* The bar's own type scale. Every size inside is an em off this, so the
+     whole block steps down together and stays in proportion. */
+  font-size: 15px;
+}
+/* The icon chip. Tinted rather than solid: at this size a filled brand
+   circle pulled focus off the green button, which is the actual action. */
+.range-help .rh-icon {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--blue-100);
+  color: var(--blue-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.range-help .rh-icon svg { width: 17px; height: 17px; }
+
+.range-help .rh-eyebrow {
+  display: block;
+  font-size: .7333em;   /* 11px */
+  font-weight: var(--fw-label);
+  line-height: var(--lh-tight);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--blue-600);
+}
+.range-help .rh-title {
+  margin: 4px 0 0;
+  /* Well under --fs-card-title (20px): this is a prompt sitting below a
+     grid of product cards, so it must not out-rank their titles. */
+  font-size: 1em;   /* 15px */
+  font-weight: var(--fw-strong);
+  line-height: var(--lh-tight);
+  color: var(--ink-900);
+}
+.range-help .rh-note {
+  margin: 3px 0 0;
+  font-size: .8667em;   /* 13px */
+  line-height: var(--lh-tight);
+  color: var(--ink-500);
+}
+/* The button is already a .btn .btn-whatsapp; it only needs to stop
+   stretching to the grid cell's full height. */
+.range-help .btn {
+  flex: none;
+  white-space: nowrap;
+  font-size: .8667em;   /* 13px */
+  padding: .6rem 1.05rem;
+}
+.range-help .btn svg { width: 16px; height: 16px; }
+
+/* Under ~620px the three-column row would crush the copy, so the bar
+   stacks: icon and copy stay on one line, the button drops full-width
+   beneath them where it stays an easy tap target. The breakpoint sits
+   below the 720px max-width so the bar holds its single row all the way
+   down to its capped size, and only stacks once the viewport is genuinely
+   narrower than the layout needs. */
+@media (max-width: 620px) {
+  .range-help {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 14px 16px;
+  }
+  .range-help .btn {
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-content: center;
+  }
 }

@@ -733,24 +733,12 @@
              is left at its default so the curve keeps its shape and the
              round cap stays round. -->
         <svg class="journey-arc-svg" viewBox="0 0 100 14" fill="none" aria-hidden="true" focusable="false">
-          <defs>
-            <!-- The visible line is DOTTED, so its own dash pattern is the
-                 dots and cannot also be used to draw it. A second, solid
-                 copy of the identical curve is therefore used as a mask
-                 that sweeps open along the path (preloader-style: one
-                 pathLength="100" stroke whose dashoffset eases to 0), so
-                 the dots are uncovered along the bow itself rather than
-                 by a straight wipe. -->
-            <mask id="journeyArc1" maskUnits="userSpaceOnUse" x="-4" y="-4" width="108" height="22">
-              <path class="journey-arc-mask" d="M2 12 C 28 -1, 72 -1, 98 12"
-                    fill="none" stroke="#fff" stroke-width="2.4"
-                    stroke-linecap="round" pathLength="100"/>
-            </mask>
-          </defs>
+          <!-- The line, trimmed by its own dash pattern: --p opens the dash
+               so the stroke is laid down across the gutter as the visitor
+               scrolls, and the round cap sits at the moving tip. -->
           <path class="journey-arc" d="M2 12 C 28 -1, 72 -1, 98 12"
-                fill="none" stroke="currentColor" stroke-width="0.5"
-                stroke-linecap="round" pathLength="100"
-                mask="url(#journeyArc1)"/>
+                fill="none" stroke="currentColor"
+                pathLength="100"/>
         </svg>
       </span>
       <article class="journey-card" data-journey-img>
@@ -772,24 +760,12 @@
              is left at its default so the curve keeps its shape and the
              round cap stays round. -->
         <svg class="journey-arc-svg" viewBox="0 0 100 14" fill="none" aria-hidden="true" focusable="false">
-          <defs>
-            <!-- The visible line is DOTTED, so its own dash pattern is the
-                 dots and cannot also be used to draw it. A second, solid
-                 copy of the identical curve is therefore used as a mask
-                 that sweeps open along the path (preloader-style: one
-                 pathLength="100" stroke whose dashoffset eases to 0), so
-                 the dots are uncovered along the bow itself rather than
-                 by a straight wipe. -->
-            <mask id="journeyArc2" maskUnits="userSpaceOnUse" x="-4" y="-4" width="108" height="22">
-              <path class="journey-arc-mask" d="M2 12 C 28 -1, 72 -1, 98 12"
-                    fill="none" stroke="#fff" stroke-width="2.4"
-                    stroke-linecap="round" pathLength="100"/>
-            </mask>
-          </defs>
+          <!-- The line, trimmed by its own dash pattern: --p opens the dash
+               so the stroke is laid down across the gutter as the visitor
+               scrolls, and the round cap sits at the moving tip. -->
           <path class="journey-arc" d="M2 12 C 28 -1, 72 -1, 98 12"
-                fill="none" stroke="currentColor" stroke-width="0.5"
-                stroke-linecap="round" pathLength="100"
-                mask="url(#journeyArc2)"/>
+                fill="none" stroke="currentColor"
+                pathLength="100"/>
         </svg>
       </span>
       <article class="journey-card" data-journey-img>
@@ -811,24 +787,12 @@
              is left at its default so the curve keeps its shape and the
              round cap stays round. -->
         <svg class="journey-arc-svg" viewBox="0 0 100 14" fill="none" aria-hidden="true" focusable="false">
-          <defs>
-            <!-- The visible line is DOTTED, so its own dash pattern is the
-                 dots and cannot also be used to draw it. A second, solid
-                 copy of the identical curve is therefore used as a mask
-                 that sweeps open along the path (preloader-style: one
-                 pathLength="100" stroke whose dashoffset eases to 0), so
-                 the dots are uncovered along the bow itself rather than
-                 by a straight wipe. -->
-            <mask id="journeyArc3" maskUnits="userSpaceOnUse" x="-4" y="-4" width="108" height="22">
-              <path class="journey-arc-mask" d="M2 12 C 28 -1, 72 -1, 98 12"
-                    fill="none" stroke="#fff" stroke-width="2.4"
-                    stroke-linecap="round" pathLength="100"/>
-            </mask>
-          </defs>
+          <!-- The line, trimmed by its own dash pattern: --p opens the dash
+               so the stroke is laid down across the gutter as the visitor
+               scrolls, and the round cap sits at the moving tip. -->
           <path class="journey-arc" d="M2 12 C 28 -1, 72 -1, 98 12"
-                fill="none" stroke="currentColor" stroke-width="0.5"
-                stroke-linecap="round" pathLength="100"
-                mask="url(#journeyArc3)"/>
+                fill="none" stroke="currentColor"
+                pathLength="100"/>
         </svg>
       </span>
       <article class="journey-card" data-journey-img>

@@ -148,3 +148,64 @@ await p.evaluate(() => [...document.querySelectorAll('section')].map(s => ({
 ```
 
 If `content + padding > box`, that section is clipping.
+
+## The why-grid outside the home page
+
+`.why-grid` is authored for the home page: a fixed 4x2 whose rows divide
+`.why-section`'s one-screen box. Reusing it elsewhere went wrong twice, both
+times because the fixed `grid-template-rows` and `height` have no viewport box
+to divide outside `.why-section`:
+
+- **Five product category pages** reused it with four cards, leaving row two in
+  the layout as ~335px of empty space above the footer (798px section against
+  536-595px siblings). These no longer use `.why-grid` at all - see the strip
+  below.
+- **`why-jagruti.html`** reuses it with nine cards, making a third implicit row
+  that `repeat(2, 1fr)` does not size, so rows one and two were squeezed to
+  151px while three cards needed 166-167px and their last paragraph line sat
+  past the glass.
+
+The release, scoped so the home page keeps its lock:
+
+```css
+.section:not(.why-section) .why-grid {
+  grid-template-rows: none;
+  height: auto;
+  min-height: 0;
+  flex: none;
+}
+```
+
+`:not(.why-section)` rather than a new class because the home page's grid is
+always inside `.why-section` and the others never are. `why-jagruti.html` goes
+665px -> 739px and stops clipping; `index.html` is unchanged at 900px / 503px.
+
+## The trust strip
+
+The five product category pages (`commercial-flour-mill`,
+`food-processing-machinery`, `kitchen-appliances`, `pulverizer`,
+`roti-maker-machine`) now use `.trust-strip` instead of `.why-grid`.
+
+All five carried the identical four cards, and each card's paragraph only
+restated its own heading - "ISO 9001:2015 Certified" over "Quality-controlled
+manufacturing at every stage". The copy was spending 463px of page to say what
+four labels say, so the paragraphs are gone and the four claims are one
+horizontal row: icon above label, no card.
+
+**Not a glass card like `.why-item`, on purpose.** Those belong to the home
+page's photographic `.why-section`, where the translucency reads against the
+image behind it. The category pages sit on flat `--page-bg`, so a
+`backdrop-filter` has nothing to blur and would render as a grey box. The strip
+carries itself on rhythm and a `--blue-100` hairline instead.
+
+`gap: 0` with the breathing room in each cell's `padding-inline`: the hairline
+is the separator, and a column gap on top of it would offset the rule instead
+of centring it between two labels. `.trust-strip-head` pulls `.section-head`'s
+bottom margin from 44px to 30px - 44px is sized for a block of cards, and left
+a single 64px row floating.
+
+Breakpoints: 4 columns, 2 below 860px (the hairline moves to the even child),
+1 below 460px (hairlines off, rhythm alone).
+
+Measured 1600/1280/900/700/390: section 345/336/320/405/513px, no clipping and
+no horizontal scroll at any width. Was 798px.
