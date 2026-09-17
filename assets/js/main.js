@@ -857,33 +857,91 @@
        the cap and stopped short while long names sailed past it. The cap
        is now only a runaway guard, high enough that the width solve always
        decides the size. */
-    /* The width of the INK, first glyph to last, rather than the element
-       box. The box also carries the space glyph's own advance and the
-       letter-spacing that follows the final character, and those do not
-       scale proportionally with the font size — a name containing a space
-       ("Supreme 900") therefore drifted off the width that space-less
-       names landed on. Measuring between the outer edges of the first and
-       last non-blank letter is what makes every name span the same width. */
-    function inkWidth(p) {
+    /* The PAINTED ink of the name, measured as a client rect.
+       Two things make this the right measurement rather than offsetLeft/
+       offsetWidth:
+         - the element box is wider than the ink (the space glyph's advance,
+           and the letter-spacing that trails the final character), and those
+           do not scale proportionally with font-size;
+         - the offset pair reports the glyph ADVANCE box, while round letters
+           (O, C, S, 0) paint outside it and flat ones (E, H) do not — so a
+           name's painted edges can sit several px off its box edges, by a
+           different amount at each end.
+       The reason the original code avoided client rects is that the letters
+       carry the entrance animation's transform, and a client rect reports the
+       TRANSFORMED box. So we neutralise the transforms for the duration of
+       the measurement and restore them immediately: the reading is then both
+       painted-accurate and independent of where the entrance happens to be.
+       Returns {left, right, width} in viewport coordinates. */
+    function inkRect(p) {
       var letters = p.letters;
-      if (!letters || !letters.length) return p.word.getBoundingClientRect().width;
-      /* offsetLeft/offsetWidth, NOT getBoundingClientRect: the letters carry
-         the entrance animation's own transform, and a client rect reports
-         the TRANSFORMED box. Measuring that would fit each name against
-         wherever its letters happened to be drifting at the moment the
-         fitter ran — which is exactly how one product ended up aligned and
-         the others not. The offset pair is transform-independent, so the
-         measurement is the same whether the scene is mid-entrance, idle or
-         hidden. */
-      var min = Infinity, max = -Infinity;
-      for (var i = 0; i < letters.length; i++) {
-        var el = letters[i];
-        if (!el.textContent.trim()) continue;
-        var l = el.offsetLeft, r = l + el.offsetWidth;
-        if (l < min) min = l;
-        if (r > max) max = r;
+      if (!letters || !letters.length) {
+        var r0 = p.word.getBoundingClientRect();
+        return { left: r0.left, right: r0.right, width: r0.width };
       }
-      return (max > min) ? (max - min) : p.word.offsetWidth;
+      var saved = [];
+      for (var i = 0; i < letters.length; i++) {
+        saved.push(letters[i].style.transform);
+        letters[i].style.transform = "none";
+      }
+      var min = Infinity, max = -Infinity;
+      for (var j = 0; j < letters.length; j++) {
+        var el = letters[j];
+        if (!el.textContent.trim()) continue;
+        var r = el.getBoundingClientRect();
+        if (r.left < min) min = r.left;
+        if (r.right > max) max = r.right;
+      }
+      for (var k = 0; k < letters.length; k++) letters[k].style.transform = saved[k];
+      if (!(max > min)) {
+        var rb = p.word.getBoundingClientRect();
+        return { left: rb.left, right: rb.right, width: rb.width };
+      }
+      return { left: min, right: max, width: max - min };
+    }
+
+    function inkWidth(p) {
+      return inkRect(p).width || p.word.offsetWidth;
+    }
+
+    /* OPTICAL overhang for the edge glyphs.
+       Geometric alignment is not optical alignment. A flat-sided letter (E,
+       H, D, I) meets the edge with a full vertical stem, so the whole height
+       of the glyph sits on the alignment line. A round letter (O, C, S, 0)
+       only TOUCHES that line at a single tangent point and curves away above
+       and below it; a diagonal (A, V, W) touches at one corner. Aligned to
+       the same x, the round and diagonal ones read as inset even though the
+       measurement says they are flush.
+
+       This is why ECO 500 alone looked wrong: it is the only name whose two
+       edges disagree — a flat E on the left against a round 0 on the right.
+       Every other name is flat/flat (Dough Kneader, Eco Pulverizer) or
+       round/round (Supreme 900), so both sides carried the SAME optical
+       error and it cancelled out.
+
+       The correction is the standard typographic one: let the round and
+       diagonal edges overhang by a small fraction of the font size, so all
+       six names read as sitting on one margin. Expressed in em so it scales
+       with the fitted size. */
+    var ROUND_EDGE    = /[OQCGSU0368]/i;
+    var DIAGONAL_EDGE = /[AVWXYZ47]/i;
+    function opticalOverhang(ch) {
+      if (!ch) return 0;
+      if (ROUND_EDGE.test(ch))    return .022;  /* tangent touch  */
+      if (DIAGONAL_EDGE.test(ch)) return .014;  /* corner touch   */
+      return 0;                                 /* flat stem: none */
+    }
+
+    /* The first and last painted characters of a name. */
+    function edgeChars(p) {
+      var first = "", last = "";
+      for (var i = 0; i < p.letters.length; i++) {
+        var t = p.letters[i].textContent;
+        if (!t || !t.trim()) continue;
+        if (!first) first = t;
+        last = t;
+      }
+      return { first: first, last: last };
     }
 
     var FIT_PROBE = 100;
@@ -942,8 +1000,44 @@
         }
         size = Math.min(size, cap);
 
+        /* Widen the target by the optical overhang the two edges need, so a
+           name with round edges is drawn slightly larger and its curves
+           reach the same apparent margin as a flat stem. */
+        var ec = edgeChars(p);
+        var over = opticalOverhang(ec.first) + opticalOverhang(ec.last);
+        if (over) {
+          p.word.style.fontSize = size + "px";
+          var wNow = inkWidth(p) || 1;
+          /* Solve size so that ink + overhang(size) == want. */
+          size = size * want / (wNow + over * size);
+          size = Math.min(size, cap);
+        }
+
+        /* Centre on the PAINTED ink. translateX(-50%) centres the element
+           BOX, and the box is not concentric with the ink: trailing
+           letter-spacing sits inside it on the right, and the two edge
+           glyphs paint different amounts outside it depending on whether
+           they are round or flat. So rather than deriving a delta, measure
+           where the ink actually lands at the final size and shift by the
+           residual error against the section's centre. Done from the
+           already-applied shift, so it converges instead of assuming. */
+        p.word.style.fontSize = size + "px";
+        var secBox = (pin || root).getBoundingClientRect();
+        var cur = parseFloat(p.word.style.getPropertyValue("--fit-shift")) || 0;
+        var ink = inkRect(p);
+        /* Centre on the OPTICAL edges, not the painted ones: a round left
+           edge is treated as reaching further left than it paints, and the
+           same on the right. When both edges are the same shape this is a
+           no-op; when they differ (ECO 500) it is what moves the name onto
+           the margin the eye reads. */
+        var ovL = opticalOverhang(ec.first) * size;
+        var ovR = opticalOverhang(ec.last)  * size;
+        var err = (((ink.left - ovL) + (ink.right + ovR)) / 2) -
+                  ((secBox.left + secBox.right) / 2);
+
         p.word.style.fontSize = prev;
         p.word.style.setProperty("--fit", size.toFixed(2) + "px");
+        p.word.style.setProperty("--fit-shift", (cur - err).toFixed(2) + "px");
       });
     }
 
@@ -1021,7 +1115,7 @@
       if (p.word) {
         var wy = (1 - a) * 18;
         p.word.style.transform =
-          "translate3d(-50%, calc(-50% + " + wy.toFixed(1) + "px), 0) scale(" + (.98 + a * .02).toFixed(3) + ")";
+          "translate3d(calc(-50% + var(--fit-shift, 0px)), calc(-50% + " + wy.toFixed(1) + "px), 0) scale(" + (.98 + a * .02).toFixed(3) + ")";
         p.word.style.opacity = "1";
       }
       p.letters.forEach(function (el, i) {
@@ -1077,7 +1171,7 @@
       }
       if (p.word) {
         p.word.style.transform =
-          "translate3d(-50%, calc(-50% + " + (-e * 22).toFixed(1) + "px), 0) scale(" + (1 + e * .02).toFixed(3) + ")";
+          "translate3d(calc(-50% + var(--fit-shift, 0px)), calc(-50% + " + (-e * 22).toFixed(1) + "px), 0) scale(" + (1 + e * .02).toFixed(3) + ")";
       }
       if (e >= 1) hide(p);
     }
@@ -1626,7 +1720,15 @@
        A card takes CARD of the run, the line between two cards takes ARC,
        and the whole chain is normalised to fit 0..1 exactly. */
     var CARD = 1;
-    var ARC  = 2.4;
+    /* The arc's beat is the time the DOTS are crossing the visible gap.
+       It was 2.4 when the drawn path ran the full width of the link box,
+       but only the gutter portion of that path is ever on screen (the rest
+       is tucked behind the two cards), so most of that long beat was being
+       spent drawing nothing — the line seemed to snap into place and then
+       wait for the next card. The stylesheet now maps --p onto just the
+       visible crossing, so this is the crossing's own duration: a little
+       longer than a card's entrance, not twice it. */
+    var ARC  = 1.15;
     /* The overlap below lets each step run past its own slot into the next
        one's, which is what makes the chain read as one continuous process
        rather than a series of separate events. The span therefore has to

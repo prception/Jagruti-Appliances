@@ -4947,110 +4947,90 @@ html:not(.js) .stage-actions { justify-content: center; }
    its top-left and a small circular icon badge straddling the seam
    between the picture and the copy beneath it. */
 .journey-flow {
-  --j-gutter: clamp(36px, 5.2vw, 88px);
+  --gutter: clamp(36px, 5.2vw, 88px);
   /* The card's capped measure, shared so the connectors can inset by
      exactly half of it and meet the card edges. */
-  --j-card: clamp(190px, 17vw, 250px);
+  --card: clamp(190px, 17vw, 250px);
   display: grid;
   /* Every card sits in its own odd column on row 1; the connectors span
      across them from row 1 too, so the two layers overlap rather than the
      links pushing the cards along. */
   grid-template-columns:
-    minmax(0, 1fr) var(--j-gutter)
-    minmax(0, 1fr) var(--j-gutter)
-    minmax(0, 1fr) var(--j-gutter)
+    minmax(0, 1fr) var(--gutter)
+    minmax(0, 1fr) var(--gutter)
+    minmax(0, 1fr) var(--gutter)
     minmax(0, 1fr);
   align-items: start;
   gap: 0;
   flex: 1;
   min-height: 0;
 }
-/* The dotted rule between two cards, with a solid dot at its middle.
-
-   THE JOIN. Rather than trying to compute how far the arc has to reach out
-   of its gutter track (which depends on the column width and the card cap,
-   and so drifts with the viewport), each connector is placed explicitly
-   across three tracks: the card on its left, the gutter, and the card on
-   its right. It then simply fills that span, so its two ends always land
-   well inside both cards whatever the width. It sits at z-index 0, behind
-   the cards, so the overlapping tails are tucked out of sight and only the
-   arc crossing the gutter is visible. */
+/* The dotted rule between two cards, with a solid dot at its middle. */
 .journey-link {
-  grid-row: 1;
   align-self: start;
   position: relative;
-  width: 100%;
-  margin: 0;
+  /* THE JOIN. The cards are capped narrower than their 1fr columns, so a
+     connector confined to its gutter track alone stops short of both of
+     them — that leftover slack on each side is the gap that was showing.
+
+     The pull has to equal that slack, and the slack grows with the
+     viewport: the column is (container - 3 gutters) / 4 while the card is
+     capped at 17vw, so the wider the screen the more the arc has to reach.
+     Both are restated here against vw, which -- unlike a percentage -- is
+     the same number wherever it is read. (A percentage cannot be used at
+     all: custom properties substitute as raw tokens, so a 100% written in
+     one resolves against whoever reads it, which is the link's own ~119px
+     box rather than the column. That is what defeated the earlier
+     attempts. The original clamp(-46px, -4vw, -18px) could not work
+     either -- for negative lengths clamp()'s bounds invert, so it pinned
+     to -18px at nearly every width.)
+
+     .journey-shell is the container; its width is the viewport less the
+     page gutters, so the column maths is written from that. The 1px is a
+     hairline overlap so no seam shows where arc meets card. */
+  width: auto;
+  margin-inline: calc(
+    -1 * (
+      /* half the column ... */
+      (100vw - 80px - 3 * clamp(36px, 5.2vw, 88px)) / 8
+      /* ... less half the card, which renders ~8px under its cap. */
+      - (clamp(190px, 17vw, 250px) - 8px) / 2
+    )
+    /* A few px of overlap so no seam can show where arc meets card. The
+       link sits at z-index 0, behind the cards, so the tuck is hidden. */
+    - 4px
+  );
+  /* The box lands ~12px right of true centre between the two cards — the
+     grid's own rounding plus the card border. Nudging it back by half that
+     makes the reach even on both ends rather than long on one side. */
+  transform: translateX(-12px);
   margin-top: clamp(88px, 11vw, 150px);
   height: clamp(22px, 2.4vw, 34px);
   color: var(--blue-400, #4eb8e9);
   opacity: .9;
+  /* The arc is pulled out over its neighbours by the negative margins
+     above, so it has to sit behind them rather than across their faces. */
   z-index: 0;
 }
-/* Each connector spans card-column N, the gutter, and card-column N+1. */
-.journey-link:nth-of-type(1) { grid-column: 1 / 4; }
-.journey-link:nth-of-type(2) { grid-column: 3 / 6; }
-.journey-link:nth-of-type(3) { grid-column: 5 / 8; }
-/* The cards keep their own odd columns on the same row. */
-.journey-card { grid-row: 1; }
-.journey-card:nth-of-type(1) { grid-column: 1; }
-.journey-card:nth-of-type(2) { grid-column: 3; }
-.journey-card:nth-of-type(3) { grid-column: 5; }
-.journey-card:nth-of-type(4) { grid-column: 7; }
-/* The arc bows upward between the two cards. The svg keeps its default
-   preserveAspectRatio, so the curve holds its shape and the round stroke
-   cap stays round — the reason the old stretched version needed a separate
-   HTML pen element at all.
-
-   SVG is a replaced element, so `width: auto` would fall back to its own
-   intrinsic ratio rather than filling the box. The drawing is therefore
-   given an explicit width and centred in the three-track span:
-   (gutter + card + 20px) crosses the gutter and tucks half a card deep
-   behind each neighbour, with 10px of overlap per side so no seam shows
-   where arc meets card. */
-/* The dotted pattern is the connector's resting look, so it is set here
-   rather than only under .js — without the script the line still reads as
-   a dotted path, just already complete instead of being drawn. */
-.journey-arc {
-  /* Values are in the viewBox's own units (100 wide), and the svg renders
-     ~3.4x that, so a 0.75 stroke lands at ~2.5px on screen. A near-zero
-     dash with a round cap draws a true circle rather than a short bar, and
-     because pathLength normalises the curve the dots stay evenly spaced at
-     every viewport instead of stretching with the gutter. */
-  stroke-dasharray: 0.01 3.2;
-  stroke-linecap: round;
-  /* non-scaling-stroke pins the dot to a real 2.5px whatever the svg's
-     scale, so the dots read identically at every breakpoint. Only the
-     SPACING (the dash gap above) is in viewBox units, which is what keeps
-     the rhythm even as the gutter stretches. */
-  vector-effect: non-scaling-stroke;
-  stroke-width: 2.5px;
+/* The arc bows upward between the two cards; preserveAspectRatio is off so the
+   curve stretches to whatever gutter width the grid gives it, while
+   vector-effect keeps the dashes an even weight however far it stretches. */
+.journey-link svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
-.journey-arc-svg {
+/* Without the script the tip has nowhere to travel, so it simply sits at
+   the crest of the curve the way a plain marker would. */
+.journey-pen {
   position: absolute;
   left: 50%;
-  /* The svg is now much taller than the thin link box (it keeps the
-     viewBox's 100:40 ratio so the dots stay round), so it is anchored by
-     the CURVE rather than by the box. The arc's two endpoints sit at y=30
-     of 40 — a quarter of the height up from the bottom — so pushing the
-     svg down by that quarter lands those endpoints on the link's own
-     baseline, where they meet the cards. */
-  top: auto;
-  /* The arc's endpoints sit at y=12 of 14 — 2 units up from the bottom, so
-     2/100 of the width — and pushing the svg down by exactly that lands
-     them on the link's baseline, where they meet the cards. */
-  bottom: calc((var(--j-gutter) + var(--j-card) + 20px) * -.02);
-  width: calc(var(--j-gutter) + var(--j-card) + 20px);
-  /* The viewBox is 100x40 and preserveAspectRatio is left at its default,
-     so the curve scales UNIFORMLY — which is what keeps the dots perfectly
-     round. The height is therefore tied to the width at that same 100:40
-     ratio rather than filling the link box: given a free height the box
-     would letterbox the arc and it would stop short of both cards. */
-  /* viewBox is 100 x 14 and preserveAspectRatio is left at its default, so
-     the curve scales uniformly and the dots stay perfectly round. */
-  height: calc((var(--j-gutter) + var(--j-card) + 20px) * .14);
-  transform: translateX(-50%);
-  overflow: visible;
+  top: clamp(5px, .6vw, 8px);
+  width: 9px; height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--blue-600);
 }
 
 /* Cards take the odd (1fr) columns; each connector starts in the same
@@ -5066,7 +5046,7 @@ html:not(.js) .stage-actions { justify-content: center; }
   text-align: center;
   /* Held to a narrower measure than its column so the dotted connectors
      have room to read between neighbouring cards. */
-  max-width: var(--j-card);
+  max-width: var(--card, clamp(190px, 17vw, 250px));
   margin-inline: auto;
   padding: clamp(10px, 1vw, 14px) clamp(10px, 1.1vw, 16px) clamp(14px, 1.4vw, 20px);
   /* The card echoes the photograph's soft arch — a generously rounded head
@@ -5216,77 +5196,97 @@ html:not(.js) .stage-actions { justify-content: center; }
    from step to step, not each card assembling itself. */
 
 /* ---- The travelling arc ----
-   Drawn exactly the way the preloader's logo frame is drawn (see .pl-frame):
-   ONE real path with pathLength="100", so the perimeter is normalised to
-   100 units and the dash values are plain percentages — no measuring at
-   runtime, no mask, no second copy of the curve.
+   The dotted curve is DRAWN, left card to right, like a pen crossing the
+   gap. The dashes are the line's own visible pattern, so the draw cannot
+   also use dashoffset on that path; instead a second, solid copy of the
+   curve is used as a MASK that sweeps open along it. A plain horizontal
+   wipe would reveal the arc in a straight line and fight its shape — the
+   mask follows the curve itself, so the line grows along its own bow. */
+.js .journey-link svg { overflow: visible; }
+/* NOTHING of the connector exists until its turn. The mask sweep alone can
+   leak a round stroke-cap at the path's start point, so the link is held
+   at zero until --p leaves 0 — the line only ever appears as it is being
+   drawn, never sitting there waiting.
 
-   THE DOTS AND THE DRAW ARE TWO SEPARATE THINGS. The visible line is
-   dotted, so its stroke-dasharray is spoken for — it is the dot pattern
-   itself and cannot also be animated to draw the line. A second, solid
-   copy of the same curve is therefore used as a MASK, and it is that copy
-   which is drawn the preloader way: one full-length dash whose offset
-   eases from 100% to 0. The dots are uncovered along the curve's own bow
-   rather than by a straight wipe.
-
-   The separate .journey-pen element is still gone. The old version
-   stretched the svg with preserveAspectRatio="none", which squashed
-   anything drawn inside it, so a round tip had to live outside as HTML and
-   be kept in sync by hand. With the curve no longer distorted, the mask's
-   own round cap is the head of the stroke. */
-.js .journey-arc-svg { overflow: visible; }
-
-/* The connector is simply at full strength for its whole turn now. The
-   old fade-in existed to hide a round stroke-cap sitting at the path's
-   start before the draw began — but the draw now starts tucked behind the
-   left card, so there is nothing to hide, and fading the layer as well as
-   drawing it made the dots ghost in instead of being laid down one by one.
-   Held at 0 until the beat opens so no dot shows ahead of its turn. */
+   The ramp is over the first 12% of the draw, not instant: multiplying by
+   1000 snapped it fully on in a single frame, which is what read as a
+   blink. Fading it in over the opening of the stroke lets the ink arrive
+   as part of the movement. */
 .js .journey-link {
-  opacity: clamp(0, calc(var(--p) * 1000), .9);
+  opacity: clamp(0, calc(var(--p) * 8), .9);
 }
-
-/* The dots themselves. A near-zero dash with a round linecap renders as a
-   true circle rather than a short bar, and pathLength="100" means the
-   numbers are percentages of the curve — so the spacing stays even at
-   every viewport instead of stretching with the gutter. */
 .js .journey-link .journey-arc {
-  stroke-dasharray: 0.01 3.2;
-  stroke-linecap: round;
+  /* The path is ~104 units long in its own viewBox; pathLength normalises
+     that to 100 so the dash maths is independent of the geometry. */
+  stroke-dasharray: 2.6 3.6;
+  /* The dashes THEMSELVES creep forward as the line grows, so the pattern
+     is being laid down by the pen rather than sitting in place waiting to
+     be uncovered. Without this the dashes are static and the mask merely
+     unveils them — which reads as a wipe, not as drawing. */
+  stroke-dashoffset: calc(var(--p) * -6px);
+}
+/* THE DRAW ITSELF: the mask retreats from 100 to 0 in step with --p, so
+   the curve is laid down by the scroll — stop half way and the line stops
+   half way across, exactly where the hand left it. */
+.js .journey-link .journey-arc-mask {
+  stroke-dasharray: 100;
+  /* The unit matters. pathLength="100" normalises the curve to 100 user
+     units, but a bare calc() result was being rejected here and the offset
+     resolved to 0 — so the mask was fully open at every --p and the line
+     simply existed, already drawn, instead of growing. Expressed as a
+     percentage of the path length it animates as intended. */
+  stroke-dashoffset: calc((1 - var(--p)) * 100%);
 }
 
-/* THE DRAW: the mask retreats from 100% to 0 in step with --p, so the dots
-   are laid down by the scroll — stop half way and the line stops half way
-   across, exactly where the hand left it.
+/* The PEN TIP — the head of the stroke being drawn.
 
-   The % unit is load-bearing: a bare calc() result is rejected here and
-   resolves to 0, which would leave the mask fully open at every --p and
-   every line already drawn instead of growing. */
-.js .journey-link .journey-arc-mask {
-  stroke-dasharray: 100 100;
-  /* THE TIMING. The link's box spans three grid tracks — the card on its
-     left, the gutter, the card on its right — but only the gutter portion
-     is ever SEEN; the rest is tucked behind the two cards. Mapping --p
-     straight onto the whole path therefore spent ~39% of the beat drawing
-     invisibly behind the left card, ~22% crossing the gap, then another
-     ~39% behind the right card: the line looked like it appeared all at
-     once and then waited, which is what broke the hand-off between steps.
-     (Those three shares hold within a point or two at every width, because
-     the card cap and the gutter grow at similar rates.)
+   It is an HTML element, not an SVG one: the arc's svg is stretched with
+   preserveAspectRatio="none", so anything inside it is squashed by the
+   same non-uniform scale and a circle would render as a flattened ellipse.
+   Out here the tip stays perfectly round whatever width the gutter takes.
 
-     So --p is remapped to cover only the visible crossing: the draw starts
-     already advanced to the left card's edge and finishes at the right
-     one's. The dots now begin exactly where the first card ends and land
-     exactly where the next one begins, so the movement is continuous and
-     each card is handed to the next by a line that is actually travelling.
-
-     --arc-from/--arc-to are the two edges as a share of the path; the
-     offset interpolates between them instead of between 100% and 0. */
-  --arc-from: 62%;
-  --arc-to: 38%;
-  stroke-dashoffset: calc(
-    var(--arc-to) + (1 - var(--p)) * (var(--arc-from) - var(--arc-to))
-  );
+   Its path is rebuilt from two parts rather than offset-path, whose
+   path() is in fixed user units and so could not stretch with the gutter:
+   a percentage translateX for the crossing, and a parabolic translateY
+   for the bow. 4p(1-p) peaks at 1 when p is .5 and is 0 at either end,
+   which is exactly the arc's rise — 0 at both cards, highest at the
+   crest. It shares --p with the mask, so the tip sits at the exact end
+   of the drawn stroke and the two cannot drift apart. */
+.js .journey-link .journey-pen {
+  /* The svg's viewBox bows from y=32 up to ~y=9.5, i.e. ~56% of its 40-unit
+     box, so the lift is that share of whatever height the link renders at
+     and the tip stays on the ink at every breakpoint. */
+  --lift: calc(clamp(22px, 2.4vw, 34px) * .56);
+  position: absolute;
+  top: clamp(5px, .6vw, 8px);
+  /* Spans the whole gutter so the percentage below is a share of the TRIP,
+     not of the tip's own 9px. The dot itself is drawn by ::before, which
+     is what keeps the element full-width while the mark stays small. */
+  left: 0;
+  right: 0;
+  height: 0;
+  /* x tracks the draw across the full gutter; y follows the bow — 0 at
+     both cards, lifted at the crest — as a parabola in --p. */
+  transform:
+    translateX(calc(var(--p) * 100%))
+    translateY(calc(var(--lift, 26px) * (4 * var(--p) * (1 - var(--p))) * -1));
+  /* Fades over the last quarter of the run so the tip eases away as the
+     stroke lands, rather than vanishing in one frame. */
+  opacity: clamp(0, calc((1 - var(--p)) * 4), 1);
+}
+/* The visible mark, with a soft halo so the tip reads as the point the ink
+   is leaving. Held at the element's left edge, which the transform above
+   is what actually moves. */
+.js .journey-link .journey-pen::before {
+  content: "";
+  position: absolute;
+  top: -4.5px;
+  left: -4.5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--blue-600);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--blue-600) 18%, transparent);
 }
 
 @media (max-width: 1024px) {
@@ -5304,16 +5304,6 @@ html:not(.js) .stage-actions { justify-content: center; }
     gap: clamp(24px, 4vw, 40px) 0;
   }
   .journey-link { display: none; }
-  /* The explicit row/column placement above is for the four-across desktop
-     grid only; here the cards flow into the two-column layout again. */
-  .journey-card,
-  .journey-card:nth-of-type(1),
-  .journey-card:nth-of-type(2),
-  .journey-card:nth-of-type(3),
-  .journey-card:nth-of-type(4) {
-    grid-row: auto;
-    grid-column: auto;
-  }
 }
 
 @media (max-width: 600px) {
@@ -5336,7 +5326,8 @@ html:not(.js) .stage-actions { justify-content: center; }
      already resolves to its finished state — nothing to override here
      beyond making sure a card is never left mid-transform. */
   .js .journey-card,
-  .js .journey-link { --p: 1; }
+  .js .journey-link,
+  .js .journey-pen { --p: 1; }
 }
 /* ==========================================================================
    Service showcase  (index.html — .services)

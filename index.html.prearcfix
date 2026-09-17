@@ -347,7 +347,7 @@
   <button class="hero-scrollcue" type="button" aria-label="Show the next product scene">
     <span class="hs-label">Scroll to discover</span>
     <span class="hs-arrow" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </span>
   </button>
 
@@ -689,7 +689,7 @@
   </div>
   <div class="container why-inner">
     <div class="section-head"><span class="eyebrow">Why Jagruti</span><h2>Built on 31+ Years of Manufacturing Experience</h2></div>
-    <div class="why-grid"><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="5.5" stroke="currentColor" stroke-width="0.5"/><path d="M8.5 13.5L7 21l5-2.5 5 2.5-1.5-7.5" stroke="currentColor" stroke-width="0.5" stroke-linejoin="round"/></svg></div><h4>31+ Years of Manufacturing</h4><p>Engineering kitchen and food-processing machines in Rajkot since 1995.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke="currentColor" stroke-width="0.5" stroke-linejoin="round"/></svg></div><h4>Quality-Focused Engineering</h4><p>ISO 9001:2015 certified manufacturing with total quality checks at every stage.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 11.5L12 4l8 7.5M6 10v9a1 1 0 0 0 1 1h3v-5h4v5h3a1 1 0 0 0 1-1v-9" stroke="currentColor" stroke-width="0.5" stroke-linejoin="round"/></svg></div><h4>Designed for Indian Kitchens</h4><p>Built around real Indian cooking needs &mdash; from daily atta to bulk roti production.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" stroke="currentColor" stroke-width="0.5" stroke-linecap="round"/></svg></div><h4>Advanced Technology</h4><p>Three-layer roti technology, digital controls and automatic cleaning systems.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="0.5"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="0.5" stroke-linecap="round"/></svg></div><h4>Reliable Performance</h4><p>Heavy-duty motors and food-grade stainless steel built for daily, dependable use.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.8 2.8-2-2 2.8-2.8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div><h4>After-Sales Support</h4><p>Warranty coverage, service assistance and genuine spare parts.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3.5 8L12 3.5 20.5 8 12 12.5 3.5 8z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3.5 8v8.5L12 21m0-8.5V21m8.5-13v8.5L12 21" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></div><h4>Wide Product Range</h4><p>From domestic atta chakkis to 2000-roti/hour commercial lines.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 21V11l5 3V11l5 3V8l6 4v9H3z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></div><h4>Custom Manufacturing</h4><p>In-house manufacturing capability for custom and OEM requirements.</p></div></div>
+    <div class="why-grid"><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="5.5" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 13.5L7 21l5-2.5 5 2.5-1.5-7.5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div><h4>31+ Years of Manufacturing</h4><p>Engineering kitchen and food-processing machines in Rajkot since 1995.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div><h4>Quality-Focused Engineering</h4><p>ISO 9001:2015 certified manufacturing with total quality checks at every stage.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 11.5L12 4l8 7.5M6 10v9a1 1 0 0 0 1 1h3v-5h4v5h3a1 1 0 0 0 1-1v-9" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div><h4>Designed for Indian Kitchens</h4><p>Built around real Indian cooking needs &mdash; from daily atta to bulk roti production.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><h4>Advanced Technology</h4><p>Three-layer roti technology, digital controls and automatic cleaning systems.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><h4>Reliable Performance</h4><p>Heavy-duty motors and food-grade stainless steel built for daily, dependable use.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.8 2.8-2-2 2.8-2.8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div><h4>After-Sales Support</h4><p>Warranty coverage, service assistance and genuine spare parts.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3.5 8L12 3.5 20.5 8 12 12.5 3.5 8z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3.5 8v8.5L12 21m0-8.5V21m8.5-13v8.5L12 21" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></div><h4>Wide Product Range</h4><p>From domestic atta chakkis to 2000-roti/hour commercial lines.</p></div><div class="why-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 21V11l5 3V11l5 3V8l6 4v9H3z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></div><h4>Custom Manufacturing</h4><p>In-house manufacturing capability for custom and OEM requirements.</p></div></div>
   </div>
   </section>
 </div>
@@ -726,32 +726,19 @@
         </div>
       </article>
       <span class="journey-link" aria-hidden="true">
-        <!-- Drawn the same way the preloader's logo frame is: one real
-             path with pathLength="100", so stroke-dasharray/offset are
-             plain percentages and the line pulls itself from the left
-             card to the right one as --p advances. preserveAspectRatio
-             is left at its default so the curve keeps its shape and the
-             round cap stays round. -->
-        <svg class="journey-arc-svg" viewBox="0 0 100 14" fill="none" aria-hidden="true" focusable="false">
+<svg viewBox="0 0 100 40" preserveAspectRatio="none" fill="none">
           <defs>
-            <!-- The visible line is DOTTED, so its own dash pattern is the
-                 dots and cannot also be used to draw it. A second, solid
-                 copy of the identical curve is therefore used as a mask
-                 that sweeps open along the path (preloader-style: one
-                 pathLength="100" stroke whose dashoffset eases to 0), so
-                 the dots are uncovered along the bow itself rather than
-                 by a straight wipe. -->
-            <mask id="journeyArc1" maskUnits="userSpaceOnUse" x="-4" y="-4" width="108" height="22">
-              <path class="journey-arc-mask" d="M2 12 C 28 -1, 72 -1, 98 12"
-                    fill="none" stroke="#fff" stroke-width="2.4"
-                    stroke-linecap="round" pathLength="100"/>
+            <mask id="journeyArc1" maskUnits="userSpaceOnUse">
+              <path class="journey-arc-mask" d="M0 32 C 28 2, 72 2, 100 32" pathLength="100"
+                    stroke="#fff" stroke-width="6" stroke-linecap="round"
+                    vector-effect="non-scaling-stroke"/>
             </mask>
           </defs>
-          <path class="journey-arc" d="M2 12 C 28 -1, 72 -1, 98 12"
-                fill="none" stroke="currentColor" stroke-width="0.5"
-                stroke-linecap="round" pathLength="100"
-                mask="url(#journeyArc1)"/>
+          <path class="journey-arc" d="M0 32 C 28 2, 72 2, 100 32" pathLength="100"
+                stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                vector-effect="non-scaling-stroke" mask="url(#journeyArc1)"/>
         </svg>
+        <span class="journey-pen"></span>
       </span>
       <article class="journey-card" data-journey-img>
         <div class="journey-card-media">
@@ -765,32 +752,19 @@
         </div>
       </article>
       <span class="journey-link" aria-hidden="true">
-        <!-- Drawn the same way the preloader's logo frame is: one real
-             path with pathLength="100", so stroke-dasharray/offset are
-             plain percentages and the line pulls itself from the left
-             card to the right one as --p advances. preserveAspectRatio
-             is left at its default so the curve keeps its shape and the
-             round cap stays round. -->
-        <svg class="journey-arc-svg" viewBox="0 0 100 14" fill="none" aria-hidden="true" focusable="false">
+<svg viewBox="0 0 100 40" preserveAspectRatio="none" fill="none">
           <defs>
-            <!-- The visible line is DOTTED, so its own dash pattern is the
-                 dots and cannot also be used to draw it. A second, solid
-                 copy of the identical curve is therefore used as a mask
-                 that sweeps open along the path (preloader-style: one
-                 pathLength="100" stroke whose dashoffset eases to 0), so
-                 the dots are uncovered along the bow itself rather than
-                 by a straight wipe. -->
-            <mask id="journeyArc2" maskUnits="userSpaceOnUse" x="-4" y="-4" width="108" height="22">
-              <path class="journey-arc-mask" d="M2 12 C 28 -1, 72 -1, 98 12"
-                    fill="none" stroke="#fff" stroke-width="2.4"
-                    stroke-linecap="round" pathLength="100"/>
+            <mask id="journeyArc2" maskUnits="userSpaceOnUse">
+              <path class="journey-arc-mask" d="M0 32 C 28 2, 72 2, 100 32" pathLength="100"
+                    stroke="#fff" stroke-width="6" stroke-linecap="round"
+                    vector-effect="non-scaling-stroke"/>
             </mask>
           </defs>
-          <path class="journey-arc" d="M2 12 C 28 -1, 72 -1, 98 12"
-                fill="none" stroke="currentColor" stroke-width="0.5"
-                stroke-linecap="round" pathLength="100"
-                mask="url(#journeyArc2)"/>
+          <path class="journey-arc" d="M0 32 C 28 2, 72 2, 100 32" pathLength="100"
+                stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                vector-effect="non-scaling-stroke" mask="url(#journeyArc2)"/>
         </svg>
+        <span class="journey-pen"></span>
       </span>
       <article class="journey-card" data-journey-img>
         <div class="journey-card-media">
@@ -804,32 +778,19 @@
         </div>
       </article>
       <span class="journey-link" aria-hidden="true">
-        <!-- Drawn the same way the preloader's logo frame is: one real
-             path with pathLength="100", so stroke-dasharray/offset are
-             plain percentages and the line pulls itself from the left
-             card to the right one as --p advances. preserveAspectRatio
-             is left at its default so the curve keeps its shape and the
-             round cap stays round. -->
-        <svg class="journey-arc-svg" viewBox="0 0 100 14" fill="none" aria-hidden="true" focusable="false">
+<svg viewBox="0 0 100 40" preserveAspectRatio="none" fill="none">
           <defs>
-            <!-- The visible line is DOTTED, so its own dash pattern is the
-                 dots and cannot also be used to draw it. A second, solid
-                 copy of the identical curve is therefore used as a mask
-                 that sweeps open along the path (preloader-style: one
-                 pathLength="100" stroke whose dashoffset eases to 0), so
-                 the dots are uncovered along the bow itself rather than
-                 by a straight wipe. -->
-            <mask id="journeyArc3" maskUnits="userSpaceOnUse" x="-4" y="-4" width="108" height="22">
-              <path class="journey-arc-mask" d="M2 12 C 28 -1, 72 -1, 98 12"
-                    fill="none" stroke="#fff" stroke-width="2.4"
-                    stroke-linecap="round" pathLength="100"/>
+            <mask id="journeyArc3" maskUnits="userSpaceOnUse">
+              <path class="journey-arc-mask" d="M0 32 C 28 2, 72 2, 100 32" pathLength="100"
+                    stroke="#fff" stroke-width="6" stroke-linecap="round"
+                    vector-effect="non-scaling-stroke"/>
             </mask>
           </defs>
-          <path class="journey-arc" d="M2 12 C 28 -1, 72 -1, 98 12"
-                fill="none" stroke="currentColor" stroke-width="0.5"
-                stroke-linecap="round" pathLength="100"
-                mask="url(#journeyArc3)"/>
+          <path class="journey-arc" d="M0 32 C 28 2, 72 2, 100 32" pathLength="100"
+                stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                vector-effect="non-scaling-stroke" mask="url(#journeyArc3)"/>
         </svg>
+        <span class="journey-pen"></span>
       </span>
       <article class="journey-card" data-journey-img>
         <div class="journey-card-media">
@@ -988,7 +949,7 @@
       <div class="connect-band-top">
         <span class="connect-band-tag">Enquiries</span>
         <span class="connect-band-tag connect-band-tag-mid">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-5 3 10 2.5-7L17 12h4"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-5 3 10 2.5-7L17 12h4"/></svg>
           Talk to our team
         </span>
         <span class="connect-band-tag connect-band-tag-end">
@@ -1045,7 +1006,7 @@
         <form class="signup-form" onsubmit="return false;">
           <input type="email" name="email" placeholder="Enter your email" aria-label="Email address" required>
           <button type="submit" aria-label="Subscribe">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
         </form>
       </div>
