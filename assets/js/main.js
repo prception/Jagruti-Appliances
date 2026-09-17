@@ -63,24 +63,136 @@
     var scrim = panel.querySelector(".menu-side-bg");
     var closeBtn = panel.querySelector(".close-btn");
     var lastFocus = null;
+    var scrollY = 0;
+    // .open lands two frames after open() so the slide-in transition is not
+    // skipped, which leaves a window where the class does not yet describe
+    // the state. This flag is set synchronously, so a toggle click inside
+    // that window still reads as "already open" and closes.
+    var isOpen = false;
+
+    // position:fixed on <body> is the only lock mobile browsers honour, but it
+    // resets the page to the top, so the offset is stashed and reapplied.
+    function lockScroll() {
+      scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+      // Lenis keeps its own smoothed target and cancels wheel events at the
+      // window, so while it runs no wheel ever reaches the panel's own scroll
+      // container. Stopping it for the duration of the open is what lets the
+      // list scroll natively; it is started again on close, on the restored
+      // offset, so the page behaves exactly as before.
+      if (lenis && lenis.stop) lenis.stop();
+      document.body.style.top = (-scrollY) + "px";
+      document.documentElement.classList.add("menu-open");
+      document.body.classList.add("menu-open");
+    }
+
+    function unlockScroll() {
+      document.documentElement.classList.remove("menu-open");
+      document.body.classList.remove("menu-open");
+      document.body.style.top = "";
+      window.scrollTo(0, scrollY);
+      if (lenis) {
+        // Lenis cached the pre-lock position; tell it where the page actually
+        // is before it resumes, or the first wheel notch eases back to the
+        // stale target and the page jumps.
+        if (lenis.scrollTo) lenis.scrollTo(scrollY, { immediate: true, force: true });
+        if (lenis.start) lenis.start();
+      }
+    }
+
+    // Wheel over the panel's chrome (the CLOSE rail, the padding, the utility
+    // block) has no scrollable ancestor inside the overlay, so the browser
+    // hands it to the page behind — which is the "background scrolls instead
+    // of the menu" bug. Redirect any such wheel into the rows column.
+    var rows = panel.querySelector(".menu-items-wrap");
+    // Lenis listens for wheel on the window and preventDefaults every event so
+    // it can drive its own smoothed target. stop() only pauses its RAF loop —
+    // the listener stays attached — so without this the panel's own scroll
+    // container never receives a wheel event at all. data-lenis-prevent is
+    // Lenis's documented opt-out: any wheel whose target sits inside a marked
+    // element is left entirely to the browser, which is exactly the native
+    // scrolling this column needs.
+    if (rows) {
+      rows.setAttribute("data-lenis-prevent", "");
+      rows.setAttribute("tabindex", "-1");
+    }
+    panel.addEventListener("wheel", function (e) {
+      if (!panel.classList.contains("open") || !rows) return;
+      // Inside the rows column the browser already scrolls it natively, and
+      // overscroll-behavior:contain stops it chaining to the page at either
+      // end — so leave those events alone and keep the native feel.
+      if (rows.contains(e.target)) return;
+      // Over the chrome there is nothing scrollable under the pointer, so the
+      // event would fall through to the page. Hand it to the list instead.
+      e.preventDefault();
+      rows.scrollBy({ top: e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY, behavior: "auto" });
+    }, { passive: false });
+
+    // Touch-drag over the panel's chrome scrolls the list, so the thin
+    // scrollbar is never the only way to reach an expanded section's
+    // sub-links. Inside the rows column the browser scrolls natively, which
+    // keeps momentum and rubber-banding intact.
+    var dragY = 0, dragging = false;
+    panel.addEventListener("touchstart", function (e) {
+      if (!rows || e.touches.length !== 1) return;
+      dragY = e.touches[0].clientY;
+      dragging = !rows.contains(e.target);
+    }, { passive: true });
+    panel.addEventListener("touchmove", function (e) {
+      if (!dragging || !rows || e.touches.length !== 1) return;
+      var y = e.touches[0].clientY;
+      rows.scrollTop -= (y - dragY);
+      dragY = y;
+    }, { passive: true });
+    panel.addEventListener("touchend", function () { dragging = false; }, { passive: true });
+    panel.addEventListener("touchcancel", function () { dragging = false; }, { passive: true });
+
+    // Keyboard paging for the list, which also works with no pointer at all.
+    panel.addEventListener("keydown", function (e) {
+      if (!rows || !panel.classList.contains("open")) return;
+      var step = { PageDown: 1, PageUp: -1, Home: 0, End: 0 }[e.key];
+      if (step === undefined) return;
+      if (e.key === "Home") rows.scrollTop = 0;
+      else if (e.key === "End") rows.scrollTop = rows.scrollHeight;
+      else rows.scrollTop += step * rows.clientHeight * .9;
+      e.preventDefault();
+    });
+
+    // Every expanded section back to collapsed, headings' ARIA in step.
+    function collapseAll() {
+      panel.querySelectorAll(".link-item.is-open").forEach(function (item) {
+        item.classList.remove("is-open");
+        var h = item.querySelector(".menu-link-heading");
+        if (h) h.setAttribute("aria-expanded", "false");
+      });
+    }
 
     function open() {
+      if (isOpen) return;
+      isOpen = true;
       lastFocus = document.activeElement;
       panel.hidden = false;
+      // A close that was still sliding out may not have run its cleanup yet,
+      // so start every open from a known state: nothing expanded, and hover
+      // back in charge until the visitor clicks a section again.
+      collapseAll();
+      panel.classList.remove("has-clicked");
+      if (rows) rows.scrollTop = 0;
       // Let the browser paint the un-hidden panel before the class lands, or
       // the transform transition is skipped and the panel simply appears.
       requestAnimationFrame(function () {
         requestAnimationFrame(function () { panel.classList.add("open"); });
       });
       toggle.setAttribute("aria-expanded", "true");
-      document.body.classList.add("menu-open");
+      lockScroll();
       if (closeBtn) closeBtn.focus();
     }
 
     function close() {
+      if (!isOpen) return;
+      isOpen = false;
       panel.classList.remove("open");
       toggle.setAttribute("aria-expanded", "false");
-      document.body.classList.remove("menu-open");
+      unlockScroll();
       if (lastFocus && lastFocus.focus) lastFocus.focus();
       // Re-hide once the slide-out has finished so the panel leaves the
       // accessibility tree and never traps a tab.
@@ -89,13 +201,13 @@
       // out, and that mid-slide jump is what reads as a snap — the open never
       // shows it because nothing is expanded yet at that point.
       var done = function () {
-        if (panel.classList.contains("open")) return;
+        // A re-open during the slide-out cancels this cleanup.
+        if (isOpen) return;
         panel.hidden = true;
-        panel.querySelectorAll(".link-item.is-open").forEach(function (item) {
-          item.classList.remove("is-open");
-          var h = item.querySelector(".menu-link-heading");
-          if (h) h.setAttribute("aria-expanded", "false");
-        });
+        collapseAll();
+        // Hover-open is handed back for the next open, which starts fresh.
+        panel.classList.remove("has-clicked");
+        if (rows) rows.scrollTop = 0;
       };
       // One listener per close, and it is torn down by whichever of the two
       // paths wins — otherwise a close whose transitionend never fires (the
@@ -118,13 +230,13 @@
     }
 
     toggle.addEventListener("click", function () {
-      if (panel.classList.contains("open")) close(); else open();
+      if (isOpen) close(); else open();
     });
     if (closeBtn) closeBtn.addEventListener("click", close);
     if (scrim) scrim.addEventListener("click", close);
 
     document.addEventListener("keydown", function (e) {
-      if (!panel.classList.contains("open")) return;
+      if (!isOpen) return;
       if (e.key === "Escape") { close(); return; }
       if (e.key !== "Tab") return;
       // Keep tabbing inside the open panel.
@@ -140,9 +252,14 @@
     // the CSS handles it entirely; click is kept for touch and keyboard, where
     // there is no hover to trigger from. Opening one closes the others.
     panel.querySelectorAll("button.menu-link-heading").forEach(function (btn) {
-      btn.addEventListener("click", function () {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
         var item = btn.closest(".link-item");
         if (!item) return;
+        // Hand control to click: the CSS hover-open is disabled from here on,
+        // so a second tap on the chevron actually collapses the section.
+        panel.classList.add("has-clicked");
         var willOpen = !item.classList.contains("is-open");
         panel.querySelectorAll(".link-item.is-open").forEach(function (other) {
           if (other === item) return;
@@ -152,6 +269,21 @@
         });
         item.classList.toggle("is-open", willOpen);
         btn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+
+        // An expanded section can be taller than the remaining column, so the
+        // sub-links open below the fold and look like they cannot be reached.
+        // The reveal is a 1s grid-rows transition, so the scroll is stepped
+        // alongside it rather than fired once against the collapsed height.
+        if (!willOpen || !rows) return;
+        var until = performance.now() + 1250;
+        (function follow() {
+          if (!item.classList.contains("is-open")) return;
+          var box = item.getBoundingClientRect();
+          var view = rows.getBoundingClientRect();
+          var over = box.bottom - view.bottom;
+          if (over > 0) rows.scrollTop += Math.min(over, 24);
+          if (performance.now() < until) requestAnimationFrame(follow);
+        })();
       });
     });
 

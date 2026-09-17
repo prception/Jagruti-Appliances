@@ -739,6 +739,7 @@ body:has(> main > .cat-hero:first-child) .site-header .nav-wrap { position: rela
    which is most of why the reference's open feels weighted rather than linear. */
 .menu-side-bar {
   position: fixed; inset: 0; z-index: 900;
+  height: 100vh; height: 100dvh;
   visibility: hidden; pointer-events: none;
   /* visibility is what makes the overlay non-interactive at rest, but it is
      NOT interpolatable: without a delay it flips to hidden on the frame the
@@ -779,7 +780,12 @@ body:has(> main > .cat-hero:first-child) .site-header .nav-wrap { position: rela
   /* The reference panel is 47em; its five short words need less room than
      seven longer ones, but 47em on a wide screen reads as half the page, so
      this sits a step under it and caps in px on very wide monitors. */
-  width: min(38em, 92vw); max-width: 100vw; height: 100%;
+  width: min(38em, 92vw); max-width: 100vw;
+  /* The panel must never exceed the visible viewport, or its scrolling column
+     measures against a height that is partly under a mobile browser toolbar
+     and the last rows sit below the fold with nothing to scroll them into
+     view. dvh tracks the toolbar; vh is the fallback where it is unsupported. */
+  height: 100vh; height: 100dvh; max-height: 100dvh;
   padding: 1.63em 1.88em 1.88em var(--gutter);
   /* Row, not column: the CLOSE rail and the vertical divider stand beside
      the link column, exactly as .menu-side-bar-inner does in their CSS
@@ -838,11 +844,23 @@ body:has(> main > .cat-hero:first-child) .site-header .nav-wrap { position: rela
   display: flex; flex-direction: column;
   flex: 1 1 auto; min-height: 0; overflow-y: auto;
   scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.35) transparent;
+  /* The mask's faded tail is painted over the container's own bottom edge, so
+     without a runway the final sub-link of an expanded section can never be
+     scrolled clear of it and reads as unreachable. This padding is that
+     runway; it also keeps the last row off the utility block's hairline. */
+  padding-bottom: 2.25em;
+  /* Vertical only. Anything wide enough to need sideways travel is a layout
+     bug, not something to scroll to. */
+  overflow-x: hidden;
   /* Fades the rows out as they meet the utility block rather than clipping
      them on a hard edge. */
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12px, #000 calc(100% - 18px), transparent 100%);
           mask-image: linear-gradient(to bottom, transparent 0, #000 12px, #000 calc(100% - 18px), transparent 100%);
 }
+/* flex children default to min-height:auto, but these rows must be free to
+   report their expanded height to the scroll container instead of refusing to
+   shrink and pushing the tail of the list outside it. */
+.menu-items-wrap > .link-item { flex: none; }
 .menu-items-wrap::-webkit-scrollbar { width: 4px; }
 .menu-items-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,.35); border-radius: 4px; }
 
@@ -911,7 +929,11 @@ body:has(> main > .cat-hero:first-child) .site-header .nav-wrap { position: rela
      rather than a link list. */
   font-weight: 500; font-size: clamp(1.5rem, 2.4vh + .9rem, 2.25rem);
   line-height: 90%; letter-spacing: -.01em;
-  flex: 1 1 auto;
+  /* min-width:0 is what lets this shrink below its text width inside the flex
+     row. Without it the title keeps its full intrinsic size, and the 3.25rem
+     open-slide pushes that width past the panel edge — which is the sideways
+     overflow that cut the longer labels off. */
+  flex: 1 1 auto; min-width: 0;
   /* Mask for the slide-up: their .menu-link-title is overflow:hidden with the
      word inside it parked at translateY(140%) until the menu opens. */
   overflow: hidden;
@@ -922,11 +944,20 @@ body:has(> main > .cat-hero:first-child) .site-header .nav-wrap { position: rela
      expressed in rem, not em: 3.25em there resolves against the row's font
      size, whereas this title sets its own much larger size, so an em here
      would slide it more than twice as far. 3.25rem == 3.25 * 16px. */
-  transition: transform .8s cubic-bezier(.165,.84,.44,1);
+  /* padding-right rides the same curve as the slide so the row narrows as the
+     title travels, rather than snapping its width on the first frame. */
+  transition: transform .8s cubic-bezier(.165,.84,.44,1),
+              padding-right .8s cubic-bezier(.165,.84,.44,1);
 }
+/* The slide moves the title right by 3.25rem, so the row must give up exactly
+   that much width or the tail of a long label lands outside the panel. The
+   right padding keeps the travel identical while the text stays inside. */
 .menu-link-heading:hover .menu-link-title,
 .menu-link-heading:focus-visible .menu-link-title,
-.link-item.is-open .menu-link-title { transform: translateX(3.25rem); }
+.link-item.is-open .menu-link-title {
+  transform: translateX(3.25rem);
+  padding-right: 3.25rem;
+}
 
 /* ---------- Link text: masked slide-up ----------
    Sampled from the live reference: each word sits at translateY(140%) behind
@@ -1004,63 +1035,90 @@ body:has(> main > .cat-hero:first-child) .site-header .nav-wrap { position: rela
   grid-template-rows: 1fr;
   transition: grid-template-rows 1s cubic-bezier(.165,.84,.44,1) .2s;
 }
+.link-item.is-open .link-item_links-inner {
+  visibility: visible; pointer-events: auto;
+  transition: visibility 0s linear 0s;
+}
 @media (hover: hover) {
-  .link-item:hover .link-item_links,
-  .link-item:focus-within .link-item_links {
+  /* Once a row has been clicked, is-open is the only thing that opens a
+     section. Without this the pointer still resting on the row re-expands it
+     on the very frame the click collapsed it, so the chevron looks dead. */
+  .menu-side-bar:not(.has-clicked) .link-item:hover .link-item_links,
+  .menu-side-bar:not(.has-clicked) .link-item:focus-within .link-item_links {
     grid-template-rows: 1fr;
     transition: grid-template-rows 1s cubic-bezier(.165,.84,.44,1) .2s;
+  }
+  .menu-side-bar:not(.has-clicked) .link-item:hover .link-item_links-inner,
+  .menu-side-bar:not(.has-clicked) .link-item:focus-within .link-item_links-inner {
+    visibility: visible; pointer-events: auto;
+    transition: visibility 0s linear 0s;
   }
 }
 .link-item_links-inner {
   overflow: hidden;
+  /* A collapsed section still occupies a 0fr grid row, so its sub-links stay
+     in the tab order and remain clickable through the row above them. Making
+     the inner box inert while closed is what stops a hidden sub-link from
+     stealing a click meant for the heading, and keeps focus-within from
+     re-opening a section the visitor just collapsed. */
+  visibility: hidden; pointer-events: none;
+  transition: visibility 0s linear .4s;
   display: flex; flex-direction: column; gap: .1em;
+  /* min-height:0 lets the 0fr→1fr grid row actually collapse and expand;
+     without it the inner box floors at its content height and the section
+     measures wrong inside the scrolling column. */
+  min-height: 0;
 }
 .link-item_links .nav-link {
   display: flex; flex-direction: column; gap: 2px;
   padding: .55em 0; text-decoration: none;
   color: rgba(255,255,255,.92);
+  /* "Food Processing Machinery" is wider than the padded column on a narrow
+     panel; letting it wrap keeps every sub-link readable in place instead of
+     pushing the column sideways behind a horizontal scrollbar. */
+  min-width: 0; overflow-wrap: break-word;
   opacity: 0; transform: translateY(8px);
   transition: opacity .4s ease, transform .5s cubic-bezier(.23,1,.32,1), padding-left .25s ease, color .2s ease;
 }
 .link-item.is-open .link-item_links .nav-link { opacity: 1; transform: translateY(0); }
 @media (hover: hover) {
-  .link-item:hover .link-item_links .nav-link,
-  .link-item:focus-within .link-item_links .nav-link { opacity: 1; transform: translateY(0); }
+  .menu-side-bar:not(.has-clicked) .link-item:hover .link-item_links .nav-link,
+  .menu-side-bar:not(.has-clicked) .link-item:focus-within .link-item_links .nav-link { opacity: 1; transform: translateY(0); }
 }
 .link-item.is-open .link-item_links .nav-link:nth-child(1) { transition-delay: .25s; }
 @media (hover: hover) {
-  .link-item:hover .link-item_links .nav-link:nth-child(1),
-  .link-item:focus-within .link-item_links .nav-link:nth-child(1) { transition-delay: .25s; }
+  .menu-side-bar:not(.has-clicked) .link-item:hover .link-item_links .nav-link:nth-child(1),
+  .menu-side-bar:not(.has-clicked) .link-item:focus-within .link-item_links .nav-link:nth-child(1) { transition-delay: .25s; }
 }
 .link-item.is-open .link-item_links .nav-link:nth-child(2) { transition-delay: .30s; }
 @media (hover: hover) {
-  .link-item:hover .link-item_links .nav-link:nth-child(2),
-  .link-item:focus-within .link-item_links .nav-link:nth-child(2) { transition-delay: .30s; }
+  .menu-side-bar:not(.has-clicked) .link-item:hover .link-item_links .nav-link:nth-child(2),
+  .menu-side-bar:not(.has-clicked) .link-item:focus-within .link-item_links .nav-link:nth-child(2) { transition-delay: .30s; }
 }
 .link-item.is-open .link-item_links .nav-link:nth-child(3) { transition-delay: .35s; }
 @media (hover: hover) {
-  .link-item:hover .link-item_links .nav-link:nth-child(3),
-  .link-item:focus-within .link-item_links .nav-link:nth-child(3) { transition-delay: .35s; }
+  .menu-side-bar:not(.has-clicked) .link-item:hover .link-item_links .nav-link:nth-child(3),
+  .menu-side-bar:not(.has-clicked) .link-item:focus-within .link-item_links .nav-link:nth-child(3) { transition-delay: .35s; }
 }
 .link-item.is-open .link-item_links .nav-link:nth-child(4) { transition-delay: .40s; }
 @media (hover: hover) {
-  .link-item:hover .link-item_links .nav-link:nth-child(4),
-  .link-item:focus-within .link-item_links .nav-link:nth-child(4) { transition-delay: .40s; }
+  .menu-side-bar:not(.has-clicked) .link-item:hover .link-item_links .nav-link:nth-child(4),
+  .menu-side-bar:not(.has-clicked) .link-item:focus-within .link-item_links .nav-link:nth-child(4) { transition-delay: .40s; }
 }
 .link-item.is-open .link-item_links .nav-link:nth-child(5) { transition-delay: .45s; }
 @media (hover: hover) {
-  .link-item:hover .link-item_links .nav-link:nth-child(5),
-  .link-item:focus-within .link-item_links .nav-link:nth-child(5) { transition-delay: .45s; }
+  .menu-side-bar:not(.has-clicked) .link-item:hover .link-item_links .nav-link:nth-child(5),
+  .menu-side-bar:not(.has-clicked) .link-item:focus-within .link-item_links .nav-link:nth-child(5) { transition-delay: .45s; }
 }
 .link-item.is-open .link-item_links .nav-link:nth-child(6) { transition-delay: .50s; }
 @media (hover: hover) {
-  .link-item:hover .link-item_links .nav-link:nth-child(6),
-  .link-item:focus-within .link-item_links .nav-link:nth-child(6) { transition-delay: .50s; }
+  .menu-side-bar:not(.has-clicked) .link-item:hover .link-item_links .nav-link:nth-child(6),
+  .menu-side-bar:not(.has-clicked) .link-item:focus-within .link-item_links .nav-link:nth-child(6) { transition-delay: .50s; }
 }
 .link-item.is-open .link-item_links .nav-link:nth-child(7) { transition-delay: .55s; }
 @media (hover: hover) {
-  .link-item:hover .link-item_links .nav-link:nth-child(7),
-  .link-item:focus-within .link-item_links .nav-link:nth-child(7) { transition-delay: .55s; }
+  .menu-side-bar:not(.has-clicked) .link-item:hover .link-item_links .nav-link:nth-child(7),
+  .menu-side-bar:not(.has-clicked) .link-item:focus-within .link-item_links .nav-link:nth-child(7) { transition-delay: .55s; }
 }
 .link-item_links .nav-link:hover { padding-left: .5em; color: #fff; }
 .link-item_links .nav-link strong { font-size: 1.5em; font-weight: 400; line-height: 110%; }
@@ -1098,7 +1156,24 @@ a.menu-caps.link:hover { color: #fff; }
 
 /* Locks the page behind the open panel without the scrollbar's disappearance
    shifting the layout. */
-body.menu-open { overflow: hidden; }
+body.menu-open {
+  overflow: hidden;
+  /* overflow:hidden alone does not hold on iOS Safari and leaks wheel
+     momentum to the page on desktop, so JS also pins the body with
+     position:fixed and restores the offset on close. */
+  position: fixed;
+  width: 100%;
+  overscroll-behavior: none;
+}
+html.menu-open { overflow: hidden; }
+/* Wheel/touch anywhere over the panel must stay in the panel, and the rows
+   column must not chain its scroll back to the page once it bottoms out. */
+.menu-side-bar { overscroll-behavior: contain; }
+.menu-items-wrap {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
 
 /* ---------- Panel responsiveness ----------
    One component at every width, so these are size steps, not layout rewrites. */
