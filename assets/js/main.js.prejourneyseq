@@ -1584,15 +1584,16 @@
   }
 
   /* ---------------- Journey flow ----------------
-     The four steps arrive in order — 01 lands, its line draws across to 02,
+     The four steps arrive in order — 01 lands, its arc draws across to 02,
      and so on — so the entrance traces the same left-to-right path the
-     diagram describes.
+     diagram describes. All the motion lives in CSS; this only flips the
+     classes, on a stagger keyed to each card's position in the row rather
+     than to the order the observer happens to report them in.
 
-     The chain is SCROLLED, not played: this writes a 0..1 --p onto each
-     card and each link from the row's position in the viewport, and the
-     stylesheet interpolates every property off that number. Scrolling
-     into the section advances the relay, scrolling back reverses it, and
-     the motion is locked to the hand rather than to a timer. */
+     The whole row is watched as ONE element, not card by card. The four
+     cards sit side by side, so they cross into view together and
+     per-card observation would fire them in a clump; observing the row
+     lets the sequence start once and run on its own clock. */
   function initJourney() {
     var root = document.querySelector("[data-journey]");
     if (!root) return;
@@ -1602,144 +1603,54 @@
 
     var links = root.querySelectorAll(".journey-link");
 
-    /* SCROLL-DRIVEN, not fire-and-forget. The relay's position is a pure
-       function of how far the row has travelled up the viewport, so the
-       chain advances AS the visitor scrolls into the section and follows
-       the scroll back out again. The old version started a fixed timeline
-       on a trigger, which meant the animation ran on its own clock while
-       the page moved on its — the two never felt connected.
+    /* The stagger is written as a CSS custom property rather than a
+       setTimeout per element: the delays then live in the stylesheet
+       alongside the easings they belong to, every child of a card can
+       offset from its card's own base, and the whole chain is driven by
+       one class flip instead of a fan of timers that can drift. */
+    var STEP = 220;
 
-       The window: 0 when the row's top is at 88% of the viewport — just
-       clearing the fold — and 1 once it has risen to 30%, which is where
-       the row actually sits when the section is centred and the visitor
-       has stopped to look at it — carried a little past that so the final
-       card has room to settle rather than being cut off mid-move.
+    function run() {
+      Array.prototype.forEach.call(cards, function (card, i) {
+        card.style.setProperty("--d", (i * STEP) + "ms");
+      });
+      /* Each arc leaves just after the card on its left has landed, so the
+         line reads as travelling from one step to the next. */
+      Array.prototype.forEach.call(links, function (link, i) {
+        link.style.setProperty("--d", (i * STEP + 260) + "ms");
+      });
 
-       Ending low rather than partway down is the whole point: the
-       relay has to still be RUNNING while the section is in front of you.
-       An earlier end meant the chain completed somewhere below the fold
-       and you only ever arrived at the finished state. */
-    var START = 0.88;
-    var END   = 0.18;
-
-    /* Beats expressed as a share of that scroll window rather than in ms.
-       A card takes CARD of the run, the line between two cards takes ARC,
-       and the whole chain is normalised to fit 0..1 exactly. */
-    var CARD = 1;
-    var ARC  = 2.4;
-    /* The overlap below lets each step run past its own slot into the next
-       one's, which is what makes the chain read as one continuous process
-       rather than a series of separate events. The span therefore has to
-       cover the LAST step's full stretched length, not just its slot, or
-       that step is still mid-move when the window closes and latches part
-       way. */
-    var OVERLAP = 0.45;
-    var span  = (cards.length * CARD + links.length * ARC + OVERLAP) || 1;
-
-    function progress() {
-      var vh = window.innerHeight || document.documentElement.clientHeight;
-      var top = root.getBoundingClientRect().top;
-      var a = vh * START, b = vh * END;
-      var p = (a - top) / (a - b);
-      if (p < 0) return 0;
-      /* Snapped so the run can actually REACH 1 and latch. Scroll rarely
-         lands on the exact pixel that ends the window, and a chain stuck
-         at .99 would never settle or release its listeners. */
-      return p > .995 ? 1 : p;
-    }
-
-    /* Each element's own 0..1 within the run, so a card can be caught
-       part-way through its move instead of only on or off.
-
-       The raw share is LINEAR, which is what made the chain feel stepped:
-       every element began and ended its move at full speed, so each step
-       punched in and stopped dead. Smoothstep eases both ends — velocity
-       is zero at 0 and at 1 — so a step accelerates out of the previous
-       one and settles into place instead of snapping. */
-    function local(p, from, len) {
-      var t = (p * span - from) / len;
-      t = t < 0 ? 0 : (t > 1 ? 1 : t);
-      return t * t * (3 - 2 * t);
-    }
-
-    /* The relay only ever moves FORWARD, and only for a visitor arriving
-       from above.
-
-       - highest holds the furthest the chain has got. Progress is taken as
-         the max of that and the live value, so scrolling back up leaves
-         the steps drawn instead of un-drawing them: once a line is laid
-         down it stays laid down.
-
-       - armed stays false until the row has been seen below the fold at
-         least once. Coming UP into the section from further down the page
-         therefore shows it already complete rather than replaying it
-         backwards into view — the sequence belongs to the downward
-         approach only. A reload deep in the page lands unarmed for the
-         same reason. */
-    var highest = 0;
-    var armed = false;
-
-    function draw() {
-      var raw = progress();
-      if (!armed) {
-        /* Still below the fold: the visitor has not reached it yet, so the
-           chain is genuinely at the start and may arm itself. */
-        if (raw <= 0) armed = true;
-        /* Arrived from below with the row already up the screen — show the
-           finished state and leave it alone. */
-        else if (highest === 0) highest = 1;
-      }
-      if (raw > highest) highest = raw;
-      var p = highest;
-      /* Finished for good: nothing can move it again, so stop listening
-         rather than recomputing the same values on every scroll frame. */
-      if (p >= 1) stop();
-      /* Each step is stretched slightly past its own slot so it is still
-         settling as the next one begins. Butted end to end the chain read
-         as a series of separate events; this small overlap is what turns
-         it into one continuous process moving along the row. */
-      var at = 0;
-      for (var i = 0; i < cards.length; i++) {
-        cards[i].style.setProperty("--p", local(p, at, CARD + OVERLAP).toFixed(3));
-        at += CARD;
-        if (links[i]) {
-          links[i].style.setProperty("--p", local(p, at, ARC + OVERLAP).toFixed(3));
-          at += ARC;
-        }
-      }
-    }
-
-    /* One rAF loop, reading layout only — the same shape initServices uses,
-       so Lenis stays in charge of the scroll and nothing is intercepted. */
-    var ticking = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
+      /* One frame's gap so the delays are applied before the transition
+         is triggered — setting both in the same frame would have the
+         browser collapse them into a single style recalculation and the
+         stagger would be lost. */
       window.requestAnimationFrame(function () {
-        ticking = false;
-        draw();
+        window.requestAnimationFrame(function () {
+          Array.prototype.forEach.call(cards, function (c) { c.classList.add("is-open"); });
+          Array.prototype.forEach.call(links, function (l) { l.classList.add("is-drawn"); });
+        });
       });
     }
 
     /* Stillness: the stylesheet already leaves everything in place. */
     var quiet = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (quiet) {
-      Array.prototype.forEach.call(cards, function (c) { c.style.setProperty("--p", "1"); });
-      Array.prototype.forEach.call(links, function (l) { l.style.setProperty("--p", "1"); });
+    if (quiet || !("IntersectionObserver" in window)) {
+      Array.prototype.forEach.call(cards, function (c) { c.classList.add("is-open"); });
+      Array.prototype.forEach.call(links, function (l) { l.classList.add("is-drawn"); });
       return;
     }
 
-    function stop() {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (lenis) lenis.off("scroll", draw);
-    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        io.unobserve(entry.target);
+        run();
+      });
+    /* The negative rootMargin holds the sequence until the row is properly
+       up into the viewport rather than just clipping its bottom edge. */
+    }, { rootMargin: "0px 0px -15% 0px", threshold: 0 });
 
-    root.classList.add("is-live");
-    draw();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    if (lenis) lenis.on("scroll", draw);
+    io.observe(root);
   }
 
   /* ---------------- Service showcase ----------------

@@ -1930,60 +1930,6 @@ body.menu-open { overflow: hidden; }
 .need-card .icon svg { width: 26px; height: 26px; }
 .need-card h3 { font-size: var(--fs-card-title); line-height: var(--lh-card); }
 .need-card a.link { font-weight: var(--fw-button); font-size: var(--fs-button); line-height: var(--lh-button); letter-spacing: var(--ls-button); color: var(--blue-600); display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; }
-/* ---------- "How to Choose" image cards ----------
-   A need-card with a .need-media image behind the copy. The image shows at full
-   strength up top and sinks into a bottom-weighted dark scrim, which is what
-   carries the white copy. Text keeps the card ramp: --fs-card-title /
-   --fs-card-desc. */
-.need-card.need-visual {
-  position: relative; overflow: hidden; isolation: isolate;
-  min-height: 300px; padding: 28px 26px;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  /* The image runs edge to edge, so the stock pale card chrome would read as
-     a seam around it. */
-  background: var(--ink-900); border-color: rgba(10,26,43,.18);
-}
-.need-card.need-visual .need-media {
-  position: absolute; inset: 0; z-index: 0; pointer-events: none;
-}
-.need-card.need-visual .need-media img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  opacity: 1;
-  transform: scale(1.02); transition: transform .5s ease;
-}
-/* Paper wash: keeps the copy readable over the image at any crop. */
-.need-card.need-visual .need-media::after {
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(180deg,
-    rgba(10,26,43,0) 0%,
-    rgba(10,26,43,.06) 32%,
-    rgba(10,26,43,.45) 60%,
-    rgba(10,26,43,.74) 82%,
-    rgba(10,26,43,.86) 100%);
-}
-.need-card.need-visual:hover .need-media img { transform: scale(1.06); }
-.need-card.need-visual .need-body { position: relative; z-index: 1; }
-.need-card.need-visual .need-step {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 34px; height: 34px; border-radius: 50%;
-  background: rgba(255,255,255,.16); color: #fff;
-  border: 1px solid rgba(255,255,255,.34);
-  backdrop-filter: blur(2px);
-  font-weight: var(--fw-label); font-size: var(--fs-label);
-  letter-spacing: var(--ls-label-tight); margin-bottom: 14px;
-}
-.need-card.need-visual h3 {
-  font-size: var(--fs-card-title); line-height: var(--lh-card);
-  letter-spacing: -.01em; color: #fff; margin: 0 0 .4em;
-}
-.need-card.need-visual p {
-  font-size: var(--fs-card-desc); line-height: var(--lh-body);
-  color: rgba(255,255,255,.88); margin: 0;
-}
-@media (max-width: 720px) {
-  .need-card.need-visual { min-height: 250px; }
-}
-
 
 /* ---------- Scroll reveal ----------
    Elements marked [data-reveal] are hidden, then main.js adds .is-revealed
@@ -4942,18 +4888,11 @@ html:not(.js) .stage-actions { justify-content: center; }
    its top-left and a small circular icon badge straddling the seam
    between the picture and the copy beneath it. */
 .journey-flow {
-  --gutter: clamp(36px, 5.2vw, 88px);
-  /* The card's capped measure, shared so the connectors can inset by
-     exactly half of it and meet the card edges. */
-  --card: clamp(190px, 17vw, 250px);
   display: grid;
-  /* Every card sits in its own odd column on row 1; the connectors span
-     across them from row 1 too, so the two layers overlap rather than the
-     links pushing the cards along. */
   grid-template-columns:
-    minmax(0, 1fr) var(--gutter)
-    minmax(0, 1fr) var(--gutter)
-    minmax(0, 1fr) var(--gutter)
+    minmax(0, 1fr) clamp(36px, 5.2vw, 88px)
+    minmax(0, 1fr) clamp(36px, 5.2vw, 88px)
+    minmax(0, 1fr) clamp(36px, 5.2vw, 88px)
     minmax(0, 1fr);
   align-items: start;
   gap: 0;
@@ -4964,41 +4903,10 @@ html:not(.js) .stage-actions { justify-content: center; }
 .journey-link {
   align-self: start;
   position: relative;
-  /* THE JOIN. The cards are capped narrower than their 1fr columns, so a
-     connector confined to its gutter track alone stops short of both of
-     them — that leftover slack on each side is the gap that was showing.
-
-     The pull has to equal that slack, and the slack grows with the
-     viewport: the column is (container - 3 gutters) / 4 while the card is
-     capped at 17vw, so the wider the screen the more the arc has to reach.
-     Both are restated here against vw, which -- unlike a percentage -- is
-     the same number wherever it is read. (A percentage cannot be used at
-     all: custom properties substitute as raw tokens, so a 100% written in
-     one resolves against whoever reads it, which is the link's own ~119px
-     box rather than the column. That is what defeated the earlier
-     attempts. The original clamp(-46px, -4vw, -18px) could not work
-     either -- for negative lengths clamp()'s bounds invert, so it pinned
-     to -18px at nearly every width.)
-
-     .journey-shell is the container; its width is the viewport less the
-     page gutters, so the column maths is written from that. The 1px is a
-     hairline overlap so no seam shows where arc meets card. */
+  /* The cards are narrower than their columns, so the arc is pulled out
+     into the slack on either side to actually bridge the two. */
   width: auto;
-  margin-inline: calc(
-    -1 * (
-      /* half the column ... */
-      (100vw - 80px - 3 * clamp(36px, 5.2vw, 88px)) / 8
-      /* ... less half the card, which renders ~8px under its cap. */
-      - (clamp(190px, 17vw, 250px) - 8px) / 2
-    )
-    /* A few px of overlap so no seam can show where arc meets card. The
-       link sits at z-index 0, behind the cards, so the tuck is hidden. */
-    - 4px
-  );
-  /* The box lands ~12px right of true centre between the two cards — the
-     grid's own rounding plus the card border. Nudging it back by half that
-     makes the reach even on both ends rather than long on one side. */
-  transform: translateX(-12px);
+  margin-inline: clamp(-46px, -4vw, -18px);
   margin-top: clamp(88px, 11vw, 150px);
   height: clamp(22px, 2.4vw, 34px);
   color: var(--blue-400, #4eb8e9);
@@ -5016,9 +4924,8 @@ html:not(.js) .stage-actions { justify-content: center; }
   height: 100%;
   overflow: visible;
 }
-/* Without the script the tip has nowhere to travel, so it simply sits at
-   the crest of the curve the way a plain marker would. */
-.journey-pen {
+/* A solid dot pinned to the highest point of the curve. */
+.journey-link-dot {
   position: absolute;
   left: 50%;
   top: clamp(5px, .6vw, 8px);
@@ -5028,9 +4935,6 @@ html:not(.js) .stage-actions { justify-content: center; }
   background: var(--blue-600);
 }
 
-/* Cards take the odd (1fr) columns; each connector starts in the same
-   column as the card on its left and spans that card, the gutter and the
-   next card, so it can be inset to meet both. */
 .journey-card {
   position: relative;
   /* Above the connector arcs, which reach under the cards from either side. */
@@ -5041,7 +4945,7 @@ html:not(.js) .stage-actions { justify-content: center; }
   text-align: center;
   /* Held to a narrower measure than its column so the dotted connectors
      have room to read between neighbouring cards. */
-  max-width: var(--card, clamp(190px, 17vw, 250px));
+  max-width: clamp(190px, 17vw, 250px);
   margin-inline: auto;
   padding: clamp(10px, 1vw, 14px) clamp(10px, 1.1vw, 16px) clamp(14px, 1.4vw, 20px);
   /* The card echoes the photograph's soft arch — a generously rounded head
@@ -5145,144 +5049,112 @@ html:not(.js) .stage-actions { justify-content: center; }
    assembles as its own small composition. main.js writes .is-open on the
    cards and .is-drawn on the arcs.  --d is the per-card base delay it
    also sets, which every child below offsets from. */
-/* --p is the 0..1 progress main.js writes from the scroll position: 0
-   before this element's turn in the relay, 1 once it has fully arrived.
-   Registering it as a real number rather than a plain custom property is
-   what lets it be used inside calc() in a transform. */
-@property --p {
-  syntax: "<number>";
-  /* MUST inherit. The mask path and the pen are descendants of the link,
-     and --p is set on the link itself — with inherits:false they fell back
-     to the initial value (1, fully drawn), which is exactly why the line
-     appeared already complete instead of growing. */
-  inherits: true;
-  /* 1, not 0: the finished state is the default, so anything the script
-     has not claimed renders complete instead of blank. */
-  initial-value: 1;
-}
-
-/* Only once main.js has confirmed it is driving the scroll does anything
-   hide. If the script never runs the section stays fully visible — the
-   reveal is an enhancement, never a prerequisite for seeing the content. */
-.js [data-journey].is-live .journey-card,
-.js [data-journey].is-live .journey-link { --p: 0; }
-
-/* The card is HANDED to its place: it comes in slightly from the left —
-   the direction the line before it travelled — while rising out of its own
-   base. The transform-origin at the bottom keeps it planted, which is what
-   stops the lift reading as a plain slide.
-
-   Every value is a straight interpolation on --p, so the card's position
-   IS the scroll position. There is no transition: the smoothness comes
-   from Lenis' own eased scroll driving --p, which is exactly why this
-   feels like part of the page rather than a clip playing over it. */
 .js .journey-card {
-  opacity: var(--p);
-  transform:
-    translate(calc(-12px * (1 - var(--p))), calc(12px * (1 - var(--p))))
-    scale(calc(.965 + .035 * var(--p)));
+  --d: 0ms;
+  opacity: 0;
+  /* The card rises AND grows very slightly out of its own base — the
+     transform-origin at the bottom keeps it planted while it settles,
+     which is what stops the lift reading as a slide. */
+  transform: translateY(34px) scale(.965);
   transform-origin: 50% 100%;
-  will-change: opacity, transform;
+  filter: blur(6px);
+  transition:
+    opacity .9s cubic-bezier(.16, 1, .3, 1) var(--d),
+    transform 1.05s cubic-bezier(.16, 1, .3, 1) var(--d),
+    filter .8s cubic-bezier(.16, 1, .3, 1) var(--d);
+  will-change: opacity, transform, filter;
+}
+.js .journey-card.is-open {
+  opacity: 1;
+  transform: none;
+  filter: none;
 }
 
-/* The card arrives as ONE PIECE. Its photograph, number medallion, icon
-   badge and text are simply part of it — nothing inside is choreographed
-   separately, because the sequence being told here is the LINE travelling
-   from step to step, not each card assembling itself. */
+/* The photograph is UNCOVERED by its own arch rather than faded in: the
+   frame's clip opens from the bottom up while the picture inside drifts
+   down from a small over-scale. The two run at different speeds, so the
+   image looks like it settles into the frame instead of arriving with it. */
+/* The clip rides on the IMAGE, not on .journey-card-media: a clip-path on
+   the media box would also cut the number medallion and the icon badge,
+   which deliberately hang outside its edges. */
+.js .journey-card-media img {
+  clip-path: inset(0 0 100% 0 round var(--media-r, 0));
+  transform: scale(1.14);
+  transition:
+    clip-path 1.15s cubic-bezier(.16, 1, .3, 1) calc(var(--d) + 60ms),
+    transform 1.6s cubic-bezier(.16, 1, .3, 1) calc(var(--d) + 60ms);
+}
+.js .journey-card.is-open .journey-card-media img {
+  clip-path: inset(0 0 0 0 round var(--media-r, 0));
+  transform: none;
+}
+
+/* Number medallion — swings in on a soft overshoot once the frame is up. */
+.js .journey-num {
+  opacity: 0;
+  transform: translateY(10px) scale(.6);
+  transition:
+    opacity .5s cubic-bezier(.16, 1, .3, 1) calc(var(--d) + 420ms),
+    transform .75s cubic-bezier(.34, 1.4, .5, 1) calc(var(--d) + 420ms);
+}
+.js .journey-card.is-open .journey-num { opacity: 1; transform: none; }
+
+/* Icon badge — same beat, a touch later, keeping its centring transform. */
+.js .journey-icon {
+  opacity: 0;
+  transform: translateX(-50%) scale(.5);
+  transition:
+    opacity .5s cubic-bezier(.16, 1, .3, 1) calc(var(--d) + 560ms),
+    transform .75s cubic-bezier(.34, 1.4, .5, 1) calc(var(--d) + 560ms);
+}
+.js .journey-card.is-open .journey-icon { opacity: 1; transform: translateX(-50%); }
+
+/* Title and copy lift in turn, so the card resolves top to bottom. */
+.js .journey-t {
+  opacity: 0;
+  transform: translateY(14px);
+  filter: blur(4px);
+  transition:
+    opacity .75s cubic-bezier(.16, 1, .3, 1) var(--td, 0ms),
+    transform .75s cubic-bezier(.16, 1, .3, 1) var(--td, 0ms),
+    filter .75s cubic-bezier(.16, 1, .3, 1) var(--td, 0ms);
+}
+.js .journey-card h4.journey-t { --td: calc(var(--d) + 520ms); }
+.js .journey-card p.journey-t  { --td: calc(var(--d) + 620ms); }
+.js .journey-card.is-open .journey-t {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
 
 /* ---- The travelling arc ----
-   The dotted curve is DRAWN, left card to right, like a pen crossing the
-   gap. The dashes are the line's own visible pattern, so the draw cannot
-   also use dashoffset on that path; instead a second, solid copy of the
-   curve is used as a MASK that sweeps open along it. A plain horizontal
-   wipe would reveal the arc in a straight line and fight its shape — the
-   mask follows the curve itself, so the line grows along its own bow. */
+   The dotted curve DRAWS ITSELF from the left card to the right one. The
+   dashes are the visible pattern, so the draw cannot also use dashoffset;
+   instead a second, solid copy of the path is used as a mask that sweeps
+   open along the curve. A plain horizontal wipe would reveal the arc in a
+   straight line and fight its shape — this follows the curve itself. */
 .js .journey-link svg { overflow: visible; }
-/* NOTHING of the connector exists until its turn. The mask sweep alone can
-   leak a round stroke-cap at the path's start point, so the link is held
-   at zero until --p leaves 0 — the line only ever appears as it is being
-   drawn, never sitting there waiting.
-
-   The ramp is over the first 12% of the draw, not instant: multiplying by
-   1000 snapped it fully on in a single frame, which is what read as a
-   blink. Fading it in over the opening of the stroke lets the ink arrive
-   as part of the movement. */
-.js .journey-link {
-  opacity: clamp(0, calc(var(--p) * 8), .9);
-}
 .js .journey-link .journey-arc {
   /* The path is ~104 units long in its own viewBox; pathLength normalises
      that to 100 so the dash maths is independent of the geometry. */
   stroke-dasharray: 2.6 3.6;
-  /* The dashes THEMSELVES creep forward as the line grows, so the pattern
-     is being laid down by the pen rather than sitting in place waiting to
-     be uncovered. Without this the dashes are static and the mask merely
-     unveils them — which reads as a wipe, not as drawing. */
-  stroke-dashoffset: calc(var(--p) * -6px);
 }
-/* THE DRAW ITSELF: the mask retreats from 100 to 0 in step with --p, so
-   the curve is laid down by the scroll — stop half way and the line stops
-   half way across, exactly where the hand left it. */
 .js .journey-link .journey-arc-mask {
   stroke-dasharray: 100;
-  /* The unit matters. pathLength="100" normalises the curve to 100 user
-     units, but a bare calc() result was being rejected here and the offset
-     resolved to 0 — so the mask was fully open at every --p and the line
-     simply existed, already drawn, instead of growing. Expressed as a
-     percentage of the path length it animates as intended. */
-  stroke-dashoffset: calc((1 - var(--p)) * 100%);
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1s cubic-bezier(.16, 1, .3, 1) var(--d, 0ms);
 }
+.js .journey-link.is-drawn .journey-arc-mask { stroke-dashoffset: 0; }
 
-/* The PEN TIP — the head of the stroke being drawn.
-
-   It is an HTML element, not an SVG one: the arc's svg is stretched with
-   preserveAspectRatio="none", so anything inside it is squashed by the
-   same non-uniform scale and a circle would render as a flattened ellipse.
-   Out here the tip stays perfectly round whatever width the gutter takes.
-
-   Its path is rebuilt from two parts rather than offset-path, whose
-   path() is in fixed user units and so could not stretch with the gutter:
-   a percentage translateX for the crossing, and a parabolic translateY
-   for the bow. 4p(1-p) peaks at 1 when p is .5 and is 0 at either end,
-   which is exactly the arc's rise — 0 at both cards, highest at the
-   crest. It shares --p with the mask, so the tip sits at the exact end
-   of the drawn stroke and the two cannot drift apart. */
-.js .journey-link .journey-pen {
-  /* The svg's viewBox bows from y=32 up to ~y=9.5, i.e. ~56% of its 40-unit
-     box, so the lift is that share of whatever height the link renders at
-     and the tip stays on the ink at every breakpoint. */
-  --lift: calc(clamp(22px, 2.4vw, 34px) * .56);
-  position: absolute;
-  top: clamp(5px, .6vw, 8px);
-  /* Spans the whole gutter so the percentage below is a share of the TRIP,
-     not of the tip's own 9px. The dot itself is drawn by ::before, which
-     is what keeps the element full-width while the mark stays small. */
-  left: 0;
-  right: 0;
-  height: 0;
-  /* x tracks the draw across the full gutter; y follows the bow — 0 at
-     both cards, lifted at the crest — as a parabola in --p. */
-  transform:
-    translateX(calc(var(--p) * 100%))
-    translateY(calc(var(--lift, 26px) * (4 * var(--p) * (1 - var(--p))) * -1));
-  /* Fades over the last quarter of the run so the tip eases away as the
-     stroke lands, rather than vanishing in one frame. */
-  opacity: clamp(0, calc((1 - var(--p)) * 4), 1);
+/* The dot arrives as the arc reaches the crest. */
+.js .journey-link-dot {
+  opacity: 0;
+  transform: scale(.3);
+  transition:
+    opacity .45s cubic-bezier(.16, 1, .3, 1) calc(var(--d, 0ms) + 620ms),
+    transform .7s cubic-bezier(.34, 1.5, .5, 1) calc(var(--d, 0ms) + 620ms);
 }
-/* The visible mark, with a soft halo so the tip reads as the point the ink
-   is leaving. Held at the element's left edge, which the transform above
-   is what actually moves. */
-.js .journey-link .journey-pen::before {
-  content: "";
-  position: absolute;
-  top: -4.5px;
-  left: -4.5px;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--blue-600);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--blue-600) 18%, transparent);
-}
+.js .journey-link.is-drawn .journey-link-dot { opacity: 1; transform: none; }
 
 @media (max-width: 1024px) {
   /* Two columns and content-driven height — the one-viewport lock is
@@ -5317,12 +5189,19 @@ html:not(.js) .stage-actions { justify-content: center; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* main.js pins --p to 1 for reduced motion, so every interpolation above
-     already resolves to its finished state — nothing to override here
-     beyond making sure a card is never left mid-transform. */
   .js .journey-card,
-  .js .journey-link,
-  .js .journey-pen { --p: 1; }
+  .js .journey-num,
+  .js .journey-icon,
+  .js .journey-t,
+  .js .journey-link-dot {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+  .js .journey-icon { transform: translateX(-50%); }
+  .js .journey-card-media img { clip-path: none; transform: none; transition: none; }
+  .js .journey-link .journey-arc-mask { stroke-dashoffset: 0; transition: none; }
 }
 /* ==========================================================================
    Service showcase  (index.html — .services)
@@ -6345,10 +6224,7 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
 .cat-hero h1 {
   margin: 0;
   color: #fff;
-  font-size: clamp(var(--fs-h1), 6.2vw, 92px);
-  /* One step down from the global --fw-title: at this size the heavier weight
-     closes up the counters, and the extra scale already carries the emphasis. */
-  font-weight: var(--fw-strong);
+  font-size: clamp(var(--fs-h1), 5.2vw, 76px);
   line-height: var(--lh-title);
   letter-spacing: var(--ls-title);
   max-width: 12em;
