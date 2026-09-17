@@ -967,17 +967,18 @@
          the pin to hold and for ENTER to fire well inside it — while still
          being far short of the full second screen that used to leave ~1080px
          of empty ground scrolling past after the poster had finished. */
-      /* A BRIEF hold, not a long one. 2.4 gave ~1.4 screens of sticky
-         travel: the poster locked the viewport for several holds and the
-         page felt stuck — the visitor kept scrolling and nothing moved.
+      /* Sized so the showcase holds the screen long enough to actually be
+         watched. The old 1.30 gave only .30 of a screen of sticky travel,
+         which was tuned for the wheel-capture engine: gestures were
+         preventDefault()ed, so stepping products consumed no scroll and the
+         pin only had to survive a few flicks. Autoplay consumes no scroll
+         either, but the visitor's does — at .30 of a screen a brisk scroll
+         cleared the whole pinned window in well under one hold, so the
+         section left before a single machine had changed.
 
-         1.35 gives ~.35 of a screen of pin. The section still catches and
-         settles for a moment as it arrives (so a machine owns the screen
-         rather than sliding past mid-transition), and the very next scroll
-         gesture releases it and the page carries on normally. Autoplay is
-         on a timer, so a machine still changes during that hold; it just
-         no longer costs the visitor a screen and a half of scrolling. */
-      track.style.height = Math.round(VH * 1.35) + "px";
+         2.4 gives ~1.4 screens of pin: a normal scroll lingers across
+         several holds, and a fast one still sees the showcase change. */
+      track.style.height = Math.round(VH * 2.4) + "px";
       fitTitles();
     }
 
@@ -1346,22 +1347,6 @@
     }
 
     measure();
-
-    /* Re-fit once the real webfont is in. The names are fitted by MEASURING
-       their ink, so the measurement is only as good as the font that was
-       active when it ran: at init 'General Sans' is usually still loading
-       and the probe lands on fallback metrics, whose glyph widths differ
-       per name. The fit then holds those wrong sizes until something else
-       calls measure() — which is why the same build showed a clean, uniform
-       span at some widths and a per-product spread (85-98% of the section
-       instead of the intended share) at others, and why a resize "fixed"
-       it. Refitting on fonts.ready makes the first paint match every later
-       one. Guarded: document.fonts is absent on older browsers, where the
-       init fit stays as the only one. */
-    if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
-      document.fonts.ready.then(function () { fitTitles(); });
-    }
-
     /* The opening state is the intro, with the showcase not yet on screen.
        The first product is settled underneath so that when the mode does
        flip it is already composed and arrives without a build-up frame. */
@@ -1570,87 +1555,84 @@
       });
     }, { threshold: [0, IN_RATIO] }).observe(root);
 
-    /* ---- Parallax: removed ----
-       The two photographic layers used to be re-transformed on every scroll
-       frame — the wall drifting at one rate, the machine at another — which
-       is what made the images travel as the section moved. Both layers are
-       now left exactly where the stylesheet puts them, so the composition is
-       a still photograph that scrolls with the page.
+    /* ---- Parallax ----
+       Two rates, so the composition reads as layered: the wall drifts
+       slowly, the machine moves against it and lifts a little further. Both
+       layers are inset past the section edges, so this travel never pulls a
+       bare edge into frame. */
+    var ticking = false;
 
-       onScroll survives as a no-op because the resize handler above and the
-       observer both call it; keeping it means neither has to know the
-       parallax is gone. */
-    function onScroll() {}
+    function update() {
+      ticking = false;
+      // Until the entrance has settled, the CSS owns these transforms.
+      if (!root.classList.contains("is-settled")) return;
+
+      var rect = root.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      if (rect.bottom < 0 || rect.top > vh) return;
+
+      // -1 entering from below, 0 at centre, +1 leaving past the top.
+      var progress = (rect.top + rect.height / 2 - vh / 2) / (vh / 2 + rect.height / 2);
+      if (progress < -1) progress = -1;
+      if (progress > 1) progress = 1;
+
+      if (bg) bg.style.transform = "translate3d(0," + (progress * -3.5).toFixed(2) + "%,0)";
+      // The machine travels further and drifts very slightly sideways.
+      if (product) {
+        product.style.transform =
+          "translate3d(" + (progress * 1.6).toFixed(2) + "%," +
+          (progress * -7).toFixed(2) + "%,0)";
+      }
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    update();
   }
 
-  /* ---------------- Journey flow ----------------
-     The four steps arrive in order — 01 lands, its arc draws across to 02,
-     and so on — so the entrance traces the same left-to-right path the
-     diagram describes. All the motion lives in CSS; this only flips the
-     classes, on a stagger keyed to each card's position in the row rather
-     than to the order the observer happens to report them in.
-
-     The whole row is watched as ONE element, not card by card. The four
-     cards sit side by side, so they cross into view together and
-     per-card observation would fire them in a clump; observing the row
-     lets the sequence start once and run on its own clock. */
+  /* ---------------- Journey mosaic ----------------
+     Each photograph opens from its top-left corner the first time it
+     crosses into view. All the motion lives in CSS; this only flips a
+     class once per tile, staggered slightly so the wall assembles rather
+     than snapping in all at once. */
   function initJourney() {
     var root = document.querySelector("[data-journey]");
     if (!root) return;
 
-    var cards = root.querySelectorAll("[data-journey-img]");
-    if (!cards.length) return;
+    var tiles = root.querySelectorAll("[data-journey-img]");
+    if (!tiles.length) return;
 
-    var links = root.querySelectorAll(".journey-link");
-
-    /* The stagger is written as a CSS custom property rather than a
-       setTimeout per element: the delays then live in the stylesheet
-       alongside the easings they belong to, every child of a card can
-       offset from its card's own base, and the whole chain is driven by
-       one class flip instead of a fan of timers that can drift. */
-    var STEP = 220;
-
-    function run() {
-      Array.prototype.forEach.call(cards, function (card, i) {
-        card.style.setProperty("--d", (i * STEP) + "ms");
-      });
-      /* Each arc leaves just after the card on its left has landed, so the
-         line reads as travelling from one step to the next. */
-      Array.prototype.forEach.call(links, function (link, i) {
-        link.style.setProperty("--d", (i * STEP + 260) + "ms");
-      });
-
-      /* One frame's gap so the delays are applied before the transition
-         is triggered — setting both in the same frame would have the
-         browser collapse them into a single style recalculation and the
-         stagger would be lost. */
-      window.requestAnimationFrame(function () {
-        window.requestAnimationFrame(function () {
-          Array.prototype.forEach.call(cards, function (c) { c.classList.add("is-open"); });
-          Array.prototype.forEach.call(links, function (l) { l.classList.add("is-drawn"); });
-        });
-      });
-    }
-
-    /* Stillness: the stylesheet already leaves everything in place. */
+    /* Stillness: the stylesheet already leaves every tile open. */
     var quiet = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (quiet || !("IntersectionObserver" in window)) {
-      Array.prototype.forEach.call(cards, function (c) { c.classList.add("is-open"); });
-      Array.prototype.forEach.call(links, function (l) { l.classList.add("is-drawn"); });
+      Array.prototype.forEach.call(tiles, function (t) { t.classList.add("is-open"); });
       return;
     }
 
+    var seen = 0;
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        io.unobserve(entry.target);
-        run();
+        var el = entry.target;
+        io.unobserve(el);
+        var delay = (seen++ % 4) * 90;
+        window.setTimeout(function () { el.classList.add("is-open"); }, delay);
       });
-    /* The negative rootMargin holds the sequence until the row is properly
-       up into the viewport rather than just clipping its bottom edge. */
-    }, { rootMargin: "0px 0px -15% 0px", threshold: 0 });
+    /* A clipped tile paints NOTHING, and the observer reports an
+       intersectionRatio of 0 for it however much of its box is on screen.
+       So the threshold has to be 0 — any ratio above it would never trip
+       and the tiles would sit closed forever. The negative rootMargin is
+       what delays the open until the tile is properly up into the
+       viewport, which is the job the threshold would otherwise do. */
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0 });
 
-    io.observe(root);
+    Array.prototype.forEach.call(tiles, function (t) { io.observe(t); });
   }
 
   /* ---------------- Service showcase ----------------
@@ -1825,60 +1807,6 @@
      No GSAP (CDN blocked, or reduced motion) means the panels simply sit
      there, full-bleed and legible, with the video playing. The section must
      never depend on the animation to be readable. */
-  /* Drives ScrollTrigger off Lenis' own rAF loop and reports Lenis' smoothed
-     position as the scroll position. Both initParallax and initTwoRanges may
-     need it, and registering the ticker callback twice would advance Lenis
-     twice per frame, so this only ever wires up once. */
-  var lenisBridged = false;
-  function bridgeLenisToGsap() {
-    if (lenisBridged || !lenis) return;
-    lenisBridged = true;
-    lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
-    gsap.ticker.lagSmoothing(0);
-  }
-
-  /* Image parallax — runs on any page, independent of the homepage's
-     Two Ranges panels. Needs GSAP + ScrollTrigger; without them the images
-     simply sit still, which is the correct fallback. */
-  function initParallax() {
-    if (!document.querySelector("[data-parallax]")) return;
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if (typeof window.gsap === "undefined" || typeof window.ScrollTrigger === "undefined") return;
-    gsap.registerPlugin(ScrollTrigger);
-    bridgeLenisToGsap();
-  /* ---------------- Image parallax ----------------
-     Any element carrying data-parallax drifts against the scroll while its
-     container crosses the viewport. The container is the nearest
-     [data-parallax-container] (or the parent), and travel is a FRACTION OF
-     THAT CONTAINER'S HEIGHT: the element runs from -speed*h to +speed*h,
-     linear, scrubbed to scroll position.
-
-     The element must be taller than its container by 2*speed, or the drift
-     exposes an edge — .range-feature img is inset:0 with height:100%, so
-     the CSS gives those the extra height (see --px-travel).
-
-     Both functions resolve their values lazily (as callbacks) so a resize
-     or a late-decoding image re-measures instead of keeping stale pixels. */
-  gsap.utils.toArray("[data-parallax]").forEach(function (el) {
-    var speed = parseFloat(el.dataset.parallax);
-    if (!isFinite(speed) || speed === 0) return;
-    var box = el.closest("[data-parallax-container]") || el.parentElement || el;
-    gsap.fromTo(el,
-      { y: function () { return -speed * box.offsetHeight; } },
-      { y: function () { return  speed * box.offsetHeight; },
-        ease: "none",
-        scrollTrigger: {
-          trigger: box,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-          invalidateOnRefresh: true
-        } });
-  });
-    window.addEventListener("load", function () { ScrollTrigger.refresh(); });
-  }
-
   function initTwoRanges() {
     var panels = document.querySelectorAll("[data-range-panel]");
     if (!panels.length) return;
@@ -1889,50 +1817,22 @@
     // Videos play whenever their panel is on screen, animation or not. They
     // ship preload="none", so nothing is fetched until that moment.
     function playWhenVisible(video) {
-      function warm() {                          // start fetching before it is needed
-        if (video.preload !== "auto") {
+      function start() {
+        if (video.preload === "none") {
           video.preload = "auto";
           try { video.load(); } catch (e) {}
         }
-      }
-      function start() {
-        warm();
         var p = video.play();
         if (p && p.catch) p.catch(function () {});
       }
       if (reduced) return;                       // looping motion is the thing to suppress
       if (!("IntersectionObserver" in window)) { start(); return; }
-
-      /* Two observers. The outer one (a viewport-height margin, any sliver)
-         only warms the buffer so the clip has data by the time the panel
-         pins; the inner one plays and pauses. Without the warm-up pass the
-         panel arrives pinned and full-bleed while the file is still being
-         fetched, which reads as a video stuck on its poster. */
-      new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { if (e.isIntersecting) warm(); });
-      }, { rootMargin: "100% 0px" }).observe(video);
-
       new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
           if (e.isIntersecting) start();
           else video.pause();                    // off screen: stop decoding
         });
-      }, { threshold: 0.05 }).observe(video);
-
-      /* A play() issued with no buffered data can reject or simply not
-         advance; once the browser has frames, try again if it is on screen
-         and still stalled. */
-      video.addEventListener("loadeddata", function () {
-        if (video.paused && isOnScreen(video)) start();
-      });
-      video.addEventListener("canplay", function () {
-        if (video.paused && isOnScreen(video)) start();
-      });
-    }
-
-    function isOnScreen(el) {
-      var r = el.getBoundingClientRect();
-      return r.bottom > 0 && r.top < (window.innerHeight || 0);
+      }, { threshold: 0.25 }).observe(video);
     }
 
     document.querySelectorAll("[data-range-video]").forEach(playWhenVisible);
@@ -1944,8 +1844,14 @@
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Drive ScrollTrigger off Lenis' own frame (see bridgeLenisToGsap).
-    bridgeLenisToGsap();
+    // Drive ScrollTrigger off Lenis' own frame, and report Lenis' smoothed
+    // position as the scroll position. Guarded: with reduced motion Lenis
+    // is null and we never get here, but the page may also ship without it.
+    if (lenis) {
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    }
 
     // Split a heading into per-character spans so they can be staggered.
     // Word wrappers keep line breaking intact, and the original text stays
@@ -2053,7 +1959,6 @@
   document.addEventListener("DOMContentLoaded", function () {
     // First: the showcase's wheel bridge expects `lenis` to already exist.
     initSmoothScroll();
-    initParallax();
     initSiteMenu();
     initHeaderScroll();
     initProductFilter();

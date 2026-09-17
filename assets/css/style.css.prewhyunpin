@@ -521,13 +521,11 @@ strong, b { font-weight: 700; }
 .btn-outline:hover { background: rgba(9,101,144,.10); border-color: var(--blue-300); }
 
 /* Opt-in for dark or photographic grounds. */
-.btn-outline.on-dark, .hero .btn-outline, .page-hero .btn-outline,
-.cat-hero .btn-outline, .range-feature .btn-outline, .cta-band .btn-outline {
+.btn-outline.on-dark, .hero .btn-outline, .page-hero .btn-outline, .cta-band .btn-outline {
   background: rgba(255,255,255,.07); color: var(--white); border-color: rgba(255,255,255,.22);
 }
 .btn-outline.on-dark:hover, .hero .btn-outline:hover,
-.page-hero .btn-outline:hover, .cat-hero .btn-outline:hover,
-.range-feature .btn-outline:hover, .cta-band .btn-outline:hover {
+.page-hero .btn-outline:hover, .cta-band .btn-outline:hover {
   background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.34);
 }
 
@@ -619,14 +617,12 @@ strong, b { font-weight: 700; }
    its own clearance. Pages that open on the light .hero pull it back up so
    header and hero read as one surface (as the reference does). */
 body { padding-top: var(--header-h); }
-body:has(> main > .hero:first-child),
-body:has(> main > .cat-hero:first-child) { padding-top: 0; }
+body:has(> main > .hero:first-child) { padding-top: 0; }
 body:has(> main > .hero:first-child) main > .hero:first-child { padding-top: var(--header-h); }
 
 /* Over the dark hero the MENU affordance inverts to white so it stays legible
    on the photo. */
-body:has(> main > .hero:first-child) .site-header:not(.is-scrolled) .menu-btn-wrap,
-body:has(> main > .cat-hero:first-child) .site-header:not(.is-scrolled) .menu-btn-wrap {
+body:has(> main > .hero:first-child) .site-header:not(.is-scrolled) .menu-btn-wrap {
   color: #fff;
 }
 /* The logo is never altered to suit the hero: no recolour, no shadow, no
@@ -641,8 +637,7 @@ body:has(> main > .cat-hero:first-child) .site-header:not(.is-scrolled) .menu-bt
    header is fixed and .hero is overflow:hidden, which would clip it.
    Full-bleed and fading to nothing, it reads as depth in the photograph
    rather than as a panel behind the logo. */
-body:has(> main > .hero:first-child) .site-header:not(.is-scrolled)::before,
-body:has(> main > .cat-hero:first-child) .site-header:not(.is-scrolled)::before {
+body:has(> main > .hero:first-child) .site-header:not(.is-scrolled)::before {
   content: "";
   position: absolute; left: 0; right: 0; top: 0;
   height: calc(var(--header-h) + 46px);
@@ -656,8 +651,7 @@ body:has(> main > .cat-hero:first-child) .site-header:not(.is-scrolled)::before 
     transparent 100%);
 }
 /* The bar's own controls sit above the scrim. */
-body:has(> main > .hero:first-child) .site-header .nav-wrap,
-body:has(> main > .cat-hero:first-child) .site-header .nav-wrap { position: relative; z-index: 1; }
+body:has(> main > .hero:first-child) .site-header .nav-wrap { position: relative; z-index: 1; }
 
 /* ---------- MENU button ----------
    Icon + lowercase caps label, exactly the reference's "menu" affordance.
@@ -1804,64 +1798,14 @@ body.menu-open { overflow: hidden; }
 .stats-strip {
   background: transparent;
   border-top: 0;
-  /* Sits in the gap between the hero and Shop By Need. The hero adds no
-     padding below itself, but .need-section already contributes
-     --section-pad-y above, so the band takes that same value on top and
-     nothing on the bottom — that makes the space above and below the
-     figures equal on screen, instead of 42px over ~120px. */
-  padding-top: var(--section-pad-y);
-  padding-bottom: 0;
+  padding: 34px 0 30px;
   color: var(--ink-900);
 }
-/* A flat trust row, not five cards: the items spread evenly on the page
-   canvas and are separated by a hairline dot, so the band stays quiet
-   between two heavy sections. */
-.stats-strip .stats-eyebrow {
-  text-align: center;
-  color: var(--ink-500);
-  font-size: var(--fs-stat-label);
-  font-weight: var(--fw-label);
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  margin: 0 0 22px;
-}
-.hero-stats {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px 0;
-}
-.hero-stats > div {
-  position: relative;
-  flex: 1 1 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  text-align: left;
-  padding: 0 4px;
-  background: none;
-  border: 0;
-  box-shadow: none;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-}
-/* The separator between stats — a single centred dot on the flex gap. */
-.hero-stats > div + div::before {
-  content: "";
-  position: absolute;
-  left: -2px;
-  top: 50%;
-  width: 4px;
-  height: 4px;
-  margin-top: -2px;
-  border-radius: 50%;
-  background: var(--ink-500);
-  opacity: .32;
-}
+.hero-stats { display: grid; grid-template-columns: repeat(5, 1fr); }
+.hero-stats > div { display: flex; align-items: center; justify-content: center; gap: 12px; text-align: left; padding: 4px 12px; border-right: 1px solid var(--blue-100); }
+.hero-stats > div:last-child { border-right: 0; }
 .hero-stats .ic { flex: none; color: var(--blue-500); }
-.hero-stats .ic svg { width: 26px; height: 26px; }
+.hero-stats .ic svg { width: 34px; height: 34px; }
 .hero-stats div div { display: flex; flex-direction: column; line-height: 1.25; }
 /* The figure has to out-rank its label by size AND weight, or the strip
    reads as five short sentences. It was 17px/600 over a 12.5px label — a
@@ -1874,14 +1818,14 @@ body.menu-open { overflow: hidden; }
    size has to hold those without wrapping too. */
 .hero-stats strong {
   color: var(--ink-900);
-  font-size: 1.0625em;           /* 17px */
+  font-size: 1.375em;            /* 22px */
   font-weight: var(--fw-title);
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-title);
 }
 .hero-stats span {
   color: var(--ink-500);
-  font-size: .75rem;
+  font-size: var(--fs-stat-label);
   font-weight: var(--fw-label);
   line-height: var(--lh-tight);
 }
@@ -2185,23 +2129,26 @@ body.menu-open { overflow: hidden; }
    runway means the observer and the parallax see exactly the travel they saw
    before, so the entrance and the two photographic layers are unchanged. */
 .why-runway {
-  /* The runway no longer adds scroll distance. It previously ran 175vh so the
-     sticky section below could be held for ~75vh of hold; the section is not
-     pinned any more, so that surplus height would just be empty page. It stays
-     as an element because [data-why] hangs off it and the reveal observer
-     measures its rect. */
-  height: auto;
+  /* 175vh, from 200vh. The hold is this height MINUS the one-viewport pin, so
+     100vh of hold becomes 75vh — about 25% shorter, which keeps the cinematic
+     pause while stopping it from feeling like the page has snagged. */
+  height: 175vh;
   position: relative;
+}
+/* Below the desktop lock the section is content-driven and the page scrolls
+   normally, so the runway must not add empty scroll distance there. */
+@media (max-width: 1200px) {
+  .why-runway { height: auto; }
 }
 
 .section.why-section {
-  /* Scrolls with the page. This was position:sticky/top:0 against a 175vh
-     runway, which pinned the composition for about three-quarters of a
-     viewport; it now moves with everything else. The one-viewport frame below
-     is kept, so the section still reads as a single authored screen — it just
-     passes through rather than being held. */
-  position: relative;
-  overflow: hidden;              /* contains the layer scale overshoot */
+  /* position:sticky, after .range-pin. The runway above scrolls past while
+     this child holds the screen, so the composition is only ever seen with
+     its top edge at the viewport top — which is the one alignment its
+     one-viewport frame is authored for. No JS owns the hold. */
+  position: sticky;
+  top: 0;
+  overflow: hidden;              /* contains the parallax/scale overshoot */
   isolation: isolate;            /* keeps the card shadows off the backdrop */
   background: var(--blue-50);    /* what shows for the moment before decode */
   /* Exactly one viewport, pinned at all three so neither content nor the
@@ -2451,7 +2398,7 @@ body.menu-open { overflow: hidden; }
   /* rem, to match the rem-sized track and type above: a px icon would hold
      its 48px while the copy around it grew with the fluid root, eating the
      card's budget from the top on wide screens. */
-  width: 2.375rem; height: 2.375rem; margin: 0 0 .5rem;
+  width: 3rem; height: 3rem; margin: 0 0 .625rem;
   border-radius: 50%;
   background: rgba(255,255,255,.34);
   border: 1px solid rgba(255,255,255,.55);
@@ -2460,26 +2407,22 @@ body.menu-open { overflow: hidden; }
   box-shadow: 0 6px 16px rgba(19,167,236,.16);
   transition: box-shadow .35s ease, color .35s ease;
 }
-.why-item .icon svg { width: 1.1875rem; height: 1.1875rem; position: relative; z-index: 1; }
+.why-item .icon svg { width: 1.5rem; height: 1.5rem; position: relative; z-index: 1; }
 /* Sized in rem, not em: the card is a small-typed context and an em-based
    heading would compound down into the hyphenation the old layout showed. */
 .why-item h4 {
-  font-size: .875rem;        /* 14px */
+  font-size: .9375rem;       /* 15px */
   font-weight: 600;
   line-height: 1.25;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   color: var(--blue-800);
   /* The headings are short noun phrases — never break them mid-word. */
   hyphens: none;
   overflow-wrap: normal;
 }
 .why-item p {
-  /* rem, not em: an em here resolved against the card's own font-size and so
-     compounded as the fluid root grew, which is what ran the four longest
-     cards a line past the glass on wide screens. Fixed rem plus a tighter
-     leading keeps every paragraph inside its card. */
-  font-size: .8125rem;       /* 13px */
-  line-height: 1.45;
+  font-size: .875em;
+  line-height: 1.6;
   margin: 0;
   color: var(--ink-700);
   hyphens: none;
@@ -2539,10 +2482,10 @@ body.menu-open { overflow: hidden; }
   opacity: 1;
   transform: none;
 }
-/* Previously dropped the transition on both layers once settled, so the
-   parallax's per-frame transform writes were not fighting a 950ms ease. The
-   parallax is gone and nothing writes to these layers any more, so the rule
-   would only strip the entrance transition on a replay. */
+/* The parallax layers are driven by the script once settled, so their
+   entrance transition must not fight the per-frame transform writes. */
+.js .why-section[data-why].is-settled .why-bg,
+.js .why-section[data-why].is-settled .why-product { transition: none; }
 
 /* Stillness: everything at its settled state, no entrance, no parallax.
    initWhyReveal also returns early, so no transform is ever written. */
@@ -2671,8 +2614,8 @@ body.menu-open { overflow: hidden; }
   }
   .why-grid { grid-template-columns: 1fr; gap: 14px; width: 100%; max-width: none; }
   .why-item { min-height: 0; padding: 20px 20px 22px; border-radius: 22px; }
-  .why-item .icon { width: 38px; height: 38px; margin-bottom: 10px; }
-  .why-item .icon svg { width: 19px; height: 19px; }
+  .why-item .icon { width: 44px; height: 44px; margin-bottom: 12px; }
+  .why-item .icon svg { width: 22px; height: 22px; }
   .why-section .section-head { margin-bottom: 32px; }
 
   .js .why-section[data-why] .why-bg { transform: scale(1.04); }
@@ -3043,40 +2986,7 @@ body.menu-open { overflow: hidden; }
 }
 .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--blue-500); }
 .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-/* Same glass card as the homepage's "Why Jagruti" grid (.why-item): a
-   translucent white fill over a blurred backdrop, a bright rim and the same
-   soft blue drop shadow, so the two card families read as one system. The
-   section behind these sits on a light blue wash rather than a photograph, so
-   the fill is a touch denser than .why-item's .20 to hold its edge there. */
-.contact-info-card {
-  position: relative;
-  padding: 1.125rem 1.375rem;
-  margin-bottom: 18px;
-  border-radius: 24px;
-  background: rgba(255,255,255,.42);
-  -webkit-backdrop-filter: blur(20px) saturate(155%);
-  backdrop-filter: blur(20px) saturate(155%);
-  border: 1px solid rgba(255,255,255,.72);
-  box-shadow:
-    0 20px 50px rgba(5, 61, 87, .12),
-    inset 0 1px 0 rgba(255,255,255,.55);
-  transition:
-    transform .35s cubic-bezier(.22,.61,.36,1),
-    box-shadow .35s cubic-bezier(.22,.61,.36,1),
-    background .35s ease,
-    border-color .35s ease;
-}
-/* Matching the .why-item hover: a 6px lift, a brighter rim, a denser fill. */
-@media (hover: hover) {
-  .contact-info-card:hover {
-    transform: translateY(-6px) scale(1.015);
-    background: rgba(255,255,255,.58);
-    border-color: rgba(255,255,255,.88);
-    box-shadow:
-      0 28px 60px rgba(5, 61, 87, .18),
-      inset 0 1px 0 rgba(255,255,255,.7);
-  }
-}
+.contact-info-card { background: var(--blue-50); border: 1px solid var(--blue-100); border-radius: var(--radius-lg); padding: 26px; margin-bottom: 18px; }
 .contact-info-card h4 { font-size: var(--fs-label); font-weight: var(--fw-label); text-transform: none; letter-spacing: var(--ls-label-tight); color: var(--blue-600); margin-bottom: 10px; }
 .contact-info-card .val { font-size: var(--fs-card-desc); font-weight: var(--fw-label); color: var(--ink-900); }
 /* The address wraps to several lines, so it sits one step down from the
@@ -3489,15 +3399,17 @@ body.menu-open { overflow: hidden; }
   /* Stats on tablets: five items never split evenly across a row, so the
      dividers are dropped for a tile grid - 2 up, with the fifth stat
      spanning the full width so no orphan is left dangling. */
-  .hero-stats { flex-wrap: wrap; justify-content: center; gap: 16px 0; }
-  .hero-stats > div { flex: 0 0 50%; }
-  .hero-stats > div + div::before { display: none; }
+  .hero-stats { grid-template-columns: 1fr 1fr; gap: 12px; }
   .hero-stats > div {
+    border-right: 0;
     justify-content: flex-start;
     gap: 14px;
     padding: 16px 18px;
+    background: var(--blue-50);
+    border: 1px solid var(--blue-100);
+    border-radius: 14px;
   }
-  .hero-stats > div:last-child { flex: 0 0 100%; justify-content: center; }
+  .hero-stats > div:last-child { grid-column: 1 / -1; justify-content: center; }
   .compare-select-row { grid-template-columns: 1fr; }
   .mobile-bar { display: block; }
   :root { --mobile-bar-h: 50px; }
@@ -3574,9 +3486,7 @@ body.menu-open { overflow: hidden; }
   /* Phones: the same tile grid, tightened - icon above the figure so each
      tile is a compact square block, and the fifth stat runs full width as a
      wide footer tile rather than sitting alone in a half-empty row. */
-  .hero-stats { flex-wrap: wrap; justify-content: center; gap: 14px 0; }
-  .hero-stats > div { flex: 0 0 50%; }
-  .hero-stats > div + div::before { display: none; }
+  .hero-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
   .hero-stats > div {
     flex-direction: column;
     align-items: center;
@@ -3589,7 +3499,7 @@ body.menu-open { overflow: hidden; }
   .hero-stats .ic svg { width: 28px; height: 28px; }
   .hero-stats strong { font-size: 1em; }
   .hero-stats > div:last-child {
-    flex: 0 0 100%;
+    grid-column: 1 / -1;
     flex-direction: row;
     gap: 12px;
     padding: 14px 16px;
@@ -4238,19 +4148,6 @@ html.preloading, html.preloading body { overflow: hidden; }
   min-height: max(100svh, 620px);
   max-height: max(100svh, 620px);
   overflow: hidden;
-  /* A soft blue-into-white wash rather than the flat page background. It
-     lives on the PIN, not on .section.stage: the section's track is many
-     viewports tall, so a gradient there would only ever show one thin
-     slice at a time. On the pin the full blend is visible in every frame.
-     Blue is heaviest at the top, passes through a paler mid tone and
-     resolves to white at the bottom, so the machines still stand on a
-     near-white ground. */
-  background:
-    linear-gradient(180deg,
-      #6aa8e2 0%,
-      #93c4ef 34%,
-      #c2dcf8 70%,
-      #eaf3fd 100%);
   /* The whole poster is centred in this box; every layer inside is
      absolutely placed against it. */
   isolation: isolate;
@@ -4925,300 +4822,201 @@ html:not(.js) .stage-actions { justify-content: center; }
   color: var(--ink-500);
 }
 
-/* ---- Step flow ----
-   Four identical step cards in a row, linked by a dotted connector. Each
-   card is an arch-topped photograph with a floating number medallion at
-   its top-left and a small circular icon badge straddling the seam
-   between the picture and the copy beneath it. */
-.journey-flow {
+/* ---- Bento mosaic ----
+   An asymmetric editorial bento. The thing that makes it read as a bento
+   rather than a table of cards is that THE TILES DO NOT SHARE A HORIZONTAL
+   BASELINE. Every column runs the full height of the wall and holds one
+   photograph and one statistic card — but the line where the two meet sits
+   at a DIFFERENT HEIGHT in every column, and which of the pair comes first
+   flips column to column:
+
+     col 1   image, top → 7/12     card, 7/12 → bottom
+     col 2   card,  top → 4/12     image, 4/12 → bottom
+     col 3   image, top → 8/12     card, 8/12 → bottom
+     col 4   card,  top → 4/12     image, 4/12 → bottom
+
+   So column 2's photograph begins around the middle of column 1's
+   photograph, column 3's picks up higher again, and the seam walks across
+   the wall instead of running straight through it. The odd columns lead
+   with a tall photograph over a short card; the even columns invert it —
+   a short card over a tall photograph — which is what gives the block its
+   alternating image/statistic rhythm in both directions.
+
+   The mechanics: a 12-row grid whose rows are equal and whose tiles span
+   whatever slice they need. Twelve rows is fine enough to place the seams
+   independently and coarse enough that the numbers stay readable. Column
+   WIDTHS are unequal too (1.05 / 1 / 1.1 / 1), so neighbouring columns
+   never share a measure.
+
+   The whole block is held to one fixed height (--journey-h) — the grid
+   decides every tile's height, which is why no aspect-ratio is set on the
+   images here; they simply cover the cell they are given. */
+.journey-mosaic {
+  --journey-h: clamp(440px, 48vw, 660px);
+  --journey-gap: clamp(12px, 1.6vw, 22px);
   display: grid;
   grid-template-columns:
-    minmax(0, 1fr) clamp(36px, 5.2vw, 88px)
-    minmax(0, 1fr) clamp(36px, 5.2vw, 88px)
-    minmax(0, 1fr) clamp(36px, 5.2vw, 88px)
-    minmax(0, 1fr);
-  align-items: start;
-  gap: 0;
+    minmax(0, 1.05fr) minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
+  grid-template-rows: repeat(12, minmax(0, 1fr));
+  gap: var(--journey-gap);
+  height: var(--journey-h);
+  /* The section is now a fixed one-viewport box (see .journey-section), so
+     the mosaic absorbs whatever the head leaves rather than setting the
+     page height itself. --journey-h stays as the basis, so the proportions
+     are unchanged wherever the leftover space matches it; min-height:0 is
+     what lets a grid item shrink below its content. The 12-row template and
+     every tile's row placement are untouched, so the composition is
+     identical — only the box it resolves against is the viewport's. */
   flex: 1;
   min-height: 0;
 }
-/* The dotted rule between two cards, with a solid dot at its middle. */
-.journey-link {
-  align-self: start;
-  position: relative;
-  /* The cards are narrower than their columns, so the arc is pulled out
-     into the slack on either side to actually bridge the two. */
-  width: auto;
-  margin-inline: clamp(-46px, -4vw, -18px);
-  margin-top: clamp(88px, 11vw, 150px);
-  height: clamp(22px, 2.4vw, 34px);
-  color: var(--blue-400, #4eb8e9);
-  opacity: .9;
-  /* The arc is pulled out over its neighbours by the negative margins
-     above, so it has to sit behind them rather than across their faces. */
-  z-index: 0;
-}
-/* The arc bows upward between the two cards; preserveAspectRatio is off so the
-   curve stretches to whatever gutter width the grid gives it, while
-   vector-effect keeps the dashes an even weight however far it stretches. */
-.journey-link svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-/* A solid dot pinned to the highest point of the curve. */
-.journey-link-dot {
-  position: absolute;
-  left: 50%;
-  top: clamp(5px, .6vw, 8px);
-  width: 9px; height: 9px;
-  margin: -4.5px 0 0 -4.5px;
-  border-radius: 50%;
-  background: var(--blue-600);
+.journey-tile {
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
 }
 
-.journey-card {
-  position: relative;
-  /* Above the connector arcs, which reach under the cards from either side. */
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  /* Held to a narrower measure than its column so the dotted connectors
-     have room to read between neighbouring cards. */
-  max-width: clamp(190px, 17vw, 250px);
-  margin-inline: auto;
-  padding: clamp(10px, 1vw, 14px) clamp(10px, 1.1vw, 16px) clamp(14px, 1.4vw, 20px);
-  /* The card echoes the photograph's soft arch — a generously rounded head
-     over a gently rounded foot, so frame and picture read as one shape. */
-  border-radius: clamp(80px, 8vw, 118px) clamp(80px, 8vw, 118px) clamp(20px, 2vw, 28px) clamp(20px, 2vw, 28px);
-  background: linear-gradient(180deg, rgba(255,255,255,.72) 0%, rgba(255,255,255,.28) 55%, rgba(255,255,255,0) 100%);
-  border: 1px solid rgba(255, 255, 255, .7);
-  box-shadow: 0 18px 40px -28px rgba(7, 81, 116, .35);
-}
+/* Placement — the row numbers ARE the design. Each pair fills its column
+   top to bottom, and the split point is what is staggered. */
+.journey-tile--a { grid-column: 1; grid-row: 1 / 8;  }  /* image, tall  */
+.journey-tile--b { grid-column: 1; grid-row: 8 / -1; }  /* step 01      */
 
-/* Arch-topped photograph — fully rounded head, gently rounded foot. */
-.journey-card-media {
+.journey-tile--c { grid-column: 2; grid-row: 1 / 5;  }  /* step 02, short */
+.journey-tile--d { grid-column: 2; grid-row: 5 / -1; }  /* image, tall    */
+
+.journey-tile--e { grid-column: 3; grid-row: 1 / 9;  }  /* image, tall  */
+.journey-tile--f { grid-column: 3; grid-row: 9 / -1; }  /* step 03      */
+
+.journey-tile--g { grid-column: 4; grid-row: 1 / 5;  }  /* step 04, short */
+.journey-tile--h { grid-column: 4; grid-row: 5 / -1; }  /* image, tall    */
+
+/* Photography — fills its grid cell exactly; height comes from the row. */
+.journey-tile--img {
+  margin: 0;
   position: relative;
-  width: 100%;
-  aspect-ratio: 1 / .94;
-  /* Held in a variable so the reveal's clip-path can round its opening to
-     exactly the same arch — an unrounded clip would square the corners off
-     for the length of the animation. */
-  --media-r: clamp(72px, 7.2vw, 106px) clamp(72px, 7.2vw, 106px) clamp(16px, 1.6vw, 24px) clamp(16px, 1.6vw, 24px);
-  border-radius: var(--media-r);
-  overflow: visible;
-  margin-bottom: clamp(20px, 1.9vw, 28px);
-}
-.journey-card-media img {
-  width: 100%;
+  background: var(--blue-100);
   height: 100%;
+}
+.journey-tile--img img {
+  width: 100%; height: 100%;
   object-fit: cover;
   display: block;
-  border-radius: inherit;
 }
 
-/* Number medallion — floats off the top-left corner of the arch. */
+/* Step cards — the quiet counterweight to the photographs. A soft tint
+   rather than plain white: on this near-white section a white card has no
+   edge of its own and the copy reads as floating between the photos
+   instead of sitting in a tile of the same wall. */
+.journey-tile--step {
+  background: var(--blue-100);
+  border: 1px solid transparent;
+  padding: clamp(18px, 2.2vw, 32px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
 .journey-num {
-  position: absolute;
-  top: clamp(-30px, -2.4vw, -18px);
-  left: clamp(-26px, -2.1vw, -14px);
-  z-index: 2;
-  width: clamp(48px, 4.6vw, 68px);
-  height: clamp(48px, 4.6vw, 68px);
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #fff;
-  border: 1.5px solid rgba(168, 214, 236, .85);
-  box-shadow: 0 8px 20px -12px rgba(7, 81, 116, .35);
-  font-size: clamp(1.15rem, 1.6vw, 1.6rem);
+  display: block;
+  font-size: clamp(2rem, 3.4vw, 3.25rem);
   font-weight: var(--fw-title);
   line-height: 1;
-  letter-spacing: -.02em;
-  color: var(--blue-800);
-  font-variant-numeric: tabular-nums;
-  margin: 0;
-}
-
-/* Icon badge — straddles the bottom edge of the photograph. */
-.journey-icon {
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  bottom: clamp(-26px, -2vw, -18px);
-  transform: translateX(-50%);
-  width: clamp(40px, 3.6vw, 52px);
-  height: clamp(40px, 3.6vw, 52px);
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #fff;
-  border: 1px solid rgba(188, 224, 240, .9);
-  box-shadow: 0 10px 22px -14px rgba(7, 81, 116, .45);
+  letter-spacing: -.03em;
   color: var(--blue-600);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 14px;
 }
-.journey-icon svg {
-  width: 52%;
-  height: 52%;
-  display: block;
-}
-
-.journey-card-body h4 {
+.journey-tile--step h4 {
   font-size: 1.0625em;
   font-weight: 700;
   letter-spacing: -.01em;
   margin: 0 0 8px;
   color: var(--blue-800);
 }
-.journey-card-body p {
-  margin: 0 auto;
-  max-width: 26ch;
+.journey-tile--step p {
+  margin: 0;
   font-size: .875em;
   line-height: 1.6;
   color: var(--blue-700);
 }
 
-/* ---- Reveal ----
-   The section animates the way the process itself reads: step 01 arrives,
-   its arc travels across to step 02, and so on down the line, so the
-   entrance traces the same left-to-right path the diagram describes.
+/* ---- Corner expand ----
+   The CARD opens from its top-left corner while the photograph inside
+   stays completely still — the frame is revealing the picture, not
+   carrying it. That is why this clips rather than scales: `transform`
+   applies to the whole subtree, so scaling the tile would drag the image
+   along with it however the image was counter-scaled. `clip-path` instead
+   changes only the visible region of the tile, so the img is laid out at
+   its final size and position from the first frame and never moves.
 
-   Everything runs on one easing family — a long, decelerating
-   cubic-bezier(.16, 1, .3, 1) — and every element inside a card is
-   delayed against that card rather than against the page, so each step
-   assembles as its own small composition. main.js writes .is-open on the
-   cards and .is-drawn on the arcs.  --d is the per-card base delay it
-   also sets, which every child below offsets from. */
-.js .journey-card {
-  --d: 0ms;
-  opacity: 0;
-  /* The card rises AND grows very slightly out of its own base — the
-     transform-origin at the bottom keeps it planted while it settles,
-     which is what stops the lift reading as a slide. */
-  transform: translateY(34px) scale(.965);
-  transform-origin: 50% 100%;
-  filter: blur(6px);
-  transition:
-    opacity .9s cubic-bezier(.16, 1, .3, 1) var(--d),
-    transform 1.05s cubic-bezier(.16, 1, .3, 1) var(--d),
-    filter .8s cubic-bezier(.16, 1, .3, 1) var(--d);
-  will-change: opacity, transform, filter;
+   The inset runs from the RIGHT and BOTTOM edges, which holds the top-left
+   corner fixed and lets the opening grow out of it across both axes.
+   --open runs 0 → 1, written once by main.js when the tile first crosses
+   into view. */
+.js .journey-tile--img {
+  --open: 0;
+  clip-path: inset(0 calc((1 - var(--open)) * 100%) calc((1 - var(--open)) * 100%) 0);
+  transition: clip-path .95s cubic-bezier(.16, 1, .3, 1);
+  will-change: clip-path;
 }
-.js .journey-card.is-open {
-  opacity: 1;
-  transform: none;
-  filter: none;
-}
+.js .journey-tile--img.is-open { --open: 1; }
 
-/* The photograph is UNCOVERED by its own arch rather than faded in: the
-   frame's clip opens from the bottom up while the picture inside drifts
-   down from a small over-scale. The two run at different speeds, so the
-   image looks like it settles into the frame instead of arriving with it. */
-/* The clip rides on the IMAGE, not on .journey-card-media: a clip-path on
-   the media box would also cut the number medallion and the icon badge,
-   which deliberately hang outside its edges. */
-.js .journey-card-media img {
-  clip-path: inset(0 0 100% 0 round var(--media-r, 0));
-  transform: scale(1.14);
-  transition:
-    clip-path 1.15s cubic-bezier(.16, 1, .3, 1) calc(var(--d) + 60ms),
-    transform 1.6s cubic-bezier(.16, 1, .3, 1) calc(var(--d) + 60ms);
-}
-.js .journey-card.is-open .journey-card-media img {
-  clip-path: inset(0 0 0 0 round var(--media-r, 0));
-  transform: none;
-}
-
-/* Number medallion — swings in on a soft overshoot once the frame is up. */
-.js .journey-num {
-  opacity: 0;
-  transform: translateY(10px) scale(.6);
-  transition:
-    opacity .5s cubic-bezier(.16, 1, .3, 1) calc(var(--d) + 420ms),
-    transform .75s cubic-bezier(.34, 1.4, .5, 1) calc(var(--d) + 420ms);
-}
-.js .journey-card.is-open .journey-num { opacity: 1; transform: none; }
-
-/* Icon badge — same beat, a touch later, keeping its centring transform. */
-.js .journey-icon {
-  opacity: 0;
-  transform: translateX(-50%) scale(.5);
-  transition:
-    opacity .5s cubic-bezier(.16, 1, .3, 1) calc(var(--d) + 560ms),
-    transform .75s cubic-bezier(.34, 1.4, .5, 1) calc(var(--d) + 560ms);
-}
-.js .journey-card.is-open .journey-icon { opacity: 1; transform: translateX(-50%); }
-
-/* Title and copy lift in turn, so the card resolves top to bottom. */
-.js .journey-t {
-  opacity: 0;
-  transform: translateY(14px);
-  filter: blur(4px);
-  transition:
-    opacity .75s cubic-bezier(.16, 1, .3, 1) var(--td, 0ms),
-    transform .75s cubic-bezier(.16, 1, .3, 1) var(--td, 0ms),
-    filter .75s cubic-bezier(.16, 1, .3, 1) var(--td, 0ms);
-}
-.js .journey-card h4.journey-t { --td: calc(var(--d) + 520ms); }
-.js .journey-card p.journey-t  { --td: calc(var(--d) + 620ms); }
-.js .journey-card.is-open .journey-t {
-  opacity: 1;
-  transform: none;
-  filter: none;
-}
-
-/* ---- The travelling arc ----
-   The dotted curve DRAWS ITSELF from the left card to the right one. The
-   dashes are the visible pattern, so the draw cannot also use dashoffset;
-   instead a second, solid copy of the path is used as a mask that sweeps
-   open along the curve. A plain horizontal wipe would reveal the arc in a
-   straight line and fight its shape — this follows the curve itself. */
-.js .journey-link svg { overflow: visible; }
-.js .journey-link .journey-arc {
-  /* The path is ~104 units long in its own viewBox; pathLength normalises
-     that to 100 so the dash maths is independent of the geometry. */
-  stroke-dasharray: 2.6 3.6;
-}
-.js .journey-link .journey-arc-mask {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  transition: stroke-dashoffset 1s cubic-bezier(.16, 1, .3, 1) var(--d, 0ms);
-}
-.js .journey-link.is-drawn .journey-arc-mask { stroke-dashoffset: 0; }
-
-/* The dot arrives as the arc reaches the crest. */
-.js .journey-link-dot {
-  opacity: 0;
-  transform: scale(.3);
-  transition:
-    opacity .45s cubic-bezier(.16, 1, .3, 1) calc(var(--d, 0ms) + 620ms),
-    transform .7s cubic-bezier(.34, 1.5, .5, 1) calc(var(--d, 0ms) + 620ms);
-}
-.js .journey-link.is-drawn .journey-link-dot { opacity: 1; transform: none; }
-
+/* Two columns: the same alternating pattern, folded into two pairs of
+   rows. The fixed height doubles so each pair keeps the proportions of the
+   four-column wall. */
+/* Three columns: the bento folds but stays asymmetric — the two anchor
+   photographs keep their full-height spans, now one per band, and the
+   paired columns redistribute around them. */
+/* Two columns: the same staggered-seam idea, two columns at a time, so
+   the offset between neighbours survives the fold. The grid becomes two
+   stacked bands of 12 rows each — 24 in total — and the second band
+   repeats the stagger with the lead flipped. */
 @media (max-width: 1024px) {
-  /* Two columns and content-driven height — the one-viewport lock is
-     released, as .why-section does at its own breakpoint. */
+  /* Below 1024px the mosaic folds to two columns of 24 rows — twice the
+     rows in half the width cannot fit one screen without crushing the
+     copy, so the one-viewport lock is released and the section goes
+     content-driven again, exactly as .why-section does at its own
+     breakpoint. The desktop three must be cleared explicitly or they keep
+     squeezing the rows. Nothing else about the layout changes. */
   .journey-section {
     height: auto;
     min-height: 0;
     max-height: none;
   }
   .journey-shell { height: auto; }
-  .journey-flow {
+  .journey-mosaic {
     flex: none;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(24px, 4vw, 40px) 0;
+    --journey-h: clamp(720px, 108vw, 1000px);
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+    grid-template-rows: repeat(24, minmax(0, 1fr));
   }
-  .journey-link { display: none; }
+  .journey-tile--a { grid-column: 1; grid-row: 1 / 8;   }
+  .journey-tile--b { grid-column: 1; grid-row: 8 / 13;  }
+  .journey-tile--c { grid-column: 2; grid-row: 1 / 5;   }
+  .journey-tile--d { grid-column: 2; grid-row: 5 / 13;  }
+  .journey-tile--e { grid-column: 1; grid-row: 13 / 21; }
+  .journey-tile--f { grid-column: 1; grid-row: 21 / -1; }
+  .journey-tile--g { grid-column: 2; grid-row: 13 / 17; }
+  .journey-tile--h { grid-column: 2; grid-row: 17 / -1; }
 }
 
+/* One column: the height cap is dropped entirely and the tiles simply
+   stack, each photograph back on a portrait ratio. */
 @media (max-width: 600px) {
-  .journey-flow { grid-template-columns: 1fr; }
-  .journey-card-media { aspect-ratio: 4 / 3; }
+  .journey-mosaic {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-auto-rows: auto;
+    height: auto;
+  }
+  .journey-tile--a, .journey-tile--b, .journey-tile--c, .journey-tile--d,
+  .journey-tile--e, .journey-tile--f, .journey-tile--g, .journey-tile--h {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .journey-tile--img { height: auto; aspect-ratio: 4 / 3; margin-top: 0; }
+  .journey-tile--step { height: auto; min-height: 0; padding: 22px; align-self: stretch; }
 }
 
 @media (max-width: 720px) {
@@ -5231,20 +5029,13 @@ html:not(.js) .stage-actions { justify-content: center; }
   .journey-head-aside p { max-width: none; font-size: .875em; }
 }
 
+/* No motion: every tile is simply open from the start. */
 @media (prefers-reduced-motion: reduce) {
-  .js .journey-card,
-  .js .journey-num,
-  .js .journey-icon,
-  .js .journey-t,
-  .js .journey-link-dot {
-    opacity: 1;
-    transform: none;
-    filter: none;
+  .js .journey-tile--img {
+    --open: 1;
+    clip-path: none;
     transition: none;
   }
-  .js .journey-icon { transform: translateX(-50%); }
-  .js .journey-card-media img { clip-path: none; transform: none; transition: none; }
-  .js .journey-link .journey-arc-mask { stroke-dashoffset: 0; transition: none; }
 }
 /* ==========================================================================
    Service showcase  (index.html — .services)
@@ -5752,237 +5543,140 @@ html:not(.js) .stage-actions { justify-content: center; }
    Replaces the old separate "Social Proof" and .cta-band sections.
    ========================================================================== */
 .connect-band-section {
-  /* Plain full-screen band. It does NOT pin and it does NOT move on its own
-     — the reveal is done entirely by the footer sitting behind it, so this
-     stays one ordinary screen in normal flow (see .site-footer below). */
-  position: relative;
-  z-index: 1;
-  padding: 0;
+  background: var(--blue-200);
+  /* Matches the hero exactly: same 100svh unit, same 620px floor. The
+     section sets the height and the grid inside absorbs whatever is left,
+     so everything stays inside one viewport frame. */
   height: 100svh;
   min-height: max(100svh, 620px);
   max-height: max(100svh, 620px);
-  background: var(--blue-900);
-}
-.connect-pin {
-  height: 100%;
+  padding: 0;
   display: flex;
   align-items: center;
   overflow: hidden;
-  isolation: isolate;
 }
-
-/* ---- The footer reveal -----------------------------------------------
-   Matches the reference exactly: the FOOTER is stuck to the bottom of the
-   viewport at a NEGATIVE z-index, so it sits behind the page rather than
-   after it. It is therefore already in place, held at the bottom of the
-   screen, while the content above scrolls; the connect band simply slides
-   up off the top and uncovers it. Nothing pins, nothing transforms, and
-   there is no gap to close — the band ends exactly where it ends and the
-   footer was always underneath it.
-
-   z-index: -1 is what puts it behind, so every ancestor between it and the
-   root must stay transparent or the footer is painted over. body already
-   carries the page background, so the footer is given its own painted
-   ground and body is made transparent over the footer's own height. */
-/* SCOPED TO THIS PAGE ONLY. Every rule below hangs off a body:has() test
-   for the connect band being the last thing in <main> — which is true on
-   the homepage and nowhere else. An unscoped .site-footer here would make
-   the footer sticky and transparent-backed on every page of the site. */
-body:has(> main > .connect-band-section:last-child) .site-footer {
-  position: sticky;
-  bottom: 0;
-  z-index: -1;
-}
-/* A z-index:-1 element is painted behind its stacking context, so the page
-   background would cover the footer. The background is moved off body onto
-   the content above it, leaving body transparent for the footer to show
-   through — this is the one rule the reveal depends on. */
-body:has(> main > .connect-band-section:last-child) { background: transparent; }
-body:has(> main > .connect-band-section:last-child) > main { background: var(--page-bg); position: relative; z-index: 0; }
-
-/* Full-bleed photographic ground. It settles from a slight over-scale as the
-   band enters view — enough to feel alive behind the slab, not enough to
-   read as a parallax gimmick. */
-.connect-bg {
-  position: absolute; inset: 0; z-index: -1;
-  overflow: hidden;
-}
-.connect-bg img {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: center;
-  transform: scale(1.08);
-  transition: transform 1.4s cubic-bezier(.22,.61,.36,1);
-}
-.connect-pin:has(.connect-band.is-revealed) .connect-bg img { transform: scale(1); }
-.connect-pin::after {
-  /* Keeps the slab legible whatever the photo does underneath. */
-  content: ""; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(180deg, rgba(5,61,87,.28) 0%, rgba(5,61,87,.46) 100%);
-  pointer-events: none;
-}
-.connect-pin .container { width: 100%; }
-
-/* ---- The slab -------------------------------------------------------- */
+.connect-band-section .container { width: 100%; }
 .connect-band {
-  position: relative;
-  /* Deliberately narrower than the page container and centred in it, so the
-     photograph reads as a frame around the card rather than a thin margin. */
-  max-width: 660px;
-  margin: 0 auto;
-  padding: 0 clamp(16px, 2vw, 26px) clamp(16px, 2vw, 24px);
-  border-radius: var(--radius-md);
-  color: #fff;
-  background: rgba(5, 61, 87, .46);
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  border: 1px solid rgba(255,255,255,.10);
-  box-shadow: 0 30px 80px rgba(3, 26, 38, .32);
-  /* Arriving: the card lifts slightly into place — a settle, not an
-     entrance. Duration and curve are the reference's own motion tokens,
-     read off their stylesheet: --duration-extra-long (.6s) paired with
-     --ease-out-slow, cubic-bezier(0,0,.3,1). That curve leaves its start
-     immediately and decelerates the whole way, which is what makes the
-     movement read as settling rather than sliding in. */
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity .6s cubic-bezier(0, 0, .3, 1), transform .6s cubic-bezier(0, 0, .3, 1);
-}
-.connect-band.is-revealed { opacity: 1; transform: none; }
-
-/* Children stagger in behind the slab itself. */
-.connect-band [data-reveal-child] {
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity .6s cubic-bezier(0, 0, .3, 1), transform .6s cubic-bezier(0, 0, .3, 1);
-}
-.connect-band.is-revealed [data-reveal-child] { opacity: 1; transform: none; }
-.connect-band.is-revealed .connect-band-head    { transition-delay: .12s; }
-.connect-band.is-revealed .connect-sub          { transition-delay: .20s; }
-.connect-band.is-revealed .connect-band-actions { transition-delay: .28s; }
-.connect-band.is-revealed .connect-band-foot    { transition-delay: .36s; }
-
-/* ---- Top meta rail --------------------------------------------------- */
-.connect-band-top {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 0 11px;
-  border-bottom: 1px solid rgba(255,255,255,.16);
+  /* Form keeps a fixed left column; the copy column is pushed past centre
+     by the wide gap and the 1.25fr weighting on the right. */
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  grid-template-rows: 1fr auto;
+  gap: 32px clamp(80px, 14vw, 240px);
+  align-items: start;
 }
-.connect-band-tag {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: var(--fs-button-sm);
-  letter-spacing: .10em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.82);
-}
-.connect-band-tag-mid { justify-self: center; }
-.connect-band-tag-end { justify-self: end; }
-.connect-band-tag svg { width: 15px; height: 15px; flex: none; }
+.connect-form  { grid-column: 1; grid-row: 1; }
+.connect-copy  { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+.connect-social{ grid-column: 1; grid-row: 2; align-self: end; }
 
-/* ---- Headline row ---------------------------------------------------- */
-.connect-band-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: clamp(24px, 4vw, 64px);
-  padding: clamp(20px, 2.8vw, 30px) 0 clamp(16px, 2vw, 22px);
-  border-bottom: 1px solid rgba(255,255,255,.16);
+.connect-form .eyebrow {
+  display: block; margin-bottom: 18px; color: var(--blue-800);
+  /* The band already supplies a tinted ground, so the default pill chip
+     reads as a stray white patch here — drop it back to plain text. */
+  background: none; padding: 0; border-radius: 0;
 }
+
+/* Underline-only fields, matching the reference: no boxes, no fills — just
+   a hairline rule under each input and a floating-style placeholder. */
+.connect-form .form-field { margin-bottom: 0; }
+.connect-form .form-field label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.connect-form .form-field input,
+.connect-form .form-field select,
+.connect-form .form-field textarea {
+  border: 0;
+  border-bottom: 1.5px solid rgba(23, 32, 38, .22);
+  border-radius: 0;
+  background: transparent;
+  padding: 14px 2px;
+  color: var(--ink-900);
+  transition: border-color .18s ease;
+}
+.connect-form .form-field input::placeholder,
+.connect-form .form-field textarea::placeholder { color: var(--ink-500); }
+.connect-form .form-field select { color: var(--ink-500); appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23607685' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 2px center; background-size: 18px; padding-right: 26px; }
+.connect-form .form-field input:focus,
+.connect-form .form-field select:focus,
+.connect-form .form-field textarea:focus { border-bottom-color: var(--blue-700); background-color: transparent; }
+.connect-form .form-field textarea { resize: none; }
+
+/* Two fields share a row where the reference pairs them. */
+.connect-form-fields .form-row-2 { gap: 0 28px; }
+
+.connect-consent { display: flex; align-items: center; gap: 10px; margin: 22px 0 18px; font-size: var(--fs-small); color: var(--ink-700); }
+.connect-consent input { width: 18px; height: 18px; flex: none; accent-color: var(--blue-700); }
+.connect-consent a { color: var(--blue-800); text-decoration: underline; }
+
+/* Full-width pill submit with the arrow puck on the right. */
+/* Compact pill — sized to its label rather than the column, so it matches
+   the scale of the two buttons in the right column. */
+.connect-submit {
+  border-radius: var(--radius-pill);
+  padding: 8px 8px 8px 18px;
+  display: inline-flex; align-items: center; gap: 12px;
+}
+.connect-submit .arrow {
+  width: 24px; height: 24px; border-radius: var(--radius-pill);
+  background: rgba(255,255,255,.18);
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+}
+.connect-submit .arrow svg { width: 13px; height: 13px; }
+
+/* The headline is the anchor of the whole band: tight, heavy, hard-left,
+   clamped so it stays oversized without overflowing at narrow widths. */
+/* A normal section heading in a normal content band (h2 + lead + CTAs),
+   so it joins the shared system. It was the last heading still setting its
+   own 70px clamp, .95 leading and uppercase transform — the only section
+   heading on the site still shouting. Colour and margin stay here. */
 .connect-headline {
-  color: #fff;
-  margin: 0;
-  font-size: clamp(1.625rem, 3.2vw, 2.375rem);
-  line-height: 1.02;
-  letter-spacing: -.02em;
-  font-weight: var(--fw-title);
+  color: var(--blue-900);
+  margin: 0 0 20px;
 }
-/* The headline CTA is the site's standard pill (.btn.btn-primary.btn-sm);
-   only its flex behaviour belongs here, so it keeps the shared radius,
-   padding, case and hover along with every other CTA on the site. */
-.connect-band-cta { flex: none; }
-.connect-band-cta svg { width: 14px; height: 14px; }
+.connect-sub { color: var(--ink-700); max-width: 46ch; margin: 0 0 24px; font-size: .875em; line-height: 1.6; }
+.connect-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.connect-actions .btn { padding: 8px 18px; }
+.connect-actions .btn svg { width: 15px; height: 15px; }
 
-/* ---- Body ------------------------------------------------------------ */
-.connect-band-body { padding-top: clamp(16px, 2vw, 22px); }
-.connect-sub {
-  color: rgba(255,255,255,.80);
-  max-width: 46ch;
-  margin: 0 0 14px;
-  font-size: var(--fs-small);
-  line-height: 1.55;
+/* This band used to opt out of the global button treatment (natural case,
+   no tracking, one size down) because .btn shipped uppercase with wide
+   tracking, which was too shouty beside the oversized headline here. The
+   base is now natural case, so the opt-out is what would make these three
+   CTAs the odd ones out — only the compact SIZE is still worth keeping,
+   since they sit under a display headline in a tight band. */
+.connect-band .btn {
+  font-size: var(--fs-button-sm);
 }
+.connect-actions .btn-ghost { border-color: var(--blue-800); color: var(--blue-900); }
+.connect-actions .btn-ghost:hover { background: var(--blue-900); color: #fff; }
 
-/* Two enquiry rows standing where the reference puts its email field: a
-   dark inset bar with the label on the left and a solid button on the right. */
-.connect-band-actions { display: grid; gap: 10px; }
-.connect-band-action {
-  display: flex; align-items: center; justify-content: space-between; gap: 14px;
-  background: rgba(3, 26, 38, .55);
-  border: 1px solid rgba(255,255,255,.08);
-  /* The site's input/surface radius, so these read as fields in the same
-     system as every other form control on the site. */
-  border-radius: var(--radius-sm);
-  padding: 7px 7px 7px 16px;
-  color: rgba(255,255,255,.86);
-  transition: background .2s ease, border-color .2s ease;
-}
-.connect-band-action:hover { background: rgba(3, 26, 38, .72); border-color: rgba(255,255,255,.18); }
-.connect-band-action-label { font-size: var(--fs-small); }
-/* Both row buttons are the site's standard small pills (.btn.btn-sm), so
-   only their flex behaviour is set here. */
-.connect-band-action-btn { flex: none; }
-
-.connect-band-foot {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 16px;
-  margin-top: 14px;
-}
-.connect-band-note { font-size: var(--fs-small); color: rgba(255,255,255,.62); }
-
-.connect-social-icons { display: flex; gap: 8px; }
+.connect-social-label { display: block; font-size: var(--fs-small); color: var(--ink-700); margin-bottom: 12px; }
+.connect-social-icons { display: flex; gap: 12px; }
 .connect-social-icons a {
-  width: 32px; height: 32px; border-radius: var(--radius-pill);
+  width: 40px; height: 40px; border-radius: var(--radius-pill);
   display: inline-flex; align-items: center; justify-content: center;
-  border: 1.5px solid rgba(255,255,255,.35); color: #fff;
-  transition: background .18s ease, color .18s ease, border-color .18s ease;
+  border: 1.5px solid var(--blue-900); color: var(--blue-900);
+  transition: background .18s ease, color .18s ease;
 }
-.connect-social-icons a:hover { background: #fff; color: var(--blue-900); border-color: #fff; }
-.connect-social-icons svg { width: 15px; height: 15px; }
+.connect-social-icons a:hover { background: var(--blue-900); color: var(--blue-200); }
+.connect-social-icons svg { width: 19px; height: 19px; }
 
 @media (max-width: 900px) {
-  /* Below the two-column break the slab no longer fits one viewport, so the
-     height lock AND the pin are both released and the section flows. */
-  /* Below the break the card no longer fits one viewport, so the band stops
-     being a fixed screen and simply flows at its own height. The footer
-     reveal is dropped with it: a footer taller than the viewport cannot be
-     held behind a shorter band, so it returns to normal flow after it. */
+  /* Below the two-column break the content no longer fits one viewport, so
+     the height lock is released and the section flows normally. */
   .connect-band-section {
     height: auto; min-height: 0; max-height: none;
-  }
-  .connect-pin {
-    height: auto;
     display: block;
     padding: 56px 0;
   }
-  body:has(> main > .connect-band-section:last-child) .site-footer { position: relative; bottom: auto; z-index: 0; }
-  body:has(> main > .connect-band-section:last-child) { background: var(--page-bg); }
-  .connect-band-top { grid-template-columns: 1fr auto; }
-  .connect-band-tag-mid { display: none; }
-  .connect-band-head { flex-direction: column; align-items: flex-start; gap: 24px; }
-  .connect-band-cta { width: 100%; }
-  .connect-band-action { flex-direction: column; align-items: stretch; gap: 12px; padding: 18px; text-align: center; }
-  .connect-band-action-btn { text-align: center; }
-  .connect-band-foot { flex-direction: column; align-items: flex-start; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .connect-band,
-  .connect-band [data-reveal-child] { opacity: 1; transform: none; transition: none; }
-  .connect-bg img { transform: none; transition: none; }
-  /* The rise is motion for its own sake, so it is dropped entirely here —
-     the plain sticky release still uncovers the footer. */
+  .connect-band {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 34px;
+  }
+  .connect-copy   { grid-column: 1; grid-row: 1; }
+  .connect-form   { grid-column: 1; grid-row: 2; }
+  .connect-social { grid-column: 1; grid-row: 3; }
 }
 
 /* ==========================================================================
@@ -6003,8 +5697,8 @@ body:has(> main > .connect-band-section:last-child) > main { background: var(--p
    every section heading, edit the tokens.
 
    Placed at the end of the file deliberately: several of these components
-   are defined late (.stage-head at ~4086, .journey-head at ~4654),
-   and a shared rule declared earlier would
+   are defined late (.stage-head at ~4086, .journey-head at ~4654,
+   .connect-headline at ~5417), and a shared rule declared earlier would
    lose to them on source order. This is the one place a single rule can
    win for all of them without inflating specificity.
 
@@ -6017,9 +5711,6 @@ body:has(> main > .connect-band-section:last-child) > main { background: var(--p
      .services-intro h2       — a full-viewport pinned rail panel that
                                 plays the hero's role in its own section
      .stage-word              — decorative artwork, not a heading at all
-     .connect-headline        — the closing band is now a full-viewport
-                                pinned slab over a photograph, playing the
-                                hero's role at the end of the page
      .article-body / .legal-body h2 — prose headings inside a 760px
                                 measure column, deliberately a step down
      .footer-signup h2        — footer chrome, deliberately quieter
@@ -6028,7 +5719,8 @@ body:has(> main > .connect-band-section:last-child) > main { background: var(--p
 .why-section .section-head h2,
 .stage-head h2,
 .journey-head h2,
-.cta-band h2 {
+.cta-band h2,
+.connect-headline {
   font-family: var(--font-sans);
   font-size: var(--fs-title);
   font-weight: var(--fw-title);
@@ -6044,543 +5736,14 @@ body:has(> main > .connect-band-section:last-child) > main { background: var(--p
   .why-section .section-head h2,
   .stage-head h2,
   .journey-head h2,
-  .cta-band h2 { font-size: 2.1em; }
+  .cta-band h2,
+  .connect-headline { font-size: 2.1em; }
 }
 @media (max-width: 600px) {
   .section-head h2,
   .why-section .section-head h2,
   .stage-head h2,
   .journey-head h2,
-  .cta-band h2 { font-size: 1.8em; }
-}
-
-/* ==========================================================================
-   Contact hero — split layout (image left / enquiry form right)
-   Replaces the centred .page-hero band on contact.html. The image column is
-   a full-bleed portrait that sets the row height; the form column scrolls
-   its own content if the viewport is short.
-   ========================================================================== */
-.contact-hero {
-  background: var(--blue-50);
-  padding: 0;
-  overflow: hidden;
-}
-.contact-hero-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: stretch;
-  min-height: 640px;
-}
-.contact-hero-media {
-  position: relative;
-  min-height: 100%;
-  background: var(--blue-200);
-}
-.contact-hero-media img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-.contact-hero-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: clamp(40px, 5vw, 72px) clamp(24px, 5vw, 80px);
-  background: #fff;
-}
-.contact-hero-form .breadcrumb { margin-bottom: 14px; }
-.contact-hero-form .eyebrow { align-self: flex-start; margin-bottom: 12px; }
-.contact-hero-form h1 {
-  font-size: clamp(1.9em, 3.2vw, 2.5em);
-  line-height: var(--lh-title);
-  letter-spacing: var(--ls-title);
-  margin: 0 0 12px;
-}
-.contact-hero-form .contact-hero-lead {
-  color: var(--ink-700);
-  font-size: var(--fs-card-desc);
-  line-height: var(--lh-body);
-  max-width: 48ch;
-  margin: 0 0 26px;
-}
-
-@media (max-width: 900px) {
-  .contact-hero-grid { grid-template-columns: 1fr; min-height: 0; }
-  .contact-hero-media { min-height: 380px; }
-  .contact-hero-media img { position: static; height: 380px; }
-}
-
-/* Info cards below the split hero: a 4-up row rather than a stacked
-   sidebar, since the form no longer shares that column. */
-.contact-info-grid .contact-info-card { margin-bottom: 0; height: 100%; }
-
-/* The contact hero runs under the fixed header the same way the homepage hero
-   does: the body drops its offset and the form column pads itself clear of the
-   bar, so the photo fills the full frame including the strip behind the nav. */
-body:has(> main > .contact-hero:first-child) { padding-top: 0; }
-body:has(> main > .contact-hero:first-child) .contact-hero-form {
-  padding-top: calc(var(--header-h) + clamp(24px, 3vw, 48px));
-}
-/* Dark scrim across the header band only, so the logo reads against the photo
-   in the left column. Same treatment as the homepage hero. */
-body:has(> main > .contact-hero:first-child) .site-header:not(.is-scrolled)::before {
-  content: "";
-  position: absolute; left: 0; right: 50%; top: 0;
-  height: calc(var(--header-h) + 46px);
-  pointer-events: none;
-  z-index: 0;
-  background: linear-gradient(180deg,
-    rgba(0,22,36,.72) 0%,
-    rgba(0,22,36,.52) 50%,
-    rgba(0,22,36,.20) 80%,
-    transparent 100%);
-}
-body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: relative; z-index: 1; }
-
-@media (max-width: 900px) {
-  body:has(> main > .contact-hero:first-child) .contact-hero-form { padding-top: clamp(32px, 6vw, 48px); }
-  body:has(> main > .contact-hero:first-child) .contact-hero-media { padding-top: 0; }
-  body:has(> main > .contact-hero:first-child) .site-header:not(.is-scrolled)::before { right: 0; }
-}
-
-/* ---------- Contact hero form — reference styling ----------
-   Underline-only fields: no boxes, no fills, labels hidden and carried by the
-   placeholder instead, with a hairline rule under each field. Matches the
-   .contact-hero-form is now the only user of this treatment — the homepage
-   connect band it was modelled on no longer carries a form. */
-.contact-hero-form form { display: block; }
-.contact-hero-form .form-field { margin-bottom: 0; }
-.contact-hero-form .form-field label {
-  position: absolute; width: 1px; height: 1px;
-  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
-}
-.contact-hero-form .form-field input,
-.contact-hero-form .form-field select,
-.contact-hero-form .form-field textarea {
-  width: 100%;
-  border: 0;
-  border-bottom: 1.5px solid rgba(23, 32, 38, .22);
-  border-radius: 0;
-  background: transparent;
-  padding: 16px 2px;
-  font-size: var(--fs-card-desc);
-  font-family: inherit;
-  color: var(--ink-900);
-  outline: none;
-  transition: border-color .18s ease;
-}
-.contact-hero-form .form-field input::placeholder,
-.contact-hero-form .form-field textarea::placeholder { color: var(--ink-500); }
-.contact-hero-form .form-field select {
-  color: var(--ink-500);
-  appearance: none; -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23607685' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 2px center;
-  background-size: 18px; padding-right: 26px;
-}
-.contact-hero-form .form-field input:focus,
-.contact-hero-form .form-field select:focus,
-.contact-hero-form .form-field textarea:focus { border-bottom-color: var(--blue-700); }
-.contact-hero-form .form-field textarea { resize: none; }
-.contact-hero-form .form-row-2 { gap: 0 28px; }
-
-/* Compact pill submit sized to its label, not the column. */
-.contact-hero-form form .btn {
-  width: auto;
-  display: inline-flex;
-  margin-top: 28px;
-  border-radius: var(--radius-pill);
-}
-.contact-hero-form .form-note { margin-top: 14px; }
-
-/* ===================================================================
-   EDITORIAL CATEGORY HERO  (.cat-hero)
-   -------------------------------------------------------------------
-   A full-bleed photographic band used at the top of a category page in
-   place of the centred .page-hero gradient. The picture carries the
-   section; type sits on it rather than beside it — headline and CTAs
-   pinned bottom-left, a short positioning line bottom-right, both on the
-   same baseline. Typography is the site ramp (General Sans via
-   --font-sans, inherited) so it reads as the same family as the homepage
-   hero: the eyebrow/breadcrumb take the label scale, the headline the
-   h1 scale at the shared title weight and tracking.
-   =================================================================== */
-/* One screen tall, pinned three ways — the full-viewport contract from
-   SECTION-HEIGHTS.md, the same box the homepage .hero declares. The three
-   declarations are all required: 100svh sets the box in the stable unit a
-   collapsing mobile toolbar cannot change, and the max(…, 620px) floor stops
-   it shrinking past the hero's own floor on a short window. This section
-   qualifies for the lock because its content is authored to fit — the copy
-   row is ~260px and flexes into whatever height is left, so the box never
-   clips it. */
-.cat-hero {
-  position: relative;
-  height: 100svh;
-  min-height: max(100svh, 620px);
-  max-height: max(100svh, 620px);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: var(--header-h) 0 clamp(34px, 5vh, 62px);
-  background: #1b1512;
-  color: #fff;
-  overflow: hidden;
-}
-.cat-hero .ch-img {
-  position: absolute; inset: 0; z-index: 0;
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: 50% 45%;
-}
-/* Two scrims, not one: a left-to-right wash that keeps the headline column
-   readable over the bright part of the picture, and a bottom gradient that
-   anchors both text blocks on the same baseline. */
-.cat-hero::after {
-  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(14,10,8,.62) 0%, rgba(14,10,8,.30) 34%, rgba(14,10,8,.06) 56%, transparent 72%),
-    linear-gradient(180deg, rgba(14,10,8,.46) 0%, transparent 26%, transparent 52%, rgba(14,10,8,.60) 100%);
-}
-.cat-hero .container { position: relative; z-index: 2; width: 100%; }
-
-/* The headline row: copy left, positioning line right, sharing a baseline.
-   It collapses to a single stacked column on narrow screens. */
-.cat-hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 23em);
-  align-items: end;
-  gap: 30px clamp(28px, 5vw, 80px);
-}
-.cat-hero-eyebrow {
-  margin: 0 0 .75em;
-  font-size: var(--fs-label); font-weight: var(--fw-label);
-  letter-spacing: var(--ls-label-tight);
-  color: rgba(255,255,255,.86);
-}
-/* The headline runs larger than the flat --fs-h1 the centred .page-hero uses:
-   on a full-bleed photograph the type has a whole screen to hold, and the
-   reference sets it at display scale. It stays on the ramp by taking --fs-h1
-   as its floor and the shared title line-height and tracking, so it is the
-   same typeface and proportions, just one step up the scale. */
-.cat-hero h1 {
-  margin: 0;
-  color: #fff;
-  font-size: clamp(var(--fs-h1), 5.2vw, 76px);
-  line-height: var(--lh-title);
-  letter-spacing: var(--ls-title);
-  max-width: 12em;
-  text-wrap: balance;
-  text-shadow: 0 2px 22px rgba(12,8,6,.42);
-}
-.cat-hero .hero-cta {
-  justify-content: flex-start;
-  margin-top: clamp(22px, 3vh, 34px);
-}
-/* The reference's buttons are square, but every CTA on this site is a pill
-   (.btn takes --radius-pill, as does the homepage hero's .hc-cta), so these
-   keep the site's radius rather than the reference's — consistency with the
-   rest of the site wins over copying that one detail. */
-.cat-hero .hero-cta .btn {
-  min-width: 11em;
-  justify-content: center;
-}
-/* Deliberately the small print of the pair — the label scale against the
-   headline's display scale, so the row reads with one clear focal point. */
-.cat-hero-note {
-  margin: 0;
-  font-size: var(--fs-label);
-  line-height: var(--lh-body);
-  color: rgba(255,255,255,.88);
-  max-width: 30em;
-  margin-left: auto;
-  text-shadow: 0 1px 14px rgba(12,8,6,.5);
-}
-
-/* Below 900px the lock is released, matching .hero, which goes height:auto at
-   the same breakpoint. A section matched to the hero on desktop is
-   deliberately not matched here. */
-@media (max-width: 900px) {
-  .cat-hero {
-    height: auto;
-    min-height: min(70svh, 560px);
-    max-height: none;
-    padding: calc(var(--header-h) + 40px) 0 48px;
-  }
-  .cat-hero-grid { grid-template-columns: 1fr; align-items: start; }
-  .cat-hero h1 { max-width: none; }
-  .cat-hero-note { max-width: 34em; }
-}
-@media (max-width: 560px) {
-  .cat-hero .hero-cta .btn { min-width: 0; flex: 1 1 auto; }
-}
-
-/* ===================================================================
-   EDITORIAL PRODUCT GRID  (.grid-editorial)
-   -------------------------------------------------------------------
-   A gallery-style range listing: the photograph carries each tile and the
-   only type is a name/price row beneath it. No card chrome, no per-card
-   buttons — the whole tile is one link, the way a lookbook grid works.
-
-   Scoped to the grid with a modifier rather than restyling .product-card,
-   which 43 pages share. Everything here overrides the base card inside
-   .grid-editorial only; the same markup on every other page is untouched.
-   =================================================================== */
-.grid.grid-editorial {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 26px clamp(16px, 1.8vw, 26px);
-}
-/* Strip the card: no ground, no border, no radius, no shadow, no lift. */
-.grid-editorial .product-card {
-  background: none;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  overflow: visible;
-}
-.grid-editorial .product-card:hover {
-  transform: none;
-  box-shadow: none;
-}
-/* A tile is HALF a panel row: two of them stacked fill the panel's height
-   exactly, which is what makes the reference's rows square off. So the thumb
-   takes whatever height is left after the name/price line rather than an
-   aspect-ratio of its own — an intrinsic ratio would size the image from its
-   own width and leave the card short, which is what left dead space under
-   the tiles beside the panel. */
-/* In the reference the tiles are SHORTER than the panel beside them, not
-   stretched to match it: they take their own near-square ratio, sit at the
-   top of the row and leave the space below empty. That is what keeps the
-   panel reading as the feature and the tiles as the supporting row. */
-.grid-editorial .product-card { align-self: start; }
-.grid-editorial .product-card .thumb {
-  display: block;
-  aspect-ratio: 450/560;
-  border-radius: 0;
-  background: var(--blue-50);
-}
-.grid-editorial .product-card .thumb img { object-fit: cover; }
-/* A slower, smaller push than the base card's .35s/1.06 — at this size the
-   image is the whole tile, so the movement wants to be barely there. */
-.grid-editorial .product-card .thumb img { transition: transform .6s cubic-bezier(.22,.61,.36,1); }
-.grid-editorial .product-card:hover .thumb img { transform: scale(1.03); }
-
-/* The one type row: name left, action right, on a single baseline under the
-   picture. Everything the base card stacks inside a padded body is either
-   hidden below or laid out on this line. */
-/* flex-direction must be stated: the base .product-card .body sets `column`
-   at equal specificity and later in the file, so omitting it here leaves the
-   row stacked. */
-.grid-editorial .product-card .body {
-  padding: 14px 2px 0;
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  flex: none;
-}
-/* The category tag, the description and the spec chip all repeat what the
-   section head already says, and the reference's row carries neither. */
-.grid-editorial .product-card .cat-tag,
-.grid-editorial .product-card p.desc,
-.grid-editorial .product-card .spec-chip-row { display: none; }
-
-/* The name is a caption under a picture, not a card title: it sits on one
-   line beside the action with no description under it, so it takes the body
-   size rather than --fs-card-title (20px), which is sized for a stacked card
-   with copy beneath. This matches the action opposite it, so the row reads
-   as one line of type — as the reference's name/price row does. */
-.grid-editorial .product-card h3 {
-  margin: 0;
-  min-width: 0;
-  flex: 1;
-  font-size: var(--fs-card-desc);
-  line-height: var(--lh-card);
-  font-weight: var(--fw-label);
-  letter-spacing: var(--ls-body);
-}
-.grid-editorial .product-card h3 a { color: var(--ink-900); text-decoration: none; }
-.grid-editorial .product-card:hover h3 a { color: var(--blue-700); }
-
-/* "From $195.00" sits opposite the name in the reference. We do not publish
-   prices, so the price slot carries the pricing ACTION instead — same
-   position, same quiet treatment, as a text link rather than a button, so
-   the row stays one line of type. */
-.grid-editorial .product-card .card-actions {
-  margin: 0;
-  flex: none;
-  gap: 0;
-}
-.grid-editorial .product-card .card-actions .btn-outline { display: none; }
-/* The base .btn-whatsapp carries a border, a box-shadow and the waPulse
-   attention animation — all of which are for a green pill, not a line of
-   type. They have to be cleared explicitly, or the link renders as a faintly
-   glowing outlined box. */
-.grid-editorial .product-card .card-actions .btn-whatsapp {
-  flex: none;
-  padding: 0;
-  background: none;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  animation: none;
-  color: var(--ink-500);
-  font-size: var(--fs-card-desc);
-  font-weight: var(--fw-body);
-  line-height: var(--lh-card);
-  white-space: nowrap;
-}
-.grid-editorial .product-card .card-actions .btn-whatsapp svg { display: none; }
-.grid-editorial .product-card .card-actions .btn-whatsapp:hover {
-  background: none;
-  color: var(--blue-700);
-  text-decoration: underline;
-}
-
-/* The section head goes left-aligned to match the grid's left edge — a
-   centred head over a flush gallery grid reads as two different systems. */
-.section-editorial .section-head {
-  max-width: none;
-  margin-left: 0;
-  margin-right: 0;
-  text-align: left;
-}
-
-@media (max-width: 767px) {
-  .grid.grid-editorial { gap: 32px 14px; }
-}
-@media (max-width: 560px) {
-  .grid.grid-editorial { gap: 26px 12px; }
-  .grid-editorial .product-card .body { flex-direction: column; align-items: flex-start; gap: 3px; }
-}
-
-/* ---------- Editorial grid: feature panel ----------
-   Matched to the reference's own .featured-products spec rather than
-   approximated: the grid runs FOUR columns and the panel spans two of them,
-   so exactly two product tiles sit beside it and the row reads 1 feature +
-   2 products. The panel occupies a single row at a near-square ratio
-   (the reference uses 696/704) — it is not a two-row block.
-
-   Below 768px the grid drops to two columns and the panel goes full width
-   at a tall portrait ratio, which is what the reference does at its own
-   48rem breakpoint. */
-/* The panel spans TWO tile rows. Each row is one tile plus its name line, so
-   two stacked tiles come out exactly as tall as one panel — which is what
-   squares off the reference's rows. Height comes from the span, so the panel
-   carries no aspect-ratio of its own. */
-.grid-editorial .range-feature {
-  aspect-ratio: 696/704;
-  position: relative;
-  isolation: isolate;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: clamp(24px, 2.4vw, 40px);
-  overflow: hidden;
-  background: #0b2030;
-  color: #fff;
-  text-decoration: none;
-}
-/* The reference alternates the panel's side between sections. Here every
-   panel lives in one grid, so each is pinned to an explicit column AND row,
-   alternating sides down the page.
-
-   Each panel occupies ONE row, spanning two of the four columns — so the two
-   columns left beside it hold exactly TWO product tiles, not four. (A
-   two-row panel would leave a 2x2 space and take four tiles.) */
-.grid-editorial { grid-auto-flow: dense; }
-.grid-editorial .range-feature   { grid-column: 1 / span 2; grid-row: 1; }
-.grid-editorial .range-feature-2 { grid-column: 3 / span 2; grid-row: 2; }
-.grid-editorial .range-feature-3 { grid-column: 1 / span 2; grid-row: 3; }
-
-/* The final row holds the three products left over after the panels. Left in
-   the 4-column flow they sit in columns 1-3 and leave a hole at the right.
-   This row spans the full width and uses space-between, so the tiles KEEP
-   the column width they have everywhere else — the extra space goes into the
-   gaps instead of stretching the tiles. First is flush left, last flush
-   right. */
-.grid-editorial .range-tail {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: space-between;
-  gap: clamp(16px, 1.8vw, 26px);
-}
-/* One column's width on the parent's 4-track grid. */
-.grid-editorial .range-tail > .product-card {
-  flex: 0 0 calc((100% - 3 * clamp(16px, 1.8vw, 26px)) / 4);
-}
-
-/* The image is oversized by the parallax travel on BOTH edges, then pulled
-   up by that same amount, so it still covers the panel at either end of the
-   drift. --px-travel must match the data-parallax value in the markup; the
-   reference does the same thing with its own --fp-parallax-travel. */
-.grid-editorial .range-feature img {
-  --px-travel: 30%;
-  position: absolute; left: 0; z-index: 0;
-  top: calc(var(--px-travel) * -1);
-  width: 100%;
-  height: calc(100% + var(--px-travel) * 2);
-  object-fit: cover; object-position: 62% 58%;
-  will-change: transform;
-}
-/* The hover zoom is dropped on parallax images: a transition on transform
-   fights the scrubbed tween, which sets transform every frame. */
-.grid-editorial .range-feature:hover img { transform: none; }
-.grid-editorial .range-feature:hover img { transform: scale(1.03); }
-/* A radial vignette, as the reference uses — it darkens the edges and leaves
-   the centre of the photograph clear, unlike a bottom-up linear scrim which
-   flattens the whole lower half. */
-.grid-editorial .range-feature::after {
-  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 0%, rgba(4,14,22,.92) 100%);
-  opacity: .62;
-}
-/* Copy sits bottom-right with the headline pulled to the left edge — the
-   reference's align-items:flex-end plus align-self:flex-start on the title. */
-.grid-editorial .rf-content {
-  position: relative; z-index: 2;
-  display: flex; flex-direction: column;
-  align-items: flex-end;
-  gap: clamp(14px, 1.4vw, 22px);
-}
-.grid-editorial .rf-title {
-  align-self: flex-start;
-  margin: 0;
-  color: #fff;
-  font-size: clamp(var(--fs-h3), 2.4vw, 38px);
-  line-height: var(--lh-title);
-  letter-spacing: var(--ls-title);
-  max-width: 8em;
-  text-wrap: balance;
-}
-/* The reference pins this column to 18rem; ours matches so the paragraph
-   sets as a narrow block against the headline rather than a wide band. */
-.grid-editorial .rf-detail {
-  display: flex; flex-direction: column;
-  gap: clamp(14px, 1.4vw, 22px);
-  width: 18rem;
-  max-width: 100%;
-}
-.grid-editorial .rf-copy {
-  margin: 0;
-  font-size: var(--fs-card-desc);
-  line-height: var(--lh-body);
-  color: rgba(255,255,255,.92);
-}
-.grid-editorial .range-feature .btn { width: 100%; }
-
-@media (max-width: 767px) {
-  .grid.grid-editorial { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .grid-editorial .range-feature,
-  .grid-editorial .range-feature-2,
-  .grid-editorial .range-feature-3 {
-    grid-column: 1 / -1;
-    grid-row: auto;
-    height: auto;
-    aspect-ratio: 370/537;
-  }
-  .grid-editorial .rf-detail { width: 100%; }
+  .cta-band h2,
+  .connect-headline { font-size: 1.8em; }
 }
