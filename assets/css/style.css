@@ -5519,6 +5519,25 @@ html:not(.js) .stage-actions { justify-content: center; }
    alternates to meet the clean half of each frame. */
 .journey-panel--left  .journey-panel-inner { justify-content: flex-start; }
 .journey-panel--right .journey-panel-inner { justify-content: flex-end; }
+/* Pulled in off the gutter, towards the middle of the frame.
+
+   Each photograph puts its subject on one side and leaves the other as
+   clean gradient, and the copy was sitting at the far edge of that clean
+   half — hard against the page gutter, with the whole centre of the
+   screen left empty between the words and the machine. This pushes the
+   block inwards so it sits INSIDE the open space rather than at its
+   outer rim, closing that gap.
+
+   It is an inset on the copy rather than narrower gutters on the
+   container, so the section keeps the same page margins as every other
+   section and only this block moves. */
+.journey-panel--left  .journey-copy { margin-left: clamp(0px, 7vw, 132px); }
+/* The right-hand panels need more of an inset than the left ones. Their
+   photographs put the machine hard against the LEFT edge, so the open
+   half runs from roughly mid-frame all the way to the right gutter —
+   twice the empty ground of a left-hand panel, and the copy was sitting
+   at the far end of it. */
+.journey-panel--right .journey-copy { margin-right: clamp(0px, 11vw, 210px); }
 /* On the right-hand panels the block is flush to the gutter, so the copy
    is set from that edge too — ranged left inside a right-hand column
    leaves a ragged edge floating in the middle of the frame with nothing
@@ -5534,6 +5553,15 @@ html:not(.js) .stage-actions { justify-content: center; }
   flex-direction: column;
   align-items: flex-start;
   gap: 14px;
+}
+/* Steps 02-04 carry one short sentence each, so their blocks were
+   collapsing to their own text width — barely 350px against panel 01's
+   544px — which left them looking stranded in the middle of the frame
+   whatever the margin. Giving the block a floor makes all four occupy
+   roughly the same column, so the copy reads as one consistent band
+   down the section rather than four differently-sized scraps. */
+.journey-panel:not(:first-child) .journey-copy {
+  min-width: min(28rem, 34vw);
 }
 .journey-copy h2,
 .journey-copy h3 {
