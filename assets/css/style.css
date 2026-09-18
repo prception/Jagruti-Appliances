@@ -1765,9 +1765,9 @@ html.menu-open { overflow: hidden; }
 .hero-dots {
   position: absolute; z-index: 7;
   left: var(--gutter);
-  /* Clears the .hero-fade band below (16vh, 110-200px) so the white
-     labels never sit on the near-opaque tail of the wash. */
-  bottom: clamp(122px, 18vh, 216px);
+  /* Just above the opaque tail of the .hero-fade wash, so the white labels
+     stay readable without climbing into the scene copy and its CTA. */
+  bottom: clamp(58px, 9vh, 96px);
   display: flex; flex-direction: column; gap: .55em;
   font-size: .8125em;
 }
@@ -1780,7 +1780,9 @@ html.menu-open { overflow: hidden; }
   padding: 3px 2px; cursor: pointer; border-radius: 4px;
   color: rgba(255,255,255,.45);
   transition: color .3s ease;
-  text-shadow: 0 1px 10px rgba(0,32,52,.5);
+  /* Doubled up: the labels sit where .hero-fade is part-opaque, so the
+     single soft shadow no longer separates white type from the wash. */
+  text-shadow: 0 1px 10px rgba(0,32,52,.75), 0 0 3px rgba(0,32,52,.55);
 }
 .hero-dots .hd i {
   width: 2px; height: 14px; border-radius: 2px;
@@ -1801,13 +1803,13 @@ html.menu-open { overflow: hidden; }
   position: absolute; z-index: 7;
   right: var(--gutter);
   /* Same clearance as .hero-dots opposite it, keeping the pair on one
-     baseline above the fade. */
-  bottom: clamp(122px, 18vh, 216px);
+     baseline above the fade's opaque tail. */
+  bottom: clamp(58px, 9vh, 96px);
   appearance: none; background: none; border: 0; font: inherit;
   padding: 4px 2px; cursor: pointer; border-radius: 4px;
   display: flex; align-items: center; gap: .8em;
   color: rgba(255,255,255,.82); font-size: .8125em;
-  text-shadow: 0 1px 10px rgba(0,32,52,.5);
+  text-shadow: 0 1px 10px rgba(0,32,52,.75), 0 0 3px rgba(0,32,52,.55);
   transition: color .2s ease;
 }
 .hero-scrollcue:hover { color: #fff; }
