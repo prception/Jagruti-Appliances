@@ -5354,6 +5354,16 @@ html:not(.js) .stage-actions { justify-content: center; }
   --journey-timeline: --journey-scroll;
   /* The timeline the photographs animate against: the section's own
      progress through the viewport, measured on the block axis. */
+  /* How much scrolling one step costs. A full 100svh per panel — four
+     screens for the section — made the run feel like work: the visitor
+     has read a step long before the scroll that clears it is finished.
+     At 62svh a step still gets a deliberate beat of its own but the
+     whole section is under two and a half screens instead of four.
+
+     The stage stays a full 100svh; only the TRAVEL shortens. That is the
+     whole trick — the picture keeps filling the screen while the copy
+     panel that drives it is shorter than one. */
+  --journey-step: 62svh;
   view-timeline-name: var(--journey-timeline);
   view-timeline-axis: block;
   position: relative;
@@ -5423,8 +5433,8 @@ html:not(.js) .stage-actions { justify-content: center; }
   .journey-bg {
     animation: journey-bg-change forwards;
     animation-timeline: var(--journey-timeline);
-    animation-range: contain calc(var(--journey-bg-index) * 100svh)
-                     contain calc((var(--journey-bg-index) + 1) * 100svh);
+    animation-range: contain calc(var(--journey-bg-index) * var(--journey-step))
+                     contain calc((var(--journey-bg-index) + 1) * var(--journey-step));
   }
   /* The floor. Nothing is underneath it, so fading it out would expose
      the section background. */
@@ -5455,19 +5465,55 @@ html:not(.js) .stage-actions { justify-content: center; }
    Lifted back over the stage so the two occupy the same screen, and given
    the higher stacking order so the text is never behind a photograph. */
 .journey-body {
+  /* Pulls the copy layer back over the sticky stage. Still a full
+     viewport, because that is the stage's height — not --journey-step. */
   margin-top: -100svh;
   position: relative;
   z-index: 2;
 }
 
+/* A panel is now SHORTER than the screen it is read on, so it cannot
+   simply centre its own copy — that would put each block 62svh apart
+   while the frame behind it is 100svh tall, and the text would sit
+   progressively higher in the picture on each step.
+
+   Instead the panel is the scroll BUDGET and the inner is the stage: the
+   inner is pinned one full viewport tall and centres the copy in the
+   screen, while the panel's shorter height is what decides how much
+   scrolling the step costs. */
 .journey-panel {
-  height: 100svh;
+  height: var(--journey-step);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+}
+/* The LAST panel gets a full screen rather than a step's budget.
+
+   Every other panel can be short because the one after it supplies the
+   scrolling that carries it across the screen. The last has nothing
+   following it, so at --journey-step the section ended 100svh - 62svh
+   before its own copy reached the middle: the sticky stage hit the
+   bottom of the section and unstuck, and the final frame slid up the
+   screen with blank page beneath it instead of resting like the other
+   three. A full viewport here is exactly the runway that was missing. */
+.journey-panel:last-child {
+  height: 100svh;
 }
 .journey-panel-inner {
   display: flex;
   width: 100%;
+  /* One viewport tall regardless of the panel's budget, pinned so it
+     holds the screen for the length of its step, and centred so the copy
+     lands in the middle of the picture rather than riding high in it.
+
+     Sticky rather than a negative margin: the panel is shorter than this
+     inner, so a margin would just shift every block up by the same
+     amount and leave them all off-centre together. Sticky lets the inner
+     hold at the top of the viewport — where it is exactly as tall as the
+     screen — through its panel's whole travel. */
+  height: 100svh;
+  align-items: center;
+  position: sticky;
+  top: 0;
 }
 /* The photographs alternate which side the machine stands on, so the copy
    alternates to meet the clean half of each frame. */
@@ -5603,34 +5649,42 @@ html:not(.js) .stage-actions { justify-content: center; }
     view-timeline-axis: block;
   }
 
+  /* A shorter lift and a lighter blur than the first pass. Over a long
+     travel a big move reads as considered; over this shorter one it read
+     as a lurch, because the same distance is now covered in less
+     scrolling. Less distance, less softening — the copy settles rather
+     than flies in. */
   @keyframes journey-copy-in {
-    from { opacity: 0; transform: translateY(28px); filter: blur(6px); }
+    from { opacity: 0; transform: translateY(16px); filter: blur(3px); }
     to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
   }
   .journey-copy > * {
     animation: journey-copy-in both;
     animation-timeline: --journey-panel;
-    /* The panel is a full screen tall, so it is already 'entered' the
-       moment its top edge appears and entry ranges are useless here —
-       that is what made the copy race ahead of the section. cover is the
-       panel's whole passage across the viewport: this opens once it is a
-       third of the way in and settles by the time it is centred, which is
-       the point at which the visitor is actually reading it. */
-    animation-range: cover 26% cover 40%;
+    /* Eased rather than linear. A scroll-driven animation runs at whatever
+       speed the hand does, so a linear curve starts and stops abruptly at
+       both ends of its range — the jerk you feel at the edges. ease-out
+       puts the speed at the START, where the scroll is carrying it, and
+       lets it glide into place. */
+    animation-timing-function: ease-out;
+    /* cover is the panel's whole passage across the viewport. This opens
+       as it comes forward and is finished well before it is centred, so
+       the copy is settled and still by the time it is being read. */
+    animation-range: cover 22% cover 38%;
   }
   /* A short stagger down the block, so the chip, the title and the
      sentence arrive in reading order rather than as one slab.
 
      The whole run has to be FINISHED by 50% — the point at which the
-     panel is centred and at rest. Overrunning that left the last lines
-     still fading in while the frame was sitting still in front of the
+     panel is centred and at rest. Overrunning that leaves the last lines
+     fading in while the frame is already sitting still in front of the
      reader, which reads as the copy lagging the page rather than
-     arriving with it. Hence the tight 3% steps. */
-  .journey-copy > *:nth-child(2) { animation-range: cover 28% cover 42%; }
-  .journey-copy > *:nth-child(3) { animation-range: cover 30% cover 44%; }
-  .journey-copy > *:nth-child(4) { animation-range: cover 32% cover 46%; }
-  .journey-copy > *:nth-child(5) { animation-range: cover 34% cover 48%; }
-  .journey-copy > *:nth-child(6) { animation-range: cover 36% cover 50%; }
+     arriving with it. The steps are 2% so all six fit inside that. */
+  .journey-copy > *:nth-child(2) { animation-range: cover 24% cover 40%; }
+  .journey-copy > *:nth-child(3) { animation-range: cover 26% cover 42%; }
+  .journey-copy > *:nth-child(4) { animation-range: cover 28% cover 44%; }
+  .journey-copy > *:nth-child(5) { animation-range: cover 30% cover 46%; }
+  .journey-copy > *:nth-child(6) { animation-range: cover 32% cover 48%; }
 
   /* And the exit. The panels scroll while the pictures behind them are
      pinned, so without this a block of copy is still legible over the
@@ -5645,18 +5699,22 @@ html:not(.js) .stage-actions { justify-content: center; }
      entrance above instead of fighting it. */
   @keyframes journey-copy-out {
     from { opacity: 1; transform: translateY(0);     filter: blur(0); }
-    to   { opacity: 0; transform: translateY(-40px); filter: blur(8px); }
+    to   { opacity: 0; transform: translateY(-22px); filter: blur(4px); }
   }
   .journey-copy {
     animation: journey-copy-out both;
     animation-timeline: --journey-panel;
+    /* ease-in on the way out, the mirror of the entrance: the block holds
+       still at first and gathers speed as it goes, rather than starting
+       to drift the instant the range opens. */
+    animation-timing-function: ease-in;
     /* Tracks the photograph it sits on. That picture fades across the
        back half of the panel's travel, so the copy leaves on the same
        stretch rather than ahead of it — an earlier exit left the frame
        holding a step's image with its words already gone. Still clear of
-       the next panel's opening at 32%, since that is measured on the NEXT
+       the next panel's opening at 22%, since that is measured on the NEXT
        panel's own timeline. */
-    animation-range: cover 72% cover 96%;
+    animation-range: cover 66% cover 92%;
   }
 }
 
@@ -5674,12 +5732,25 @@ html:not(.js) .stage-actions { justify-content: center; }
   }
   .journey-stage { display: none; }
   .journey-body { margin-top: 0; }
-  .journey-panel {
+  /* Including the last one: the full-viewport rule above exists only to
+     give the sticky stage runway, and there is no stage here — stacked,
+     it would just hang an empty screen off the end of the section. */
+  .journey-panel,
+  .journey-panel:last-child {
     height: auto;
     display: block;
   }
   .journey-panel + .journey-panel { margin-top: clamp(40px, 7vw, 72px); }
-  .journey-panel-inner { display: block; }
+  /* The inner is the pinned stage on desktop — a sticky, one-viewport-tall
+     box. Stacked, there is nothing to pin it against, and leaving it at
+     100svh gave every step a screen of empty space beneath it and pushed
+     the section past five screens. Back to a plain block that is as tall
+     as its content. */
+  .journey-panel-inner {
+    display: block;
+    position: static;
+    height: auto;
+  }
   .journey-copy { max-width: none; }
   /* Each panel gets its own photograph back, inline above the copy. */
   .journey-panel::before {
