@@ -684,13 +684,15 @@ strong, b { font-weight: 700; }
    header and hero read as one surface (as the reference does). */
 body { padding-top: var(--header-h); }
 body:has(> main > .hero:first-child),
-body:has(> main > .cat-hero:first-child) { padding-top: 0; }
+body:has(> main > .cat-hero:first-child),
+body:has(> main > .wj-hero:first-child) { padding-top: 0; }
 body:has(> main > .hero:first-child) main > .hero:first-child { padding-top: var(--header-h); }
 
 /* Over the dark hero the MENU affordance inverts to white so it stays legible
    on the photo. */
 body:has(> main > .hero:first-child) .site-header:not(.is-scrolled) .menu-btn-wrap,
-body:has(> main > .cat-hero:first-child) .site-header:not(.is-scrolled) .menu-btn-wrap {
+body:has(> main > .cat-hero:first-child) .site-header:not(.is-scrolled) .menu-btn-wrap,
+body:has(> main > .wj-hero:first-child) .site-header:not(.is-scrolled) .menu-btn-wrap {
   color: #fff;
 }
 /* The logo is never altered to suit the hero: no recolour, no shadow, no
@@ -706,7 +708,8 @@ body:has(> main > .cat-hero:first-child) .site-header:not(.is-scrolled) .menu-bt
    Full-bleed and fading to nothing, it reads as depth in the photograph
    rather than as a panel behind the logo. */
 body:has(> main > .hero:first-child) .site-header:not(.is-scrolled)::before,
-body:has(> main > .cat-hero:first-child) .site-header:not(.is-scrolled)::before {
+body:has(> main > .cat-hero:first-child) .site-header:not(.is-scrolled)::before,
+body:has(> main > .wj-hero:first-child) .site-header:not(.is-scrolled)::before {
   content: "";
   position: absolute; left: 0; right: 0; top: 0;
   height: calc(var(--header-h) + 46px);
@@ -721,7 +724,8 @@ body:has(> main > .cat-hero:first-child) .site-header:not(.is-scrolled)::before 
 }
 /* The bar's own controls sit above the scrim. */
 body:has(> main > .hero:first-child) .site-header .nav-wrap,
-body:has(> main > .cat-hero:first-child) .site-header .nav-wrap { position: relative; z-index: 1; }
+body:has(> main > .cat-hero:first-child) .site-header .nav-wrap,
+body:has(> main > .wj-hero:first-child) .site-header .nav-wrap { position: relative; z-index: 1; }
 
 /* ---------- MENU button ----------
    Icon + lowercase caps label, exactly the reference's "menu" affordance.
@@ -3310,17 +3314,190 @@ html.menu-open { overflow: hidden; }
 
 .related-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 
-/* ---------- Compare ---------- */
-.compare-select-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 30px; }
-.compare-select { border: 1.5px solid var(--blue-200); border-radius: var(--radius-md); padding: 12px 14px; font-size: var(--fs-card-desc); font-weight: var(--fw-label); background: #fff; width: 100%; }
+/* ---------- Compare studio ----------
+   The comparison page runs its own full-bleed two-column layout: a sticky
+   editorial rail on the left and the three product columns + spec table on
+   the right. The rail is decoration and context; the right side is the tool. */
+.compare-studio {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  background: var(--page-bg);
+  border-top: 1px solid var(--blue-100);
+  /* The whole comparison scrolls with the page: columns, tabs and spec rows
+     move together as you scroll, rather than the table scrolling inside a
+     fixed viewport-height frame. The rail sticks instead (see .cs-rail).
+     align-items must stay stretch (the default): a sticky child can only
+     travel inside its own grid area, so shrinking the rail's track to its
+     content would unstick it the moment that short area scrolled past. */
+}
+
+/* --- Left rail ---
+   Two parts on purpose. The <aside> is the stretched grid track: it carries
+   the ground and the divider for the section's whole height. The sticky
+   travel belongs to .cs-rail-inner, because a sticky box as tall as its own
+   container has nowhere to travel and would simply scroll away with the
+   page — which is what a sticky .cs-rail did. */
+.cs-rail {
+  background: var(--blue-50);
+  border-right: 1px solid var(--blue-100);
+}
+.cs-rail-inner {
+  position: sticky; top: var(--header-h);
+  height: calc(100vh - var(--header-h)); overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between;
+  gap: 40px;
+  padding: 44px 34px 36px;
+}
+.cs-eyebrow {
+  font-size: var(--fs-label); font-weight: var(--fw-label);
+  text-transform: uppercase; letter-spacing: var(--ls-label);
+  color: var(--ink-700); margin: 0;
+}
+.cs-rule { display: block; width: 46px; height: 1px; background: var(--ink-500); opacity: .45; margin: 20px 0 26px; }
+.cs-rail-title {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 2.25em; line-height: 1.08; letter-spacing: var(--ls-title);
+  color: var(--ink-900); margin: 0 0 20px;
+}
+.cs-rail-copy { font-size: var(--fs-card-desc); line-height: var(--lh-body); color: var(--ink-500); margin: 0; }
+.cs-rail-caps {
+  font-size: .75em; font-weight: var(--fw-label);
+  text-transform: uppercase; letter-spacing: var(--ls-label);
+  line-height: 1.9; color: var(--ink-500); margin: 0;
+}
+
+/* --- Right side --- */
+.cs-main {
+  min-width: 0;
+  padding: 24px 34px 60px;
+}
+
+/* Three product columns. Each column owns its own selector, so the choice
+   lives on top of the machine it changes rather than in a separate row. */
+.cs-columns {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px; align-items: stretch;
+  min-height: 0;
+  max-width: 760px; margin: 0 auto; width: 100%;
+}
+.cs-col {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  display: flex; flex-direction: column; min-height: 0;
+}
+.cs-col-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
+.cs-col-num,
+.cs-col-cat {
+  font-size: .6875em; font-weight: var(--fw-label);
+  text-transform: uppercase; letter-spacing: var(--ls-label);
+  color: var(--ink-500);
+}
+.cs-col-cat { text-align: right; }
+
+.cs-select-wrap { position: relative; margin-bottom: 10px; }
+.cs-select-wrap svg { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; pointer-events: none; color: var(--ink-500); }
+.compare-select {
+  appearance: none; -webkit-appearance: none;
+  width: 100%; background: var(--blue-50);
+  border: 1px solid var(--blue-200); border-radius: 0;
+  padding: 9px 32px 9px 11px;
+  font: inherit; font-size: var(--fs-label); font-weight: var(--fw-label);
+  color: var(--ink-900); cursor: pointer;
+}
+.compare-select:focus-visible { outline: 2px solid var(--blue-500); outline-offset: 1px; }
+
+.cs-stage {
+  /* Same ground as the products pages' .grid-editorial tiles (#e0e2e6), so a
+     machine reads identically here and on its category page. */
+  background: #e0e2e6; border-radius: 0;
+  flex: 0 0 auto; height: 200px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 12px; overflow: hidden; margin-bottom: 8px;
+}
+/* Bounded, never stretched: the machine shrinks to fit the stage on its
+   longest side and keeps its proportions, so nothing is ever clipped. */
+.cs-stage img {
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
+  object-fit: contain; display: block;
+}
+
+/* Thumbnail strip — one frame per view of the chosen machine. */
+.cs-thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; flex: 0 0 auto; }
+.cs-thumbs .cs-thumb { aspect-ratio: auto; height: 42px; }
+.cs-thumb {
+  background: #e0e2e6; border: 1px solid transparent;
+  border-radius: 0; padding: 4px; aspect-ratio: 1; overflow: hidden; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .2s ease;
+}
+.cs-thumb img {
+  max-width: 100%; max-height: 100%; width: auto; height: auto;
+  object-fit: contain; display: block;
+}
+.cs-thumb.is-active { border-color: var(--blue-500); }
+.cs-thumb:hover { border-color: var(--blue-200); }
+
+.cs-col h3 { font-size: 1em; line-height: var(--lh-tight); margin: 0 0 4px; }
+.cs-col h3 a { color: inherit; text-decoration: none; }
+.cs-col h3 a:hover { color: var(--brand-primary); }
+.cs-col-desc { font-size: var(--fs-label); color: var(--ink-500); line-height: var(--lh-body); margin: 0 0 10px; flex: 0 0 auto; }
+.cs-col .btn { width: 100%; justify-content: center; padding-block: 9px; font-size: .8125em; }
+
+.cs-col.is-empty .cs-stage,
+.cs-col.is-empty .cs-thumbs { opacity: .4; }
+
+/* --- Tabs --- */
+.cs-tabs {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--blue-100);
+  margin-top: 22px; flex: 0 0 auto;
+}
+.cs-tab {
+  background: none; border: 0; border-bottom: 2px solid transparent;
+  padding: 13px 8px; cursor: pointer;
+  font: inherit; font-size: var(--fs-label); font-weight: var(--fw-label);
+  text-transform: uppercase; letter-spacing: var(--ls-label);
+  color: var(--ink-500); transition: color .2s ease, border-color .2s ease;
+}
+.cs-tab:hover { color: var(--ink-900); }
+.cs-tab.is-active { color: var(--ink-900); border-bottom-color: var(--ink-900); }
+
+/* --- Spec / content panels --- */
+.cs-panels { min-height: 0; }
+.cs-panel { display: none; }
+.cs-panel.is-active { display: block; }
 .compare-table-wrap { overflow-x: auto; }
-.compare-table { width: 100%; border-collapse: collapse; min-width: 720px; }
-.compare-table th, .compare-table td { padding: 14px 18px; border-bottom: 1px solid var(--blue-100); font-size: var(--fs-label); text-align: left; }
-.compare-table th { background: var(--blue-50); position: sticky; top: 0; }
-.compare-table th.attr-col { width: 190px; color: var(--ink-500); font-weight: 400; background: #fff; }
-.compare-table td.attr { font-weight: 400; color: var(--ink-700); background: var(--blue-50); }
-.compare-table .prod-head img { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; margin-bottom: 8px; }
-.compare-table .prod-head strong { display: block; font-size: var(--fs-card-desc); }
+.compare-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.compare-table th,
+.compare-table td {
+  padding: 11px 18px; border-bottom: 1px solid var(--blue-100);
+  font-size: var(--fs-label); text-align: left; vertical-align: top;
+}
+.compare-table td.attr {
+  width: 24%; font-weight: var(--fw-label);
+  text-transform: uppercase; letter-spacing: var(--ls-label);
+  font-size: .75em; color: var(--ink-900);
+}
+.compare-table td.val { color: var(--ink-900); }
+.compare-table tbody tr:nth-child(odd) { background: rgba(233,242,247,.45); }
+.cs-empty { text-align: center; color: var(--ink-500); padding: 48px 0; font-size: var(--fs-card-desc); }
+
+/* Short viewports and small screens: let the section grow with the page
+   again rather than squeezing the columns into an unusable frame. */
+@media (max-width: 1100px) {
+  .compare-studio { grid-template-columns: 1fr; }
+  .cs-rail { border-right: 0; border-bottom: 1px solid var(--blue-100); }
+  .cs-rail-inner {
+    position: static; height: auto; overflow: visible;
+    padding: 40px var(--gutter);
+  }
+  .cs-rail-mid, .cs-rail-bottom { display: none; }
+  .cs-rail-title { font-size: 2em; }
+  .cs-main { padding: 24px var(--gutter) 60px; }
+}
 
 /* ---------- FAQ ---------- */
 .faq-cat-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 34px; }
@@ -3769,7 +3946,9 @@ html.menu-open { overflow: hidden; }
     padding: 16px 18px;
   }
   .hero-stats > div:last-child { flex: 0 0 100%; justify-content: center; }
-  .compare-select-row { grid-template-columns: 1fr; }
+  .cs-columns { grid-template-columns: 1fr; }
+  .cs-tabs { grid-template-columns: repeat(2, 1fr); }
+  .compare-table td.attr { width: 40%; }
   .mobile-bar { display: block; }
   :root { --mobile-bar-h: 50px; }
   /* The home page drops the sticky call/WhatsApp bar, so the hero cue and
@@ -5139,458 +5318,419 @@ html:not(.js) .stage-actions { justify-content: center; }
 /* ==========================================================================
    Journey — "From Grain to Fresh Flour"
    --------------------------------------------------------------------------
-   An editorial mosaic rather than a diagram. The header is a two-column
-   band: an oversized display title on the left, the lead and its call to
-   action on the right. Below it a staggered grid alternates photography
-   with the four operating steps, the columns offset from one another so
-   nothing lines up into a plain table of cards.
+   A SCROLL-DRIVEN SLIDESHOW, after the mechanism hexpens.com uses on its
+   home page.
 
-   Each photo's CARD opens FROM ITS TOP-LEFT CORNER as it enters view: the
-   tile is clipped from nothing to its full size, holding that corner fixed
-   while the opening grows right and down. The photograph inside does not
-   move at all — it is laid out at its final size from the start and the
-   frame simply uncovers it.
+   The shape of it: two layers share one section.
+
+   .journey-stage is position:sticky, one viewport tall, and holds the four
+   photographs stacked on top of each other — each absolutely placed,
+   filling the frame, object-fit:cover. .journey-body is pulled back OVER
+   that stage with margin-top:-100svh and holds four 100svh text panels.
+   So the section is four screens tall, the copy scrolls normally, and the
+   picture layer stays pinned behind it for the whole run.
+
+   Stacking: photograph 0 sits on top, 3 at the bottom, via
+   z-index: calc(var(--journey-bg-index) * -1). Each one then animates
+   ITSELF OUT across its own one-screen slice of the timeline — fading,
+   scaling up to 1.2 and blurring to 20px — uncovering the next. The last
+   never animates: it is the floor the run settles onto.
+
+   Two engines, same visual vocabulary:
+
+   - Modern browsers: a CSS view-timeline on the section, with each
+     photograph's animation-range carved out of it by index. Entirely
+     scroll-linked, scrubs both directions, no JavaScript involved.
+
+   - Browsers without animation-timeline: initJourney() in main.js watches
+     the text panels with an IntersectionObserver and writes the active
+     index to --journey-active-item. The same three properties then
+     transition between two discrete states instead of scrubbing.
+
+   Every colour is an existing token. No new palette.
    ========================================================================== */
 .journey-section {
-  /* Inherits --section-pad-y from .section; the clamp that used to live
-     here is what that token was taken from. */
-  overflow: hidden;
-  /* One viewport frame, the same three-way lock the hero uses
-     (.hero { height: 100svh; min-height: 620px }) so the two sections
-     measure identically at every viewport. svh is the stable unit, and the
-     620px floor has to beat the 100svh min — hence max() rather than a
-     second min-height declaration. Padding, type and the mosaic's own
-     composition are untouched: only the outer box is pinned, and the
-     mosaic's --journey-h below absorbs whatever height is left. */
-  height: 100svh;
-  min-height: max(100svh, 620px);
-  max-height: max(100svh, 620px);
-}
-.journey-shell {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(36px, 6vh, 72px);
-  /* Distributes the now-fixed section height: the head keeps its natural
-     size and the mosaic takes the remainder. No child heights are set. */
-  height: 100%;
-}
-
-/* ---- Header band ---- */
-.journey-head {
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-  gap: clamp(24px, 5vw, 80px);
-  align-items: end;
-}
-/* The same type as every other section title on the site — the tokens,
-   not a one-off clamp, so this heading stays in step with the rest. */
-.journey-head h2 {
-  margin: 0;
-}
-
-.journey-head-aside {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 22px;
-  padding-bottom: 6px;
-}
-/* Held a step below --fs-lead: this sits beside the title rather than
-   under it, so it reads as supporting copy and must not rival the h2. */
-.journey-head-aside p {
-  margin: 0;
-  max-width: 38ch;
-  font-size: .875em;
-  font-weight: var(--fw-body);
-  line-height: var(--lh-body);
-  color: var(--ink-500);
-}
-
-/* ---- Step flow ----
-   Four identical step cards in a row, linked by a dotted connector. Each
-   card is an arch-topped photograph with a floating number medallion at
-   its top-left and a small circular icon badge straddling the seam
-   between the picture and the copy beneath it. */
-.journey-flow {
-  --j-gutter: clamp(36px, 5.2vw, 88px);
-  /* The card's capped measure, shared so the connectors can inset by
-     exactly half of it and meet the card edges. */
-  --j-card: clamp(190px, 17vw, 250px);
-  display: grid;
-  /* Every card sits in its own odd column on row 1; the connectors span
-     across them from row 1 too, so the two layers overlap rather than the
-     links pushing the cards along. */
-  grid-template-columns:
-    minmax(0, 1fr) var(--j-gutter)
-    minmax(0, 1fr) var(--j-gutter)
-    minmax(0, 1fr) var(--j-gutter)
-    minmax(0, 1fr);
-  align-items: start;
-  gap: 0;
-  flex: 1;
+  --journey-active-item: 0;
+  --journey-timeline: --journey-scroll;
+  /* The timeline the photographs animate against: the section's own
+     progress through the viewport, measured on the block axis. */
+  view-timeline-name: var(--journey-timeline);
+  view-timeline-axis: block;
+  position: relative;
+  /* clip rather than hidden — hidden on the ancestor would defeat the
+     sticky stage, clip does not create a scroll container. */
+  overflow-x: clip;
+  /* The section's own height comes entirely from .journey-body's four
+     panels, so the vertical padding every other .section carries would
+     just add dead space above the first frame. */
+  padding-top: 0;
+  padding-bottom: 0;
+  /* Undoes the fixed one-viewport lock the mosaic version needed. */
+  height: auto;
   min-height: 0;
-}
-/* The dotted rule between two cards, with a solid dot at its middle.
-
-   THE JOIN. Rather than trying to compute how far the arc has to reach out
-   of its gutter track (which depends on the column width and the card cap,
-   and so drifts with the viewport), each connector is placed explicitly
-   across three tracks: the card on its left, the gutter, and the card on
-   its right. It then simply fills that span, so its two ends always land
-   well inside both cards whatever the width. It sits at z-index 0, behind
-   the cards, so the overlapping tails are tucked out of sight and only the
-   arc crossing the gutter is visible. */
-.journey-link {
-  grid-row: 1;
-  align-self: start;
-  position: relative;
-  width: 100%;
-  margin: 0;
-  margin-top: clamp(88px, 11vw, 150px);
-  height: clamp(22px, 2.4vw, 34px);
-  color: var(--blue-400, #4eb8e9);
-  opacity: .9;
-  z-index: 0;
-}
-/* Each connector spans card-column N, the gutter, and card-column N+1. */
-.journey-link:nth-of-type(1) { grid-column: 1 / 4; }
-.journey-link:nth-of-type(2) { grid-column: 3 / 6; }
-.journey-link:nth-of-type(3) { grid-column: 5 / 8; }
-/* The cards keep their own odd columns on the same row. */
-.journey-card { grid-row: 1; }
-.journey-card:nth-of-type(1) { grid-column: 1; }
-.journey-card:nth-of-type(2) { grid-column: 3; }
-.journey-card:nth-of-type(3) { grid-column: 5; }
-.journey-card:nth-of-type(4) { grid-column: 7; }
-/* The arc bows upward between the two cards. The svg keeps its default
-   preserveAspectRatio, so the curve holds its shape and the round stroke
-   cap stays round — the reason the old stretched version needed a separate
-   HTML pen element at all.
-
-   SVG is a replaced element, so `width: auto` would fall back to its own
-   intrinsic ratio rather than filling the box. The drawing is therefore
-   given an explicit width and centred in the three-track span:
-   (gutter + card + 20px) crosses the gutter and tucks half a card deep
-   behind each neighbour, with 10px of overlap per side so no seam shows
-   where arc meets card. */
-/* The connector's resting look — what shows without the script: the full
-   arc already drawn. The .js rules below take over the trim once the
-   scroll-driven draw is running. */
-.journey-arc {
-  /* A solid line ending in one arrow head. The stroke-width is in the
-     viewBox's own units because markerUnits is strokeWidth — the arrow is
-     sized off this number, so it cannot be a non-scaling screen pixel value
-     the way the old dotted version's was. 0.75 renders at ~2.5px at desktop
-     width, which is the weight the dots read at. */
-  stroke-width: 0.75;
-  stroke-linecap: round;
-  fill: none;
-}
-.journey-arc-svg {
-  position: absolute;
-  left: 50%;
-  /* The svg is now much taller than the thin link box (it keeps the
-     viewBox's 100:40 ratio so the dots stay round), so it is anchored by
-     the CURVE rather than by the box. The arc's two endpoints sit at y=30
-     of 40 — a quarter of the height up from the bottom — so pushing the
-     svg down by that quarter lands those endpoints on the link's own
-     baseline, where they meet the cards. */
-  top: auto;
-  /* The arc's endpoints sit at y=12 of 14 — 2 units up from the bottom, so
-     2/100 of the width — and pushing the svg down by exactly that lands
-     them on the link's baseline, where they meet the cards. */
-  bottom: calc((var(--j-gutter) + var(--j-card) + 20px) * -.02);
-  width: calc(var(--j-gutter) + var(--j-card) + 20px);
-  /* The viewBox is 100x40 and preserveAspectRatio is left at its default,
-     so the curve scales UNIFORMLY — which is what keeps the dots perfectly
-     round. The height is therefore tied to the width at that same 100:40
-     ratio rather than filling the link box: given a free height the box
-     would letterbox the arc and it would stop short of both cards. */
-  /* viewBox is 100 x 14 and preserveAspectRatio is left at its default, so
-     the curve scales uniformly and the dots stay perfectly round. */
-  height: calc((var(--j-gutter) + var(--j-card) + 20px) * .14);
-  transform: translateX(-50%);
-  overflow: visible;
+  max-height: none;
 }
 
-/* Cards take the odd (1fr) columns; each connector starts in the same
-   column as the card on its left and spans that card, the gutter and the
-   next card, so it can be inset to meet both. */
-.journey-card {
-  position: relative;
-  /* Above the connector arcs, which reach under the cards from either side. */
+/* ---- The pinned picture layer ---- */
+.journey-stage {
+  height: 100svh;
+  position: sticky;
+  top: 0;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  /* Held to a narrower measure than its column so the dotted connectors
-     have room to read between neighbouring cards. */
-  max-width: var(--j-card);
-  margin-inline: auto;
-  padding: clamp(10px, 1vw, 14px) clamp(10px, 1.1vw, 16px) clamp(14px, 1.4vw, 20px);
-  /* The card echoes the photograph's soft arch — a generously rounded head
-     over a gently rounded foot, so frame and picture read as one shape. */
-  border-radius: clamp(80px, 8vw, 118px) clamp(80px, 8vw, 118px) clamp(20px, 2vw, 28px) clamp(20px, 2vw, 28px);
-  background: linear-gradient(180deg, rgba(255,255,255,.72) 0%, rgba(255,255,255,.28) 55%, rgba(255,255,255,0) 100%);
-  border: 1px solid rgba(255, 255, 255, .7);
-  box-shadow: 0 18px 40px -28px rgba(7, 81, 116, .35);
+}
+.journey-stage-inner {
+  height: 100%;
+  position: relative;
 }
 
-/* Arch-topped photograph — fully rounded head, gently rounded foot. */
-.journey-card-media {
-  position: relative;
+.journey-bg {
+  --journey-bg-index: 0;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 1 / .94;
-  /* Held in a variable so the reveal's clip-path can round its opening to
-     exactly the same arch — an unrounded clip would square the corners off
-     for the length of the animation. */
-  --media-r: clamp(72px, 7.2vw, 106px) clamp(72px, 7.2vw, 106px) clamp(16px, 1.6vw, 24px) clamp(16px, 1.6vw, 24px);
-  border-radius: var(--media-r);
-  overflow: visible;
-  margin-bottom: clamp(20px, 1.9vw, 28px);
+  height: 100%;
+  /* 0 on top, then -1, -2, -3 — so the first photograph is the one the
+     visitor meets and each fade-out reveals the next one down. */
+  z-index: calc(var(--journey-bg-index) * -1);
+  /* Promotes the layer and stops the blur+scale from flickering while it
+     composites over the one beneath. */
+  backface-visibility: hidden;
+  background: var(--canvas);
 }
-.journey-card-media img {
+.journey-bg img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
-  border-radius: inherit;
+  /* The subject sits to one side in each frame and the opposite side is
+     clean gradient the copy sits on, so the crop is held to centre and
+     the composition survives at any viewport ratio. */
+  object-position: center center;
 }
 
-/* Number medallion — floats off the top-left corner of the arch. */
-.journey-num {
-  position: absolute;
-  top: clamp(-30px, -2.4vw, -18px);
-  left: clamp(-26px, -2.1vw, -14px);
+/* The fade-out itself: the photograph recedes as it leaves — pulling back
+   in scale and softening — rather than simply dissolving. */
+@keyframes journey-bg-change {
+  from { opacity: 1; scale: 1;   filter: blur(0); }
+  to   { opacity: 0; scale: 1.2; filter: blur(20px); }
+}
+
+/* Engine A — scroll-driven animations. Each photograph owns the slice of
+   the timeline between its own index and the next, so the crossfade is
+   scrubbed by the scroll position itself. */
+@supports (animation-timeline: view()) {
+  .journey-bg {
+    animation: journey-bg-change forwards;
+    animation-timeline: var(--journey-timeline);
+    animation-range: contain calc(var(--journey-bg-index) * 100svh)
+                     contain calc((var(--journey-bg-index) + 1) * 100svh);
+  }
+  /* The floor. Nothing is underneath it, so fading it out would expose
+     the section background. */
+  .journey-bg:last-child { animation: none; }
+}
+
+/* Engine B — the fallback. --journey-active-item is written by main.js;
+   this resolves it to a 0/1 per layer and transitions between the two
+   endpoints of the same keyframe. */
+@supports not (animation-timeline: view()) {
+  .journey-bg {
+    --journey-bg-active: clamp(0, calc(var(--journey-bg-index) + 1 - var(--journey-active-item)), 1);
+    transform: translateZ(0) scale(calc(1.2 - var(--journey-bg-active) * .2));
+    filter: blur(calc(20px - var(--journey-bg-active) * 20px));
+    opacity: var(--journey-bg-active);
+    transition-property: opacity, transform, filter;
+    transition-duration: .4s;
+    transition-timing-function: ease-in-out;
+  }
+  .journey-bg:last-child {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* ---- The copy layer ----
+   Lifted back over the stage so the two occupy the same screen, and given
+   the higher stacking order so the text is never behind a photograph. */
+.journey-body {
+  margin-top: -100svh;
+  position: relative;
   z-index: 2;
-  width: clamp(48px, 4.6vw, 68px);
-  height: clamp(48px, 4.6vw, 68px);
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #fff;
-  border: 1.5px solid rgba(168, 214, 236, .85);
-  box-shadow: 0 8px 20px -12px rgba(7, 81, 116, .35);
-  font-size: clamp(1.15rem, 1.6vw, 1.6rem);
-  font-weight: var(--fw-title);
-  line-height: 1;
-  letter-spacing: -.02em;
-  color: var(--blue-800);
-  font-variant-numeric: tabular-nums;
+}
+
+.journey-panel {
+  height: 100svh;
+  display: flex;
+  align-items: center;
+}
+.journey-panel-inner {
+  display: flex;
+  width: 100%;
+}
+/* The photographs alternate which side the machine stands on, so the copy
+   alternates to meet the clean half of each frame. */
+.journey-panel--left  .journey-panel-inner { justify-content: flex-start; }
+.journey-panel--right .journey-panel-inner { justify-content: flex-end; }
+/* On the right-hand panels the block is flush to the gutter, so the copy
+   is set from that edge too — ranged left inside a right-hand column
+   leaves a ragged edge floating in the middle of the frame with nothing
+   to hold it. */
+.journey-panel--right .journey-copy {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.journey-copy {
+  max-width: 34rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+.journey-copy h2,
+.journey-copy h3 {
   margin: 0;
 }
+/* Panels 02-04 are headed by an h3 rather than the section's own h2, but
+   they play the same role on screen — one step title per full-screen
+   frame, under an eyebrow with copy beneath.
 
-/* Icon badge — straddles the bottom edge of the photograph. */
-.journey-icon {
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  bottom: clamp(-26px, -2vw, -18px);
-  transform: translateX(-50%);
-  width: clamp(40px, 3.6vw, 52px);
-  height: clamp(40px, 3.6vw, 52px);
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #fff;
-  border: 1px solid rgba(188, 224, 240, .9);
-  box-shadow: 0 10px 22px -14px rgba(7, 81, 116, .45);
-  color: var(--blue-600);
+   That is exactly .range-content-inner h3's situation a section further
+   down, so this takes the same treatment rather than inventing one: the
+   shared heading weight, leading and tracking, and a fluid size that
+   tracks the column. The earlier version set the display serif at weight
+   400 with display leading, which made these titles the only headings on
+   the page that were large but not bold — they read as washed out beside
+   the 700 h3s in Two Ranges and Shop By Need. */
+.journey-copy h3 {
+  font-size: clamp(1.9em, 3.2vw, 2.6em);
+  font-weight: var(--fw-title);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-title);
 }
-.journey-icon svg {
-  width: 52%;
-  height: 52%;
-  display: block;
+/* Panel 01 is the only frame carrying BOTH the section's h2 and a step
+   title, so its h3 steps down to sit under that h2 instead of rivalling
+   it — at the shared size the two read as competing headings stacked on
+   one screen. The other panels have the frame to themselves and keep the
+   full size above. */
+.journey-panel:first-child .journey-copy h3 {
+  font-size: var(--fs-h4);
 }
-
-.journey-card-body h4 {
-  font-size: 1.0625em;
-  font-weight: 700;
-  letter-spacing: -.01em;
-  margin: 0 0 8px;
-  color: var(--blue-800);
-}
-.journey-card-body p {
-  margin: 0 auto;
-  max-width: 26ch;
-  font-size: .875em;
-  line-height: 1.6;
-  color: var(--blue-700);
-}
-
-/* ---- Reveal ----
-   The section animates the way the process itself reads: step 01 arrives,
-   its arc travels across to step 02, and so on down the line, so the
-   entrance traces the same left-to-right path the diagram describes.
-
-   Everything runs on one easing family — a long, decelerating
-   cubic-bezier(.16, 1, .3, 1) — and every element inside a card is
-   delayed against that card rather than against the page, so each step
-   assembles as its own small composition. main.js writes .is-open on the
-   cards and .is-drawn on the arcs.  --d is the per-card base delay it
-   also sets, which every child below offsets from. */
-/* --p is the 0..1 progress main.js writes from the scroll position: 0
-   before this element's turn in the relay, 1 once it has fully arrived.
-   Registering it as a real number rather than a plain custom property is
-   what lets it be used inside calc() in a transform. */
-@property --p {
-  syntax: "<number>";
-  /* MUST inherit. The mask path and the pen are descendants of the link,
-     and --p is set on the link itself — with inherits:false they fell back
-     to the initial value (1, fully drawn), which is exactly why the line
-     appeared already complete instead of growing. */
-  inherits: true;
-  /* 1, not 0: the finished state is the default, so anything the script
-     has not claimed renders complete instead of blank. */
-  initial-value: 1;
-}
-
-/* Only once main.js has confirmed it is driving the scroll does anything
-   hide. If the script never runs the section stays fully visible — the
-   reveal is an enhancement, never a prerequisite for seeing the content. */
-.js [data-journey].is-live .journey-card,
-.js [data-journey].is-live .journey-link { --p: 0; }
-
-/* The card is HANDED to its place: it comes in slightly from the left —
-   the direction the line before it travelled — while rising out of its own
-   base. The transform-origin at the bottom keeps it planted, which is what
-   stops the lift reading as a plain slide.
-
-   Every value is a straight interpolation on --p, so the card's position
-   IS the scroll position. There is no transition: the smoothness comes
-   from Lenis' own eased scroll driving --p, which is exactly why this
-   feels like part of the page rather than a clip playing over it. */
-.js .journey-card {
-  opacity: var(--p);
-  transform:
-    translate(calc(-12px * (1 - var(--p))), calc(12px * (1 - var(--p))))
-    scale(calc(.965 + .035 * var(--p)));
-  transform-origin: 50% 100%;
-  will-change: opacity, transform;
-}
-
-/* The card arrives as ONE PIECE. Its photograph, number medallion, icon
-   badge and text are simply part of it — nothing inside is choreographed
-   separately, because the sequence being told here is the LINE travelling
-   from step to step, not each card assembling itself. */
-
-/* ---- The travelling arc ----
-   Drawn exactly the way the preloader's logo frame is drawn (see .pl-frame):
-   ONE real path with pathLength="100", so the perimeter is normalised to
-   100 units and the dash values are plain percentages — no measuring at
-   runtime, no mask, no second copy of the curve.
-
-   THE DOTS AND THE DRAW ARE TWO SEPARATE THINGS. The visible line is
-   dotted, so its stroke-dasharray is spoken for — it is the dot pattern
-   itself and cannot also be animated to draw the line. A second, solid
-   copy of the same curve is therefore used as a MASK, and it is that copy
-   which is drawn the preloader way: one full-length dash whose offset
-   eases from 100% to 0. The dots are uncovered along the curve's own bow
-   rather than by a straight wipe.
-
-   The separate .journey-pen element is still gone. The old version
-   stretched the svg with preserveAspectRatio="none", which squashed
-   anything drawn inside it, so a round tip had to live outside as HTML and
-   be kept in sync by hand. With the curve no longer distorted, the mask's
-   own round cap is the head of the stroke. */
-.js .journey-arc-svg { overflow: visible; }
-
-/* The connector is simply at full strength for its whole turn now. The
-   old fade-in existed to hide a round stroke-cap sitting at the path's
-   start before the draw began — but the draw now starts tucked behind the
-   left card, so there is nothing to hide, and fading the layer as well as
-   drawing it made the dots ghost in instead of being laid down one by one.
-   Held at 0 until the beat opens so no dot shows ahead of its turn. */
-.js .journey-link {
-  opacity: clamp(0, calc(var(--p) * 1000), .9);
-}
-
-/* Holds the colour the arc inherits through currentColor. */
-.js .journey-link .journey-arc {
-  stroke: currentColor;
-}
-
-/* THE DRAW: the visible line is TRIMMED BY ITS OWN DASH PATTERN in step
-   with --p, so the arc is laid down by the scroll — stop half way and the
-   line stops half way across, exactly where the hand left it. The mask is
-   gone: it painted out everything past the drawn tip, arrow head included.
-
-   The % unit is load-bearing: a bare calc() result is rejected here and
-   resolves to 0, which would leave every line already drawn instead of
-   growing.
-
-   THE TIMING. The link's box spans three grid tracks — the card on its
-   left, the gutter, the card on its right — but only the gutter portion
-   is ever SEEN; the rest is tucked behind the two cards. Mapping --p
-   straight onto the whole path therefore spent ~39% of the beat drawing
-   invisibly behind the left card, ~22% crossing the gap, then another
-   ~39% behind the right card. So --p is remapped to cover only the
-   visible crossing: the draw starts already advanced to the left card's
-   edge and finishes at the right one's.
-
-   --arc-from/--arc-to are those two edges as a share of the path. */
-.js .journey-link {
-  --arc-from: 62%;
-  --arc-to: 38%;
-}
-.js .journey-link .journey-arc {
-  stroke-dasharray: 100 100;
-  stroke-dashoffset: calc(
-    var(--arc-to) + (1 - var(--p)) * (var(--arc-from) - var(--arc-to))
-  );
-}
-
-
-@media (max-width: 1024px) {
-  /* Two columns and content-driven height — the one-viewport lock is
-     released, as .why-section does at its own breakpoint. */
-  .journey-section {
-    height: auto;
-    min-height: 0;
-    max-height: none;
-  }
-  .journey-shell { height: auto; }
-  .journey-flow {
-    flex: none;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(24px, 4vw, 40px) 0;
-  }
-  .journey-link { display: none; }
-  /* The explicit row/column placement above is for the four-across desktop
-     grid only; here the cards flow into the two-column layout again. */
-  .journey-card,
-  .journey-card:nth-of-type(1),
-  .journey-card:nth-of-type(2),
-  .journey-card:nth-of-type(3),
-  .journey-card:nth-of-type(4) {
-    grid-row: auto;
-    grid-column: auto;
-  }
-}
-
+/* On a phone the h2 has already stepped down to 1.8em while the clamp
+   above is still on its 1.9em floor, which inverts the two — a step
+   title ends up LARGER than the section heading. Below 600px the step
+   titles drop under it again. */
 @media (max-width: 600px) {
-  .journey-flow { grid-template-columns: 1fr; }
-  .journey-card-media { aspect-ratio: 4 / 3; }
+  .journey-copy h3,
+  .journey-panel:first-child .journey-copy h3 { font-size: 1.5em; }
+}
+/* --fs-small, not --fs-lead. The lead token is 20px, but every section
+   head on this page overrides it down to --fs-small — see the
+   .need-section / .ranges-section rule beside .section-head p — so a
+   20px lead here was the one paragraph on the home page setting larger
+   than its neighbours rather than the system's intended size. */
+.journey-copy .journey-lead {
+  margin: 0;
+  max-width: 44ch;
+  font-size: var(--fs-small);
+  font-weight: var(--fw-body);
+  line-height: var(--lh-body);
+  color: var(--ink-700);
+}
+/* The step sentences are the same job as a card's description elsewhere
+   on the page (.why-item p, .range-content p), so they take the same
+   size rather than the larger running-prose --fs-body. */
+.journey-text {
+  margin: 0;
+  max-width: 46ch;
+  font-size: var(--fs-small);
+  line-height: var(--lh-body);
+  color: var(--ink-700);
 }
 
-@media (max-width: 720px) {
-  .journey-head {
-    grid-template-columns: 1fr;
-    gap: 22px;
-    align-items: start;
+/* The step marker: a small capitalised chip carrying the number, so the
+   sequence stays legible now that the connector arcs are gone. */
+/* The step marker does the same job as an .eyebrow — a small label above
+   a title — so it is sized and weighted from the same tokens rather than
+   from one-off rem values. It also drops the uppercase transform: the
+   eyebrow rule above deliberately gave that up because it made every
+   section "open with a shouted label", and this chip reintroduced it. */
+.journey-step {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-label);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-label);
+  color: var(--brand-primary);
+}
+/* The number itself is the one thing here allowed to out-rank its label,
+   since it is what carries the sequence. */
+.journey-step-num {
+  font-size: var(--fs-h6);
+  font-weight: var(--fw-strong);
+  letter-spacing: 0;
+}
+.journey-cta {
+  margin-top: 8px;
+}
+
+/* ---- Entrance of the copy ----
+   Each panel's text rises and settles as its own frame comes forward, so
+   the words arrive with the photograph rather than sitting there waiting
+   for it.
+
+   Both the entrance and the exit are scrubbed against ONE timeline per
+   panel, named on the panel itself and inherited by everything inside it.
+
+   That naming is the whole point. An anonymous view() on each element
+   would track THAT ELEMENT's own box, and these elements are short — a
+   heading is a couple of lines tall, so its entry range is a couple of
+   lines of scrolling and it slams from invisible to finished almost
+   instantly, long before the section has settled. Measured against the
+   panel, every element shares the same full-screen travel, so the copy
+   moves at the pace of the frame it belongs to.
+
+   The fallback simply shows the copy: without scroll-driven animation
+   there is nothing to scrub against, and a half-finished entrance is
+   worse than none. */
+@supports (animation-timeline: view()) {
+  .journey-panel {
+    view-timeline-name: --journey-panel;
+    view-timeline-axis: block;
   }
 
-  .journey-head-aside p { max-width: none; font-size: .875em; }
+  @keyframes journey-copy-in {
+    from { opacity: 0; transform: translateY(28px); filter: blur(6px); }
+    to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+  }
+  .journey-copy > * {
+    animation: journey-copy-in both;
+    animation-timeline: --journey-panel;
+    /* The panel is a full screen tall, so it is already 'entered' the
+       moment its top edge appears and entry ranges are useless here —
+       that is what made the copy race ahead of the section. cover is the
+       panel's whole passage across the viewport: this opens once it is a
+       third of the way in and settles by the time it is centred, which is
+       the point at which the visitor is actually reading it. */
+    animation-range: cover 26% cover 40%;
+  }
+  /* A short stagger down the block, so the chip, the title and the
+     sentence arrive in reading order rather than as one slab.
+
+     The whole run has to be FINISHED by 50% — the point at which the
+     panel is centred and at rest. Overrunning that left the last lines
+     still fading in while the frame was sitting still in front of the
+     reader, which reads as the copy lagging the page rather than
+     arriving with it. Hence the tight 3% steps. */
+  .journey-copy > *:nth-child(2) { animation-range: cover 28% cover 42%; }
+  .journey-copy > *:nth-child(3) { animation-range: cover 30% cover 44%; }
+  .journey-copy > *:nth-child(4) { animation-range: cover 32% cover 46%; }
+  .journey-copy > *:nth-child(5) { animation-range: cover 34% cover 48%; }
+  .journey-copy > *:nth-child(6) { animation-range: cover 36% cover 50%; }
+
+  /* And the exit. The panels scroll while the pictures behind them are
+     pinned, so without this a block of copy is still legible over the
+     TOP of the frame while the next photograph is already fading in
+     underneath it — the two layers come apart and two steps are readable
+     at once. Fading the whole block out as its panel leaves keeps one
+     step on screen at a time, and matches the way the photograph it
+     belongs to goes: up, softening, out of the way.
+
+     This rides on .journey-copy itself rather than its children so the
+     block leaves as one piece, and it composes with the per-child
+     entrance above instead of fighting it. */
+  @keyframes journey-copy-out {
+    from { opacity: 1; transform: translateY(0);     filter: blur(0); }
+    to   { opacity: 0; transform: translateY(-40px); filter: blur(8px); }
+  }
+  .journey-copy {
+    animation: journey-copy-out both;
+    animation-timeline: --journey-panel;
+    /* Tracks the photograph it sits on. That picture fades across the
+       back half of the panel's travel, so the copy leaves on the same
+       stretch rather than ahead of it — an earlier exit left the frame
+       holding a step's image with its words already gone. Still clear of
+       the next panel's opening at 32%, since that is measured on the NEXT
+       panel's own timeline. */
+    animation-range: cover 72% cover 96%;
+  }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  /* main.js pins --p to 1 for reduced motion, so every interpolation above
-     already resolves to its finished state — nothing to override here
-     beyond making sure a card is never left mid-transform. */
-  .js .journey-card,
-  .js .journey-link { --p: 1; }
+/* ---- Phones ----
+   The pinned stage costs four screens of scrolling and the copy has no
+   clean half of the frame to sit in once the crop narrows, so below 860px
+   the section becomes what it describes: four photographs, each with its
+   step underneath it. No pin, no crossfade, nothing hidden behind an
+   animation that will not run. */
+@media (max-width: 860px) {
+  .journey-section {
+    view-timeline-name: none;
+    padding-top: var(--section-pad-y);
+    padding-bottom: var(--section-pad-y);
+  }
+  .journey-stage { display: none; }
+  .journey-body { margin-top: 0; }
+  .journey-panel {
+    height: auto;
+    display: block;
+  }
+  .journey-panel + .journey-panel { margin-top: clamp(40px, 7vw, 72px); }
+  .journey-panel-inner { display: block; }
+  .journey-copy { max-width: none; }
+  /* Each panel gets its own photograph back, inline above the copy. */
+  .journey-panel::before {
+    content: "";
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    background-size: cover;
+    background-position: center center;
+  }
+  .journey-panel[data-journey-slide="0"]::before { background-image: url("../images/Home page/grain to fresh floor/1new.png"); }
+  .journey-panel[data-journey-slide="1"]::before { background-image: url("../images/Home page/grain to fresh floor/2new.png.png"); }
+  .journey-panel[data-journey-slide="2"]::before { background-image: url("../images/Home page/grain to fresh floor/3new.png.png"); }
+  .journey-panel[data-journey-slide="3"]::before { background-image: url("../images/Home page/grain to fresh floor/4new.png"); }
+
+  /* The entrance and exit above are timed against a panel that owns a
+     whole screen. Stacked, a panel is a fraction of that, so the same
+     ranges leave copy half-faded while it is sitting still in front of
+     the reader — and the exit would dim a step that is simply further up
+     a list. Neither has anything to scrub against here, so both are off
+     and the copy is present. */
+  .journey-copy,
+  .journey-copy > * {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
 }
+
+/* ---- Stillness ----
+   Reduced motion keeps the layout — the pinned stage is structure, not
+   decoration — but nothing fades, scales, blurs or rises. The first
+   photograph simply stays put and the copy is present from the start. */
+@media (prefers-reduced-motion: reduce) {
+  .journey-bg {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .journey-copy > * {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
 /* ==========================================================================
    Service showcase  (index.html — .services)
    --------------------------------------------------------------------------
@@ -6345,7 +6485,7 @@ body:has(> main > .connect-band-section:last-child) > main { background: var(--p
 
    Why this exists: the same four token values were previously restated by
    five separate component rules (.section-head h2, .stage-head h2,
-   .why-section .section-head h2, .cta-band h2, .journey-head h2), and their
+   .why-section .section-head h2, .cta-band h2, .journey-copy h2), and their
    responsive steps were duplicated in six more places. Nothing linked them,
    so each new section re-declared the set from scratch and any one of them
    could drift without the others noticing — which is exactly how the stage
@@ -6356,7 +6496,7 @@ body:has(> main > .connect-band-section:last-child) > main { background: var(--p
    every section heading, edit the tokens.
 
    Placed at the end of the file deliberately: several of these components
-   are defined late (.stage-head at ~4086, .journey-head at ~4654),
+   are defined late (.stage-head at ~4086, .journey-copy at ~5320),
    and a shared rule declared earlier would
    lose to them on source order. This is the one place a single rule can
    win for all of them without inflating specificity.
@@ -6380,8 +6520,9 @@ body:has(> main > .connect-band-section:last-child) > main { background: var(--p
 .section-head h2,
 .why-section .section-head h2,
 .stage-head h2,
-.journey-head h2,
-.cta-band h2 {
+.journey-copy h2,
+.cta-band h2,
+.ab-statement {
   /* The display serif, as on every hero headline. Section heads are the
      page's other tier of big type, so they take the same face — the
      grotesque keeps everything below them (body, eyebrows, card titles).
@@ -6404,15 +6545,17 @@ body:has(> main > .connect-band-section:last-child) > main { background: var(--p
   .section-head h2,
   .why-section .section-head h2,
   .stage-head h2,
-  .journey-head h2,
-  .cta-band h2 { font-size: 2.1em; }
+  .journey-copy h2,
+  .cta-band h2,
+  .ab-statement { font-size: 2.1em; }
 }
 @media (max-width: 600px) {
   .section-head h2,
   .why-section .section-head h2,
   .stage-head h2,
-  .journey-head h2,
-  .cta-band h2 { font-size: 1.8em; }
+  .journey-copy h2,
+  .cta-band h2,
+  .ab-statement { font-size: 1.8em; }
 }
 
 /* ==========================================================================
@@ -6690,9 +6833,15 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
 
    Everything else -- the scrims, the transparent header, the type ramp --
    is inherited from .cat-hero unchanged. */
+/* The band height is shared with the support hero (min(82svh, 720px)) so every
+   full-bleed photographic banner on the site is one length. It is taller than
+   the 62svh/560px this started at: at that height the picture was cropped hard
+   enough to lose the subject, and the first product row only gained a sliver of
+   fold. 82svh still stops short of the viewport, so the grid below remains
+   visible on load -- the point of the banner over the full-screen .cat-hero. */
 .cat-hero.cat-hero-wide {
   height: auto;
-  min-height: min(62svh, 560px);
+  min-height: min(82svh, 720px);
   max-height: none;
   padding: calc(var(--header-h) + 40px) 0 clamp(40px, 6vh, 64px);
 }
@@ -6738,7 +6887,49 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
 }
 
 @media (max-width: 900px) {
-  .cat-hero.cat-hero-wide { min-height: min(56svh, 460px); }
+  .cat-hero.cat-hero-wide { min-height: min(64svh, 520px); }
+}
+
+/* ---------- Support banner variant (.support-hero) ----------
+   The support page takes the same full-bleed band. Its height now comes from
+   .cat-hero-wide, which the product banners share, so only what is specific to
+   this page is set here: the copy sits on the picture's lower edge rather than
+   below the header, the crop is centred, and the headline is a step down the
+   scale. Scrims, type ramp and the transparent header are inherited. */
+.cat-hero.cat-hero-wide.support-hero {
+  justify-content: flex-end;
+  padding-bottom: clamp(30px, 4.5vh, 54px);
+}
+/* The copy block returns to bottom-aligned (the -wide banner top-aligns it),
+   which is what puts the headline on the picture's lower edge. */
+.support-hero .cat-hero-grid { align-items: end; }
+/* A step down from the -wide banner's 80px. That size is set for the short
+   two- or three-word category names ("Roti Making Machines"); this headline is
+   a five-word sentence, so at 80px it ran the full width of the container and
+   read as the whole picture. Capping at 60px and giving it a measure keeps it
+   the focal point without crowding the frame. */
+.support-hero h1 {
+  font-size: clamp(32px, 4.2vw, 60px);
+  max-width: 17em;
+}
+/* The subject in this frame sits centre-low, so the default -wide crop of
+   50% 28% pushed it behind the copy. Centring the focal point keeps it clear
+   of the headline column. */
+.support-hero .ch-img { object-position: 50% 45%; }
+/* The note is the standfirst above the CTA here, so it keeps a tight measure
+   and the button row follows on the site's hero-cta rhythm. The gaps are
+   pulled in from the -wide defaults so the whole eyebrow/headline/note/CTA
+   stack stays shallow and the headline lands near the picture's lower edge,
+   as in the reference, rather than drifting up to mid-frame. */
+.support-hero .cat-hero-eyebrow { margin-bottom: .5em; }
+.support-hero .cat-hero-note {
+  max-width: 34em;
+  margin-top: clamp(12px, 1.6vh, 18px);
+}
+.support-hero .hero-cta { margin-top: clamp(16px, 2.2vh, 24px); }
+
+@media (max-width: 900px) {
+  .support-hero .cat-hero-grid { align-items: start; }
 }
 
 /* ---------- Collection count bar (.range-bar) ----------
@@ -7139,4 +7330,766 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
     width: 100%;
     justify-content: center;
   }
+}
+
+/* ===================================================================
+   SUPPORT PAGE — ROUTE CARDS & MAINTENANCE PANEL
+   -------------------------------------------------------------------
+   The two sections under the support hero, rebuilt to the supplied
+   design: photo-topped route cards, then a two-column maintenance
+   block with an image panel. Colour comes entirely from the existing
+   blue ramp and --gradient-* tokens; no new hues are introduced.
+   Scoped to .support-routes / .maint so the shared .support-card,
+   .feature-list and .section-head rules other pages use are untouched.
+   =================================================================== */
+
+/* ---------- Route cards (.route-card) ----------
+   One <a> per card, so the whole tile is the link — the "Learn More" row
+   is a visual affordance inside it, not a nested anchor. */
+.support-routes .grid-3 { gap: clamp(18px, 2vw, 26px); }
+.route-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border: 1px solid var(--blue-100);
+  /* Just enough to take the hard point off the corner, no more. */
+  border-radius: 6px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+.route-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 44px rgba(7,81,116,.16);
+  border-color: var(--blue-200);
+}
+/* The picture band. A fixed aspect keeps the three cards' copy on one
+   baseline regardless of each source image's proportions. */
+.route-card .rc-media {
+  display: block;
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--blue-50);
+  overflow: hidden;
+}
+.route-card .rc-media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .5s ease;
+  /* The picture dissolves into the card rather than stopping at a hard edge:
+     the mask fades the lower band of the image to transparent so the white
+     body shows through progressively. mask-image alone would leave a visible
+     line on the img's own bottom edge, so the fade starts at 62% — well above
+     it — and the ::after wash below carries the last of the blend. */
+  -webkit-mask-image: linear-gradient(180deg, #000 82%, rgba(0,0,0,.72) 92%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 82%, rgba(0,0,0,.72) 92%, transparent 100%);
+}
+/* A short wash of the card's own ground over the image's foot. It sits on top
+   of the masked picture and matches .route-card's background, so the two meet
+   with no seam. Browsers without mask support still get this gradient, which
+   softens the join on its own. */
+.route-card .rc-media::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 24%;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.55) 55%, var(--white) 100%);
+}
+.route-card:hover .rc-media img { transform: scale(1.045); }
+
+.route-card .rc-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: clamp(20px, 2vw, 26px);
+}
+/* The icon overlaps up into the picture band, as in the design. */
+.route-card .rc-icon {
+  width: 44px; height: 44px;
+  margin-top: -40px;
+  border-radius: 13px;
+  background: var(--white);
+  color: var(--blue-700);
+  border: 1px solid var(--blue-100);
+  box-shadow: 0 6px 18px rgba(7,81,116,.14);
+  display: flex; align-items: center; justify-content: center;
+}
+.route-card .rc-icon svg { width: 21px; height: 21px; }
+.route-card .rc-title {
+  font-family: var(--font-display, inherit);
+  font-size: 1.18em;
+  color: var(--heading-color);
+  line-height: var(--lh-card, 1.25);
+}
+.route-card .rc-desc {
+  font-size: var(--fs-label);
+  line-height: var(--lh-body);
+  color: var(--ink-500);
+}
+/* The circular arrow + label row. */
+.route-card .rc-more {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-top: 4px;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-label);
+  color: var(--blue-700);
+}
+.route-card .rc-arrow {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  color: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  flex: none;
+  transition: transform .28s ease;
+}
+.route-card .rc-arrow svg { width: 15px; height: 15px; }
+.route-card:hover .rc-arrow { transform: translateX(3px); }
+
+/* Per-card tints: the middle and right cards sit a step warmer / cooler so
+   the row reads as three distinct routes, as in the design. Both are drawn
+   from the existing ramp rather than new hues. */
+/* The per-card image grounds are deliberately NOT tinted any more. They were a
+   loading ground behind an opaque picture; now that the image fades out over
+   its lower band, whatever sits behind it shows through the blend, and a warm
+   or green ground read as a coloured band across the card. All three photos
+   share a light blue-grey surround, so one neutral ground blends invisibly. */
+
+/* ---------- Maintenance block (.maint) ---------- */
+/* Left-aligned head, and the second half of the headline takes the brand
+   primary — the two-tone treatment from the design. */
+.maint-head { max-width: none; margin-bottom: clamp(26px, 3vw, 38px); text-align: left; }
+.maint-head h2 span { color: var(--blue-600); }
+
+.maint-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+  gap: clamp(28px, 4vw, 56px);
+  align-items: start;
+}
+
+/* The tips: icon-in-tile rows on a hairline list. */
+.maint-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.maint-list li {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(96,118,133,.16);
+  font-size: var(--fs-label);
+  line-height: var(--lh-body);
+  color: var(--ink-700);
+}
+.maint-list li:last-child { border-bottom: 0; }
+.maint-list .mi {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: var(--blue-100);
+  color: var(--blue-700);
+  display: flex; align-items: center; justify-content: center;
+  flex: none;
+}
+.maint-list .mi svg { width: 20px; height: 20px; }
+
+/* ---------- The image panel (.maint-panel) ---------- */
+.maint-panel {
+  position: relative;
+  border-radius: var(--radius-lg);
+  background: var(--gradient-deep);
+  padding: clamp(16px, 1.6vw, 22px);
+  overflow: hidden;
+}
+.maint-panel .mp-img {
+  width: 100%;
+  aspect-ratio: 4 / 3.4;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  display: block;
+}
+/* The round "Care Today" badge, top-right over the panel. */
+.maint-panel .mp-badge {
+  position: absolute;
+  top: clamp(14px, 1.6vw, 22px);
+  right: clamp(14px, 1.6vw, 22px);
+  z-index: 2;
+  width: 104px; height: 104px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.94);
+  color: var(--blue-800);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  line-height: 1.15;
+  box-shadow: 0 10px 26px rgba(5,61,87,.28);
+}
+.maint-panel .mp-badge strong { font-size: 1.05em; font-weight: 600; }
+.maint-panel .mp-badge span { font-size: 1.05em; }
+.maint-panel .mp-badge em {
+  font-style: normal;
+  margin-top: 4px;
+  font-size: 9px;
+  letter-spacing: var(--ls-label-tight, .02em);
+  text-transform: uppercase;
+  color: var(--ink-500);
+  max-width: 8em;
+}
+/* The three-stat strip across the panel's lower edge. */
+.maint-panel .mp-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: clamp(12px, 1.4vw, 18px);
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.3;
+  color: rgba(255,255,255,.92);
+}
+.maint-panel .mp-stats > div {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 12px 6px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,.09);
+}
+.maint-panel .mps-icon { color: var(--blue-300); }
+.maint-panel .mps-icon svg { width: 18px; height: 18px; }
+
+@media (max-width: 900px) {
+  .maint-grid { grid-template-columns: minmax(0, 1fr); }
+  /* The panel leads on narrow screens: the picture introduces the list
+     rather than trailing a long scroll of tips. */
+  .maint-panel { order: -1; }
+  .maint-head { text-align: left; }
+}
+@media (max-width: 560px) {
+  .maint-panel .mp-badge { width: 86px; height: 86px; }
+  .maint-panel .mp-badge em { display: none; }
+}
+
+/* ==========================================================================
+   WHY JAGRUTI — editorial page
+   Two movements, in the order a visitor meets them:
+     1. .wj-hero   full-bleed photograph, copy centred low in the frame
+     2. .wj-split  a 50/50 panel: tinted column of copy beside the photo
+   The headline voice throughout is the shared display face at the site's own
+   sizes (--fs-h1/--fs-h3 clamps, --lh-title, --ls-display). No italics and no
+   bespoke scale: emphasis comes from size and space, not a second style.
+   ========================================================================== */
+
+.wj-hero {
+  position: relative;
+  /* svh, not vh: mobile browser chrome must not push the copy out of frame. */
+  min-height: max(100svh, 640px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--header-h) 0 clamp(40px, 7vh, 80px);
+  background: #1b1512;
+  color: #fff;
+  overflow: hidden;
+  text-align: center;
+}
+.wj-hero-img {
+  position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 42%;
+}
+/* Two stacked washes: a vertical one so the type never sits on raw highlight,
+   and a soft centre pool that holds the headline specifically. */
+.wj-hero::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(70% 50% at 50% 68%, rgba(12,9,7,.58) 0%, transparent 100%),
+    linear-gradient(180deg, rgba(12,9,7,.42) 0%, transparent 30%, transparent 46%, rgba(12,9,7,.52) 100%);
+}
+.wj-hero .container { position: relative; z-index: 2; }
+.wj-hero-inner {
+  max-width: 44rem;
+  margin: 0 auto;
+  /* Pushes the block well below centre — the picture reads first, the words
+     arrive under it. */
+  padding-top: clamp(120px, 34vh, 340px);
+}
+
+.wj-hero h1 {
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-display);
+  font-size: clamp(var(--fs-h2), 4.6vw, 66px);
+  text-wrap: balance;
+  text-shadow: 0 2px 30px rgba(0,0,0,.28);
+}
+.wj-hero p {
+  margin: 1.1em auto 0;
+  max-width: 30rem;
+  color: rgba(255,255,255,.92);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  text-shadow: 0 1px 18px rgba(0,0,0,.34);
+}
+
+/* --- 2. The split panels ------------------------------------------------- */
+/* Full-bleed: the panel breaks the container so colour meets photo edge to
+   edge, exactly as the reference does. Copy keeps its own inner measure. */
+.wj-split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  min-height: clamp(520px, 86vh, 820px);
+  /* align-items must stay stretch (the default) so the copy track runs the
+     panel's full height — a sticky child can only travel inside its own
+     grid area. */
+  background: var(--brand-tint);
+}
+/* The copy column is the stretched grid track; it carries the ground for the
+   panel's whole height. The travel belongs to .wj-split-copy-inner, exactly as
+   .compare-studio splits .cs-rail from .cs-rail-inner: a sticky box as tall as
+   its own container has nowhere to go and would just scroll away with the page.
+
+   No padding and no centring here — the inner block's sticky offset does the
+   positioning, so this track must stay a plain full-height column. */
+.wj-split-copy { display: block; text-align: center; }
+/* Sticky, so the copy holds near the top of the viewport while the panel
+   scrolls past it, then releases at the panel's end — which reads as the text
+   travelling DOWN its column relative to the photo beside it. Pure CSS: no
+   scrub, no JS, and it degrades to a normal static block wherever position
+   sticky is unsupported.
+
+   The top offset clears the fixed header, which overlays the page everywhere.
+   max-width keeps the measure; the auto margins centre it in the track. */
+.wj-split-copy-inner {
+  position: sticky;
+  top: calc(var(--header-h) + clamp(28px, 9vh, 96px));
+  max-width: 30rem;
+  margin: 0 auto;
+  /* Bottom padding is what gives the sticky block its runway: it holds until
+     this much of the column is left, so the release lands just inside the
+     panel rather than at its very edge. */
+  padding: clamp(48px, 10vh, 110px) clamp(28px, 6vw, 72px) clamp(56px, 12vh, 132px);
+}
+.wj-split h2 {
+  margin: 0 0 .7em;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  color: var(--ink-900);
+  font-size: clamp(1.5em, 2.1vw, 2em);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-display);
+}
+.wj-split p {
+  margin: 0 0 1.1em;
+  color: var(--ink-700);
+  font-size: .95em;
+  line-height: 1.7;
+}
+.wj-split p:last-of-type { margin-bottom: 0; }
+.wj-split-media { position: relative; overflow: hidden; background: #1b1512; min-height: 320px; }
+.wj-split-media img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 45%;
+}
+/* Reversed panel: photo left, copy right, on the warmer ground. */
+.wj-split.is-reversed { background: var(--brand-canvas); }
+.wj-split.is-reversed .wj-split-media { order: -1; }
+
+@media (max-width: 900px) {
+  /* Stacked. The picture leads each panel so the page keeps alternating
+     image/word rather than running two text blocks together. */
+  .wj-split { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .wj-split-media { order: -1; min-height: clamp(280px, 52vh, 420px); }
+  .wj-split.is-reversed .wj-split-media { order: -1; }
+  /* Stacked: there is no second column to travel against, so the copy is a
+     plain static block again. */
+  .wj-split-copy-inner {
+    position: static;
+    padding: clamp(40px, 8vh, 72px) clamp(24px, 6vw, 48px);
+  }
+  .wj-hero-inner { padding-top: clamp(24px, 10vh, 90px); }
+}
+@media (max-width: 560px) {
+}
+
+/* --- 3. The nine reasons -------------------------------------------------
+   Replaces the glass-card grid on this page only (index.html keeps .why-grid).
+   Glass needs a dark or photographic ground to read as a material; on this
+   page's light canvas it was nearly invisible and the 4/4/1 wrap left a lone
+   card stranded on its own row.
+
+   The layout is a pinned title beside a single scrolling column: the heading
+   holds while the nine entries pass it, so the section reads as one continuous
+   argument rather than a field of tiles. Each entry is a full-width row —
+   number, then heading and copy side by side — which gives the prose a long
+   measure and keeps every heading on one line. */
+.wj-reasons-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: start;
+}
+/* Pinned beside the list. --header-h clears the fixed bar, which overlays the
+   page on every route. */
+.wj-reasons-head {
+  position: sticky;
+  top: calc(var(--header-h) + clamp(24px, 5vh, 56px));
+}
+.wj-reasons-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: clamp(var(--fs-h3), 3.2vw, 46px);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-display);
+  color: var(--ink-900);
+}
+
+.wj-reasons {
+  display: grid;
+  /* Equal-height entries: every row takes the height of the tallest, so the
+     nine rules land on a consistent rhythm instead of tracking copy length. */
+  grid-auto-rows: 1fr;
+  border-top: 1px solid var(--blue-100);
+}
+
+/* One row per reason: a narrow number rail, then heading and copy as two
+   columns so the entry reads across rather than stacking. */
+.wj-reason {
+  display: grid;
+  grid-template-columns: 4.25rem minmax(0, 12rem) minmax(0, 1fr);
+  column-gap: clamp(16px, 2.4vw, 40px);
+  align-items: start;
+  align-content: center;
+  /* A single row: the rail holds number and icon side by side, so nothing
+     stacks and the entry is only as tall as its copy. */
+  grid-template-rows: auto;
+  padding: clamp(12px, 1.3vw, 17px) clamp(14px, 1.6vw, 24px);
+  /* Cancels that inner padding at the column edges: the hairline and the
+     number rail stay flush with the list, while the hover wash still bleeds
+     a little past the text on both sides. */
+  margin-inline: calc(-1 * clamp(14px, 1.6vw, 24px));
+  border-bottom: 1px solid var(--blue-100);
+  /* The row is the positioning context for the two overlays below. */
+  position: relative;
+  isolation: isolate;
+  transition: background .45s cubic-bezier(.22,.61,.36,1);
+}
+/* A wash that fades in from the left rather than a flat fill: the entry
+   lights up along the reading direction. Sits behind the copy via z-index. */
+.wj-reason::before {
+  content: "";
+  position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(90deg,
+    rgba(13,138,196,.075) 0%,
+    rgba(13,138,196,.03) 45%,
+    transparent 100%);
+  opacity: 0;
+  transition: opacity .45s cubic-bezier(.22,.61,.36,1);
+}
+/* A brand rule that draws in along the row's bottom edge, over the hairline.
+   scaleX from the left mirrors the wash, so the two read as one gesture. */
+.wj-reason::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+  background: linear-gradient(90deg, var(--blue-600), rgba(13,138,196,.12));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .55s cubic-bezier(.22,.61,.36,1);
+}
+.wj-reason:hover::before { opacity: 1; }
+.wj-reason:hover::after  { transform: scaleX(1); }
+.wj-reason-rail {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  gap: .5em;
+}
+.wj-reason-num {
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: .8em;
+  letter-spacing: .12em;
+  line-height: 1;
+  /* Starts as a faint index and resolves to brand blue on hover — the rail
+     is what tells you which row you are on. */
+  color: var(--ink-300);
+  /* Tabular figures so 01–09 hold one width and the rail never shifts. */
+  font-variant-numeric: tabular-nums;
+  transition: color .45s ease;
+}
+.wj-reason:hover .wj-reason-num { color: var(--blue-600); }
+/* The icon sits in the number rail beneath its digit, so the rail carries the
+   entry's two markers and the heading column stays pure type. */
+.wj-reason-icon {
+  grid-column: 1;
+  display: block;
+  color: var(--blue-600);
+  opacity: .5;
+  transition: opacity .45s ease;
+}
+.wj-reason:hover .wj-reason-icon { opacity: 1; }
+.wj-reason-icon svg { width: 18px; height: 18px; display: block; }
+.wj-reason h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: 1.12em;
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-display);
+  color: var(--ink-900);
+  /* A few pixels of travel, in the same direction as the wash. Enough to
+     register as response; not enough to reflow the row. */
+  transition: transform .45s cubic-bezier(.22,.61,.36,1), color .45s ease;
+}
+.wj-reason:hover h3 { transform: translateX(4px); color: var(--blue-700); }
+.wj-reason p {
+  margin: 0;
+  font-size: .95em;
+  line-height: 1.6;
+  color: var(--ink-500);
+  transition: color .45s ease;
+}
+.wj-reason:hover p { color: var(--ink-700); }
+
+@media (max-width: 1000px) {
+  /* The title unpins and leads the list. */
+  .wj-reasons-layout { grid-template-columns: minmax(0, 1fr); gap: clamp(24px, 4vh, 40px); }
+  .wj-reasons-head { position: static; }
+}
+@media (max-width: 680px) {
+  /* Copy drops under the heading, number keeps its rail. */
+  .wj-reason { grid-template-columns: 4.25rem minmax(0, 1fr); row-gap: .3em; }
+  .wj-reason { grid-template-rows: auto auto; }
+  .wj-reason h3 { grid-column: 2; grid-row: 1; }
+  .wj-reason p  { grid-column: 2; grid-row: 2; }
+}
+
+/* ==========================================================================
+   ABOUT PAGE — editorial layout
+   --------------------------------------------------------------------------
+   A magazine-style treatment: an oversized Marcellus statement set hard to
+   the left gutter, a hairline rule under it, then a caption/body row that
+   hangs a small grey label in the left column and runs the prose in the
+   columns to its right.
+
+   The ground here is white rather than --page-bg. That is the one deliberate
+   departure from the "one page ground" rule at the top of this file: these
+   sections are typographic spreads, and the canvas tint muddies the contrast
+   the huge serif depends on. It is scoped to .about-page so nothing else on
+   the site inherits it.
+   ========================================================================== */
+.about-page { background: var(--white); }
+
+/* ---- The editorial spread ---------------------------------------------
+   One shared skeleton. Every band on this page is an .ab-spread, so the
+   rule, the gutters and the column starts line up down the whole page. */
+.ab-spread {
+  padding: clamp(72px, 11vh, 150px) 0 clamp(56px, 8vh, 104px);
+  background: var(--white);
+}
+.ab-spread + .ab-spread { padding-top: clamp(48px, 7vh, 96px); }
+
+/* The statement is a NORMAL section heading, so it carries no typography of
+   its own: family, size, weight, leading and tracking all come from the
+   section-heading system at the end of this file, which .ab-statement is
+   listed in. Only layout and colour live here — per that system's rule that
+   layout is not typography. */
+.ab-statement {
+  margin: 0;
+  color: var(--ink-900);
+  text-wrap: balance;
+  max-width: 20ch;
+}
+/* A statement that runs long (the founder's letter opener) needs room to
+   breathe across more of the measure. */
+.ab-statement.is-wide { max-width: 22ch; }
+
+/* The hairline. The reference's signature move — it separates the statement
+   from the caption row and is what makes the page read as a spread rather
+   than as stacked sections. */
+.ab-rule {
+  border: 0;
+  border-top: 1px solid rgba(23, 32, 38, .16);
+  margin: clamp(32px, 5vh, 64px) 0 clamp(28px, 4vh, 48px);
+}
+
+/* ---- Caption / body row -------------------------------------------------
+   Left column holds the small grey caption, the remaining columns hold the
+   prose. Twelve-column base so a row can run one, two or three body columns
+   without inventing a new grid each time. */
+.ab-row {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: clamp(28px, 4vh, 48px);
+  align-items: start;
+}
+.ab-row-caption { grid-column: 1 / span 4; }
+/* Two body columns starting at the halfway mark, as the reference sets it. */
+.ab-row-body { grid-column: 6 / span 4; }
+.ab-row-body + .ab-row-body { grid-column: 10 / span 3; }
+/* A single wide prose column (the founder's letter) instead of two. */
+.ab-row-prose { grid-column: 6 / span 7; }
+
+.ab-caption {
+  margin: 0;
+  font-size: var(--fs-small);
+  line-height: var(--lh-body);
+  color: var(--ink-300);
+}
+.ab-col-head {
+  margin: 0 0 .6em;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-small);
+  line-height: var(--lh-card);
+  letter-spacing: var(--ls-label-tight);
+  color: var(--ink-900);
+}
+.ab-col-body { margin: 0 0 1em; font-size: .875em; line-height: 1.65; color: var(--ink-700); }
+.ab-col-body:last-child { margin-bottom: 0; }
+/* The letter sets a step larger than the two-column notes — it is the page's
+   main read, not a sidebar. */
+.ab-row-prose .ab-col-body { font-size: var(--fs-small); line-height: var(--lh-body); }
+
+.ab-signoff {
+  margin: clamp(24px, 3.5vh, 40px) 0 0;
+  font-size: .875em;
+  line-height: 1.5;
+  color: var(--ink-900);
+}
+.ab-signoff span { display: block; color: var(--ink-500); }
+
+/* ---- Full-bleed media ---------------------------------------------------
+   Breaks the gutter and runs edge to edge, the way the reference drops its
+   video in under the opening spread. */
+.ab-media {
+  position: relative;
+  width: 100%;
+  /* The clip is 1920x1080, and the whole frame is meant to be seen — so the
+     VIDEO's aspect ratio sets the height of this band rather than a height
+     being imposed and the picture cropped to fill it. At full-bleed width
+     that gives a section-height band on a normal desktop window (1440 wide
+     → 810 tall) with nothing cut off any edge.
+
+     This is the opposite choice from .range-media on the home page, which
+     uses cover because its BOX narrows around the video as the panel
+     animates. Here the box is a fixed full-width band, so cover would only
+     ever mean crop.
+
+     --ab-media-crop is how far the picture is pushed past the band so the
+     edges are trimmed and the framing tightens. The band keeps the clip's
+     own ratio, so the same factor trims top, bottom and both sides by the
+     same proportion — a small even cut in from every edge, not a reframe.
+     1.06 takes roughly 3% off each side. */
+  --ab-media-crop: 1.06;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--ink-900);
+}
+/* cover, so a replacement clip of a different shape still fills the band
+   rather than letterboxing against the dark ground. With the band already
+   carrying this clip's own ratio, cover alone would show the full frame —
+   the scale above it is what trims the edges.
+
+   Scaled from the centre so the trim is even on all four sides; the band
+   clips the overspill via overflow:hidden. */
+.ab-media video,
+.ab-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(var(--ab-media-crop, 1));
+  transform-origin: 50% 50%;
+}
+/* No height override on phones: the 16/9 ratio above already gives a sensible
+   band on a narrow viewport (390 wide → 219 tall) and keeps the full frame
+   visible, which a fixed height would letterbox. */
+
+/* ---- Numbered list (the journey) ---------------------------------------
+   The timeline re-set as editorial rows: a tabular index in its own rail,
+   heading and copy in the column beside it, hairline between entries. */
+.ab-list { display: grid; gap: 0; }
+.ab-item {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  column-gap: var(--gutter);
+  padding: clamp(22px, 3vh, 34px) 0;
+  border-top: 1px solid rgba(23, 32, 38, .12);
+}
+.ab-item:last-child { border-bottom: 1px solid rgba(23, 32, 38, .12); }
+.ab-item-num {
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: .875em;
+  line-height: var(--lh-card);
+  letter-spacing: var(--ls-label);
+  /* Tabular figures so 01–06 hold one width and the rail never shifts. */
+  font-variant-numeric: tabular-nums;
+  color: var(--blue-600);
+}
+.ab-item-text { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); column-gap: var(--gutter); row-gap: .4em; }
+.ab-item h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-h6);
+  line-height: var(--lh-card);
+  letter-spacing: var(--ls-display);
+  color: var(--ink-900);
+}
+.ab-item p { margin: 0; font-size: .875em; line-height: 1.65; color: var(--ink-500); }
+
+/* ---- Three-up capability columns (manufacturing) ----------------------- */
+.ab-cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: clamp(32px, 5vh, 56px);
+}
+.ab-cols > div { border-top: 1px solid rgba(23, 32, 38, .16); padding-top: clamp(18px, 2.5vh, 26px); }
+
+/* ---- Image + text pair -------------------------------------------------- */
+.ab-pair {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: clamp(28px, 4vh, 44px);
+  align-items: center;
+}
+.ab-pair-media { grid-column: 1 / span 6; }
+.ab-pair-media img { width: 100%; height: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.ab-pair-text { grid-column: 8 / span 5; }
+
+/* ---- Closing call to action -------------------------------------------- */
+.ab-cta { border-top: 1px solid rgba(23, 32, 38, .16); padding-top: clamp(40px, 6vh, 72px); }
+.ab-cta .hero-cta { margin-top: clamp(24px, 3.5vh, 36px); }
+
+/* ---- Responsive ---------------------------------------------------------
+   The grid collapses in two steps. At tablet the caption unpins and leads
+   its row full width; at phone the numbered rail narrows and the item's
+   heading and copy stack. */
+@media (max-width: 1000px) {
+  .ab-row-caption,
+  .ab-row-body,
+  .ab-row-body + .ab-row-body,
+  .ab-row-prose { grid-column: 1 / -1; }
+  .ab-row { row-gap: clamp(20px, 3vh, 32px); }
+  .ab-statement,
+  .ab-statement.is-wide { max-width: none; }
+  .ab-cols { grid-template-columns: minmax(0, 1fr); }
+  .ab-pair-media,
+  .ab-pair-text { grid-column: 1 / -1; }
+  .ab-item-text { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 680px) {
+  .ab-item { grid-template-columns: 2.75rem minmax(0, 1fr); column-gap: 16px; }
 }

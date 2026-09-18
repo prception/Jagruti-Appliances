@@ -694,118 +694,88 @@
   </section>
 </div>
 
-<!-- From Grain to Fresh Flour - an editorial mosaic. A two-column header
-     sits on top (oversized title left, lead + CTA right); below it a
-     staggered grid alternates photography with the four operating steps.
-     Each photo's card opens from its TOP-LEFT corner as it enters view:
-     the tile is clipped to nothing and grows out of that corner, while the
-     photograph inside stays perfectly still and is simply uncovered. -->
-<section class="section section-alt journey-section">
-  <div class="container journey-shell">
-    <div class="journey-head">
-      <div class="journey-head-main">
-        <span class="eyebrow">The Experience</span>
-        <h2>From Grain,<br>To Fresh Flour.</h2>
+<!-- From Grain to Fresh Flour - a scroll-driven slideshow, after the
+     mechanism hexpens.com uses on its home page.
+
+     Two layers share one section. The STAGE is position:sticky and holds
+     the four photographs stacked on top of each other, each filling the
+     viewport. The BODY is pulled back over it with margin-top:-100svh and
+     holds four 100svh text blocks, so the section's total height is four
+     screens of scrolling while the picture layer stays pinned.
+
+     The crossfade is pure CSS where the browser supports scroll-driven
+     animations: the section declares a view-timeline and each photograph
+     animates itself OUT (fading, scaling to 1.2 and blurring to 20px)
+     across its own one-screen slice of that timeline, uncovering the one
+     beneath. The last photograph never animates - it is the floor.
+
+     Browsers without animation-timeline fall back to an IntersectionObserver
+     in main.js that writes the active index onto the section; the same
+     properties then transition between two discrete states instead of
+     scrubbing continuously. -->
+<section class="section journey-section" data-journey-scroll>
+  <div class="journey-stage">
+    <div class="journey-stage-inner">
+      <div class="journey-bg" style="--journey-bg-index: 0;">
+        <img src="assets/images/Home page/grain to fresh floor/1new.png" alt="Clean wheat grain in a sack with a wooden scoop, beside the mill" decoding="async" fetchpriority="low">
       </div>
-      <div class="journey-head-aside">
-        <p>Four simple steps between a scoop of clean grain and warm, stone-fine flour &mdash; built for the rhythm of a real kitchen.</p>
-        <a class="btn btn-primary" href="products/domestic-flour-mill.html">Explore Mills</a>
+      <div class="journey-bg" style="--journey-bg-index: 1;">
+        <img src="assets/images/Home page/grain to fresh floor/2new.png.png" alt="Selecting the grind texture on the mill control panel" decoding="async" loading="lazy">
+      </div>
+      <div class="journey-bg" style="--journey-bg-index: 2;">
+        <img src="assets/images/Home page/grain to fresh floor/3new.png.png" alt="Flour milling inside the stainless-steel grinding chamber" decoding="async" loading="lazy">
+      </div>
+      <div class="journey-bg" style="--journey-bg-index: 3;">
+        <img src="assets/images/Home page/grain to fresh floor/4new.png" alt="Freshly ground flour collected and ready for the kitchen" decoding="async" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <div class="journey-body">
+    <!-- The section's own title rides with the first panel so the visitor
+         meets it and step 01 in the same frame. -->
+    <div class="journey-panel journey-panel--left" data-journey-slide="0">
+      <div class="container journey-panel-inner">
+        <div class="journey-copy">
+          <span class="eyebrow">The Experience</span>
+          <h2>From Grain,<br>To Fresh Flour.</h2>
+          <p class="journey-lead">Four simple steps between a scoop of clean grain and warm, stone-fine flour &mdash; built for the rhythm of a real kitchen.</p>
+          <span class="journey-step"><span class="journey-step-num">01</span> Step One</span>
+          <h3>Add Grains</h3>
+          <p class="journey-text">Load clean, dry wheat, grain or pulses into the hopper.</p>
+        </div>
       </div>
     </div>
 
-    <div class="journey-flow" data-journey>
-      <article class="journey-card" data-journey-img>
-        <div class="journey-card-media">
-          <img src="assets/images/Home page/grain to fresh floor/1.png" alt="Clean wheat grain being loaded into the mill hopper" decoding="async" loading="lazy">
-          <span class="journey-num">01</span>
-          <span class="journey-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21V8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M12 8c0-2.6 1.6-4.6 4-5.4.3 2.8-1.2 5-4 5.4zM12 8C12 5.4 10.4 3.4 8 2.6 7.7 5.4 9.2 7.6 12 8zM12 14c0-2.6 1.6-4.6 4-5.4.3 2.8-1.2 5-4 5.4zM12 14c0-2.6-1.6-4.6-4-5.4-.3 2.8 1.2 5 4 5.4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+    <div class="journey-panel journey-panel--right" data-journey-slide="1">
+      <div class="container journey-panel-inner">
+        <div class="journey-copy">
+          <span class="journey-step"><span class="journey-step-num">02</span> Step Two</span>
+          <h3>Select Your Setting</h3>
+          <p class="journey-text">Choose the grind texture and adjust as needed.</p>
         </div>
-        <div class="journey-card-body">
-          <h4 class="journey-t">Add Grains</h4>
-          <p class="journey-t">Load clean, dry wheat, grain or pulses into the hopper.</p>
+      </div>
+    </div>
+
+    <div class="journey-panel journey-panel--left" data-journey-slide="2">
+      <div class="container journey-panel-inner">
+        <div class="journey-copy">
+          <span class="journey-step"><span class="journey-step-num">03</span> Step Three</span>
+          <h3>Start Grinding</h3>
+          <p class="journey-text">The stainless-steel chamber grinds with precision.</p>
         </div>
-      </article>
-      <span class="journey-link" aria-hidden="true">
-        <!-- Drawn the same way the preloader's logo frame is: one real
-             path with pathLength="100", so stroke-dasharray/offset are
-             plain percentages and the line pulls itself from the left
-             card to the right one as --p advances. preserveAspectRatio
-             is left at its default so the curve keeps its shape and the
-             round cap stays round. -->
-        <svg class="journey-arc-svg" viewBox="0 0 100 14" fill="none" aria-hidden="true" focusable="false">
-          <!-- The line, trimmed by its own dash pattern: --p opens the dash
-               so the stroke is laid down across the gutter as the visitor
-               scrolls, and the round cap sits at the moving tip. -->
-          <path class="journey-arc" d="M2 12 C 28 -1, 72 -1, 98 12"
-                fill="none" stroke="currentColor"
-                pathLength="100"/>
-        </svg>
-      </span>
-      <article class="journey-card" data-journey-img>
-        <div class="journey-card-media">
-          <img src="assets/images/Home page/grain to fresh floor/2.png" alt="Selecting the grind texture on the mill control panel" decoding="async" loading="lazy">
-          <span class="journey-num">02</span>
-          <span class="journey-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 21V14M6 10V3M12 21V12M12 8V3M18 21V16M18 12V3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="6" cy="12" r="2" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="10" r="2" stroke="currentColor" stroke-width="1.7"/><circle cx="18" cy="14" r="2" stroke="currentColor" stroke-width="1.7"/></svg></span>
+      </div>
+    </div>
+
+    <div class="journey-panel journey-panel--right" data-journey-slide="3">
+      <div class="container journey-panel-inner">
+        <div class="journey-copy">
+          <span class="journey-step"><span class="journey-step-num">04</span> Step Four</span>
+          <h3>Enjoy Fresh Flour</h3>
+          <p class="journey-text">Collect fresh, fine flour &mdash; ready for your kitchen.</p>
+          <a class="btn btn-primary journey-cta" href="products/domestic-flour-mill.html">Explore Mills</a>
         </div>
-        <div class="journey-card-body">
-          <h4 class="journey-t">Select Your Setting</h4>
-          <p class="journey-t">Choose the grind texture and adjust as needed.</p>
-        </div>
-      </article>
-      <span class="journey-link" aria-hidden="true">
-        <!-- Drawn the same way the preloader's logo frame is: one real
-             path with pathLength="100", so stroke-dasharray/offset are
-             plain percentages and the line pulls itself from the left
-             card to the right one as --p advances. preserveAspectRatio
-             is left at its default so the curve keeps its shape and the
-             round cap stays round. -->
-        <svg class="journey-arc-svg" viewBox="0 0 100 14" fill="none" aria-hidden="true" focusable="false">
-          <!-- The line, trimmed by its own dash pattern: --p opens the dash
-               so the stroke is laid down across the gutter as the visitor
-               scrolls, and the round cap sits at the moving tip. -->
-          <path class="journey-arc" d="M2 12 C 28 -1, 72 -1, 98 12"
-                fill="none" stroke="currentColor"
-                pathLength="100"/>
-        </svg>
-      </span>
-      <article class="journey-card" data-journey-img>
-        <div class="journey-card-media">
-          <img src="assets/images/Home page/grain to fresh floor/3.png" alt="Flour milling inside the stainless-steel grinding chamber" decoding="async" loading="lazy">
-          <span class="journey-num">03</span>
-          <span class="journey-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.2l2 1.5 2.4-.5.9 2.3 2.1 1.3-.6 2.4.6 2.4-2.1 1.3-.9 2.3-2.4-.5-2 1.5-2-1.5-2.4.5-.9-2.3-2.1-1.3.6-2.4-.6-2.4 2.1-1.3.9-2.3 2.4.5 2-1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg></span>
-        </div>
-        <div class="journey-card-body">
-          <h4 class="journey-t">Start Grinding</h4>
-          <p class="journey-t">The stainless-steel chamber grinds with precision.</p>
-        </div>
-      </article>
-      <span class="journey-link" aria-hidden="true">
-        <!-- Drawn the same way the preloader's logo frame is: one real
-             path with pathLength="100", so stroke-dasharray/offset are
-             plain percentages and the line pulls itself from the left
-             card to the right one as --p advances. preserveAspectRatio
-             is left at its default so the curve keeps its shape and the
-             round cap stays round. -->
-        <svg class="journey-arc-svg" viewBox="0 0 100 14" fill="none" aria-hidden="true" focusable="false">
-          <!-- The line, trimmed by its own dash pattern: --p opens the dash
-               so the stroke is laid down across the gutter as the visitor
-               scrolls, and the round cap sits at the moving tip. -->
-          <path class="journey-arc" d="M2 12 C 28 -1, 72 -1, 98 12"
-                fill="none" stroke="currentColor"
-                pathLength="100"/>
-        </svg>
-      </span>
-      <article class="journey-card" data-journey-img>
-        <div class="journey-card-media">
-          <img src="assets/images/Home page/grain to fresh floor/4.png" alt="Freshly ground flour collected and ready for the kitchen" decoding="async" loading="lazy">
-          <span class="journey-num">04</span>
-          <span class="journey-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 15c0-2 2-2.6 2-4.4C9 9 8 8.2 8 7M12 15c0-2 2-2.6 2-4.4 0-1.6-1-2.4-1-3.6M17 15c0-2 2-2.6 2-4.4 0-1.6-1-2.4-1-3.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
-        </div>
-        <div class="journey-card-body">
-          <h4 class="journey-t">Enjoy Fresh Flour</h4>
-          <p class="journey-t">Collect fresh, fine flour &mdash; ready for your kitchen.</p>
-        </div>
-      </article>
+      </div>
     </div>
   </div>
 </section>
@@ -937,7 +907,7 @@
 </section>
 
 
-<!-- Connect band — full-bleed image ground holding one dark editorial slab,
+<!-- Connect band - full-bleed image ground holding one dark editorial slab,
      pinned while the footer rises over it (see the reference layout). The
      old enquiry form is gone: this band now carries enquiry CTAs only. -->
 <section class="section connect-band-section" id="connect">

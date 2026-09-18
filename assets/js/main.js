@@ -349,27 +349,111 @@
     apply();
   }
 
-  /* ---------------- Compare tool ---------------- */
+  /* ---------------- Compare tool ----------------
+     Three product columns, each with its own machine selector sitting on
+     top of the card it controls, then a tabbed panel area below where the
+     spec table is built from the union of the chosen machines' specs. */
   function initCompare() {
     var wrap = document.querySelector("[data-compare-tool]");
     if (!wrap || typeof JAGRUTI_PRODUCTS === "undefined") return;
-    var selects = Array.prototype.slice.call(wrap.querySelectorAll(".compare-select"));
-    var tableWrap = wrap.querySelector(".compare-table-wrap");
+    var colsWrap = wrap.querySelector(".cs-columns");
+    var panelsWrap = wrap.querySelector(".cs-panels");
+    var tabs = Array.prototype.slice.call(wrap.querySelectorAll(".cs-tab"));
+    if (!colsWrap || !panelsWrap) return;
 
     var options = JAGRUTI_PRODUCTS.filter(function (p) { return p.specs && p.specs.length; });
+    var SLOTS = 3;
+    var chosenSlugs = [];
+    for (var i = 0; i < SLOTS; i++) chosenSlugs.push(options[i] ? options[i].slug : "");
 
-    selects.forEach(function (sel, i) {
-      var blank = document.createElement("option");
-      blank.value = ""; blank.textContent = "Select a machine…";
-      sel.appendChild(blank);
-      options.forEach(function (p) {
-        var o = document.createElement("option");
-        o.value = p.slug; o.textContent = p.name;
-        sel.appendChild(o);
+    var CHEV = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+    function bySlug(slug) {
+      return options.find(function (p) { return p.slug === slug; }) || null;
+    }
+
+    // The .jpg files are PDF extracts with the machine name burnt into the
+    // artwork, so prefer the cutout whenever one exists. Products shot as
+    // real photos (-photo.webp) have no cutout and are already clean.
+    function shotOf(p) { return p.cutout || p.image; }
+
+    // "food-processing-machinery" -> "Food Processing Machinery"
+    function catLabel(cat) {
+      return String(cat || "").split("-").map(function (w) {
+        return w.charAt(0).toUpperCase() + w.slice(1);
+      }).join(" ");
+    }
+
+    function esc(str) {
+      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    /* ---- Product columns ---- */
+    function renderColumns() {
+      var html = "";
+      chosenSlugs.forEach(function (slug, idx) {
+        var p = bySlug(slug);
+        var num = ("0" + (idx + 1)).slice(-2);
+        html += '<div class="cs-col' + (p ? "" : " is-empty") + '" data-slot="' + idx + '">';
+        html += '<div class="cs-col-head"><span class="cs-col-num">' + num + '</span>' +
+                '<span class="cs-col-cat">' + (p ? esc(catLabel(p.category)) : "&mdash;") + '</span></div>';
+
+        html += '<div class="cs-select-wrap"><select class="compare-select" aria-label="Choose machine ' + (idx + 1) + '">';
+        html += '<option value=""' + (p ? "" : " selected") + '>Select a machine&hellip;</option>';
+        options.forEach(function (o) {
+          html += '<option value="' + esc(o.slug) + '"' + (p && o.slug === p.slug ? " selected" : "") + '>' + esc(o.name) + '</option>';
+        });
+        html += '</select>' + CHEV + '</div>';
+
+        if (p) {
+          html += '<div class="cs-stage"><img src="' + esc(shotOf(p)) + '" alt="' + esc(p.name) + '" loading="lazy" decoding="async"></div>';
+          // Three frames of the same machine; the data carries one image per
+          // product, so every frame points at it until per-view shots exist.
+          html += '<div class="cs-thumbs">';
+          for (var t = 0; t < 3; t++) {
+            html += '<button class="cs-thumb' + (t === 0 ? " is-active" : "") + '" type="button" aria-label="View ' + (t + 1) + ' of ' + esc(p.name) + '">' +
+                    '<img src="' + esc(shotOf(p)) + '" alt="" loading="lazy" decoding="async"></button>';
+          }
+          html += '</div>';
+          html += '<h3><a href="products/' + esc(p.slug) + '.html">' + esc(p.name) + '</a></h3>';
+          html += '<p class="cs-col-desc">' + esc(catLabel(p.category)) + '</p>';
+          html += '<a class="btn btn-outline" href="' + waLink("Hi Jagruti Appliances, I'm interested in the " + p.name + ". I'd like to know the current price, availability, warranty and delivery details.") + '" target="_blank" rel="noopener">Get Price &rarr;</a>';
+        } else {
+          html += '<div class="cs-stage"></div>';
+          html += '<div class="cs-thumbs"><span class="cs-thumb"></span><span class="cs-thumb"></span><span class="cs-thumb"></span></div>';
+          html += '<h3>&nbsp;</h3><p class="cs-col-desc">Pick a machine to compare.</p>';
+        }
+        html += '</div>';
       });
-      if (options[i]) sel.value = options[i].slug;
-      sel.addEventListener("change", render);
-    });
+      colsWrap.innerHTML = html;
+
+      colsWrap.querySelectorAll(".compare-select").forEach(function (sel) {
+        sel.addEventListener("change", function () {
+          var slot = +sel.closest(".cs-col").getAttribute("data-slot");
+          chosenSlugs[slot] = sel.value;
+          renderColumns();
+          renderPanels();
+        });
+      });
+
+      colsWrap.querySelectorAll(".cs-col").forEach(function (col) {
+        var thumbs = Array.prototype.slice.call(col.querySelectorAll("button.cs-thumb"));
+        var stage = col.querySelector(".cs-stage img");
+        thumbs.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            thumbs.forEach(function (b) { b.classList.remove("is-active"); });
+            btn.classList.add("is-active");
+            var img = btn.querySelector("img");
+            if (stage && img) stage.src = img.src;
+          });
+        });
+      });
+    }
+
+    /* ---- Spec table + the other tab panels ---- */
+    function chosenProducts() {
+      return chosenSlugs.map(bySlug).filter(Boolean);
+    }
 
     function attrUnion(products) {
       var seen = {}, order = [];
@@ -383,33 +467,96 @@
 
     function specValue(p, attr) {
       var row = (p.specs || []).find(function (r) { return r[0] === attr; });
-      return row ? row[1] : "—";
+      return row ? row[1] : "-";
     }
 
-    function render() {
-      var chosen = selects.map(function (s) { return s.value; })
-        .filter(Boolean)
-        .map(function (slug) { return options.find(function (p) { return p.slug === slug; }); })
-        .filter(Boolean);
+    // The value cells line up with the three columns above, so an empty slot
+    // still holds its place rather than shifting the machines sideways.
+    function valueCells(cb) {
+      var out = "";
+      chosenSlugs.forEach(function (slug) {
+        var p = bySlug(slug);
+        out += '<td class="val">' + (p ? cb(p) : "-") + '</td>';
+      });
+      return out;
+    }
 
-      if (!chosen.length) { tableWrap.innerHTML = "<p style='text-align:center;color:var(--ink-500);padding:40px 0;'>Choose machines above to compare their specifications.</p>"; return; }
-
+    function specsPanel() {
+      var chosen = chosenProducts();
+      if (!chosen.length) return '<p class="cs-empty">Choose machines above to compare their specifications.</p>';
       var attrs = attrUnion(chosen);
-      var html = '<table class="compare-table"><thead><tr><th class="attr-col">Specification</th>';
-      chosen.forEach(function (p) {
-        html += '<th class="prod-head"><img src="' + p.image + '" alt="' + p.name + '"><strong>' + p.name + '</strong><a class="btn btn-whatsapp btn-sm" style="margin-top:8px;" href="' + waLink("Hi Jagruti Appliances, I'm interested in the " + p.name + ". I'd like to know the current price, availability, warranty and delivery details.") + '" target="_blank" rel="noopener">Get Price</a></th>';
-      });
-      html += "</tr></thead><tbody>";
+      var html = '<div class="compare-table-wrap"><table class="compare-table"><tbody>';
       attrs.forEach(function (attr) {
-        html += "<tr><td class=\"attr\">" + attr + "</td>";
-        chosen.forEach(function (p) { html += "<td>" + specValue(p, attr) + "</td>"; });
-        html += "</tr>";
+        html += '<tr><td class="attr">' + esc(attr) + '</td>' + valueCells(function (p) { return esc(specValue(p, attr)); }) + '</tr>';
       });
-      html += "</tbody></table>";
-      tableWrap.innerHTML = html;
+      html += '</tbody></table></div>';
+      return html;
     }
 
-    render();
+    function rowsPanel(rows) {
+      var chosen = chosenProducts();
+      if (!chosen.length) return '<p class="cs-empty">Choose machines above to compare.</p>';
+      var html = '<div class="compare-table-wrap"><table class="compare-table"><tbody>';
+      rows.forEach(function (row) {
+        html += '<tr><td class="attr">' + esc(row.label) + '</td>' + valueCells(row.value) + '</tr>';
+      });
+      html += '</tbody></table></div>';
+      return html;
+    }
+
+    function featuresPanel() {
+      return rowsPanel([
+        { label: "Category", value: function (p) { return esc(catLabel(p.category)); } },
+        { label: "Full Details", value: function (p) { return '<a href="products/' + esc(p.slug) + '.html">View product page &rarr;</a>'; } }
+      ]);
+    }
+
+    function downloadsPanel() {
+      return rowsPanel([
+        { label: "Catalogue", value: function () { return '<a href="catalogue.html">Download catalogue &rarr;</a>'; } },
+        { label: "Specifications", value: function (p) { return '<a href="products/' + esc(p.slug) + '.html">On the product page &rarr;</a>'; } }
+      ]);
+    }
+
+    function supportPanel() {
+      return rowsPanel([
+        { label: "Warranty", value: function (p) { return esc(specValue(p, "Warranty")); } },
+        { label: "Service", value: function () { return '<a href="support/service.html">Service &amp; repairs &rarr;</a>'; } },
+        { label: "Spare Parts", value: function () { return '<a href="support/spare-parts.html">Spare parts &rarr;</a>'; } },
+        { label: "Customer Care", value: function () { return '<a href="tel:+917070705922">+91 70707 05922</a>'; } }
+      ]);
+    }
+
+    var PANELS = {
+      specifications: specsPanel,
+      features: featuresPanel,
+      downloads: downloadsPanel,
+      support: supportPanel
+    };
+
+    function activePanelName() {
+      var on = tabs.find(function (t) { return t.classList.contains("is-active"); });
+      return on ? on.getAttribute("data-cs-panel") : "specifications";
+    }
+
+    function renderPanels() {
+      var name = activePanelName();
+      panelsWrap.innerHTML = '<div class="cs-panel is-active">' + (PANELS[name] || specsPanel)() + '</div>';
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.classList.toggle("is-active", on);
+          t.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        renderPanels();
+      });
+    });
+
+    renderColumns();
+    renderPanels();
   }
 
   /* ---------------- FAQ category nav ---------------- */
@@ -1809,171 +1956,56 @@
     function onScroll() {}
   }
 
-  /* ---------------- Journey flow ----------------
-     The four steps arrive in order — 01 lands, its line draws across to 02,
-     and so on — so the entrance traces the same left-to-right path the
-     diagram describes.
+  /* ---------------- Journey slideshow ----------------
+     FALLBACK ONLY. The crossfade between the four photographs is a CSS
+     scroll-driven animation — see the .journey-bg rules in style.css — and
+     in a browser that supports animation-timeline nothing here runs at
+     all: the stylesheet scrubs the fade, the scale and the blur straight
+     off the section's own view timeline, which is both smoother and free.
 
-     The chain is SCROLLED, not played: this writes a 0..1 --p onto each
-     card and each link from the row's position in the viewport, and the
-     stylesheet interpolates every property off that number. Scrolling
-     into the section advances the relay, scrolling back reverses it, and
-     the motion is locked to the hand rather than to a timer. */
+     Where animation-timeline is missing, there is no timeline to scrub
+     against, so the same transition is driven discretely instead: an
+     IntersectionObserver watches the four copy panels and writes the
+     active index onto the section as --journey-active-item. The
+     stylesheet's @supports not(...) branch resolves that number into a
+     0/1 per photograph and transitions between the two endpoints of the
+     same keyframe, giving the same vocabulary — fade, scale to 1.2, blur
+     to 20px — in one 400ms move per step rather than continuously.
+
+     Threshold .5 means a panel takes over once it owns half the screen,
+     which is the point at which it is the one being read. */
   function initJourney() {
-    var root = document.querySelector("[data-journey]");
+    var root = document.querySelector("[data-journey-scroll]");
     if (!root) return;
 
-    var cards = root.querySelectorAll("[data-journey-img]");
-    if (!cards.length) return;
+    /* The CSS is already doing it, and doing it better. */
+    if (window.CSS && CSS.supports && CSS.supports("animation-timeline: view()")) return;
 
-    var links = root.querySelectorAll(".journey-link");
-
-    /* SCROLL-DRIVEN, not fire-and-forget. The relay's position is a pure
-       function of how far the row has travelled up the viewport, so the
-       chain advances AS the visitor scrolls into the section and follows
-       the scroll back out again. The old version started a fixed timeline
-       on a trigger, which meant the animation ran on its own clock while
-       the page moved on its — the two never felt connected.
-
-       The window: 0 when the row's top is at 88% of the viewport — just
-       clearing the fold — and 1 once it has risen to 30%, which is where
-       the row actually sits when the section is centred and the visitor
-       has stopped to look at it — carried a little past that so the final
-       card has room to settle rather than being cut off mid-move.
-
-       Ending low rather than partway down is the whole point: the
-       relay has to still be RUNNING while the section is in front of you.
-       An earlier end meant the chain completed somewhere below the fold
-       and you only ever arrived at the finished state. */
-    var START = 0.88;
-    var END   = 0.18;
-
-    /* Beats expressed as a share of that scroll window rather than in ms.
-       A card takes CARD of the run, the line between two cards takes ARC,
-       and the whole chain is normalised to fit 0..1 exactly. */
-    var CARD = 1;
-    /* The arc's beat is the time the DOTS are crossing the visible gap.
-       It was 2.4 when the drawn path ran the full width of the link box,
-       but only the gutter portion of that path is ever on screen (the rest
-       is tucked behind the two cards), so most of that long beat was being
-       spent drawing nothing — the line seemed to snap into place and then
-       wait for the next card. The stylesheet now maps --p onto just the
-       visible crossing, so this is the crossing's own duration: a little
-       longer than a card's entrance, not twice it. */
-    var ARC  = 1.15;
-    /* The overlap below lets each step run past its own slot into the next
-       one's, which is what makes the chain read as one continuous process
-       rather than a series of separate events. The span therefore has to
-       cover the LAST step's full stretched length, not just its slot, or
-       that step is still mid-move when the window closes and latches part
-       way. */
-    var OVERLAP = 0.45;
-    var span  = (cards.length * CARD + links.length * ARC + OVERLAP) || 1;
-
-    function progress() {
-      var vh = window.innerHeight || document.documentElement.clientHeight;
-      var top = root.getBoundingClientRect().top;
-      var a = vh * START, b = vh * END;
-      var p = (a - top) / (a - b);
-      if (p < 0) return 0;
-      /* Snapped so the run can actually REACH 1 and latch. Scroll rarely
-         lands on the exact pixel that ends the window, and a chain stuck
-         at .99 would never settle or release its listeners. */
-      return p > .995 ? 1 : p;
-    }
-
-    /* Each element's own 0..1 within the run, so a card can be caught
-       part-way through its move instead of only on or off.
-
-       The raw share is LINEAR, which is what made the chain feel stepped:
-       every element began and ended its move at full speed, so each step
-       punched in and stopped dead. Smoothstep eases both ends — velocity
-       is zero at 0 and at 1 — so a step accelerates out of the previous
-       one and settles into place instead of snapping. */
-    function local(p, from, len) {
-      var t = (p * span - from) / len;
-      t = t < 0 ? 0 : (t > 1 ? 1 : t);
-      return t * t * (3 - 2 * t);
-    }
-
-    /* The relay only ever moves FORWARD, and only for a visitor arriving
-       from above.
-
-       - highest holds the furthest the chain has got. Progress is taken as
-         the max of that and the live value, so scrolling back up leaves
-         the steps drawn instead of un-drawing them: once a line is laid
-         down it stays laid down.
-
-       - armed stays false until the row has been seen below the fold at
-         least once. Coming UP into the section from further down the page
-         therefore shows it already complete rather than replaying it
-         backwards into view — the sequence belongs to the downward
-         approach only. A reload deep in the page lands unarmed for the
-         same reason. */
-    var highest = 0;
-    var armed = false;
-
-    function draw() {
-      var raw = progress();
-      if (!armed) {
-        /* Still below the fold: the visitor has not reached it yet, so the
-           chain is genuinely at the start and may arm itself. */
-        if (raw <= 0) armed = true;
-        /* Arrived from below with the row already up the screen — show the
-           finished state and leave it alone. */
-        else if (highest === 0) highest = 1;
-      }
-      if (raw > highest) highest = raw;
-      var p = highest;
-      /* Finished for good: nothing can move it again, so stop listening
-         rather than recomputing the same values on every scroll frame. */
-      if (p >= 1) stop();
-      /* Each step is stretched slightly past its own slot so it is still
-         settling as the next one begins. Butted end to end the chain read
-         as a series of separate events; this small overlap is what turns
-         it into one continuous process moving along the row. */
-      var at = 0;
-      for (var i = 0; i < cards.length; i++) {
-        cards[i].style.setProperty("--p", local(p, at, CARD + OVERLAP).toFixed(3));
-        at += CARD;
-        if (links[i]) {
-          links[i].style.setProperty("--p", local(p, at, ARC + OVERLAP).toFixed(3));
-          at += ARC;
-        }
-      }
-    }
-
-    /* One rAF loop, reading layout only — the same shape initServices uses,
-       so Lenis stays in charge of the scroll and nothing is intercepted. */
-    var ticking = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(function () {
-        ticking = false;
-        draw();
-      });
-    }
-
-    /* Stillness: the stylesheet already leaves everything in place. */
+    /* Reduced motion: the stylesheet pins every photograph still and shows
+       the first one, so there is nothing to drive. */
     var quiet = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (quiet) {
-      Array.prototype.forEach.call(cards, function (c) { c.style.setProperty("--p", "1"); });
-      Array.prototype.forEach.call(links, function (l) { l.style.setProperty("--p", "1"); });
-      return;
-    }
+    if (quiet) return;
 
-    function stop() {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (lenis) lenis.off("scroll", draw);
-    }
+    var panels = root.querySelectorAll("[data-journey-slide]");
+    if (!panels.length) return;
+    if (!("IntersectionObserver" in window)) return;
 
-    root.classList.add("is-live");
-    draw();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    if (lenis) lenis.on("scroll", draw);
+    var prev = 0;
+
+    var obs = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        var entry = entries[i];
+        if (!entry.isIntersecting) continue;
+
+        var index = parseInt(entry.target.getAttribute("data-journey-slide"), 10);
+        if (isNaN(index) || index === prev) continue;
+
+        root.style.setProperty("--journey-active-item", String(index));
+        prev = index;
+      }
+    }, { threshold: 0.5 });
+
+    Array.prototype.forEach.call(panels, function (panel) { obs.observe(panel); });
   }
 
   /* ---------------- Service showcase ----------------

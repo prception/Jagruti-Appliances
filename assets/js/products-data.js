@@ -40,7 +40,8 @@ var JAGRUTI_PRODUCTS = [
     "name": "Jagruti Aura Plus Domestic Flour Mill",
     "category": "domestic-flour-mill",
     "image": "assets/images/products/jagruti-aura-plus-flour-mill.jpg",
-    "specs": []
+    "specs": [],
+    "cutout": "assets/images/products/jagruti-aura-plus-cutout.webp"
   },
   {
     "slug": "premium",
@@ -97,7 +98,8 @@ var JAGRUTI_PRODUCTS = [
         "Warranty",
         "1 Year"
       ]
-    ]
+    ],
+    "cutout": "assets/images/products/jagruti-eco-pulverizer-cutout.webp"
   },
   {
     "slug": "premium-pulverizer",
@@ -129,7 +131,8 @@ var JAGRUTI_PRODUCTS = [
         "Warranty",
         "1 Year"
       ]
-    ]
+    ],
+    "cutout": "assets/images/products/jagruti-premium-pulverizer-cutout.webp"
   },
   {
     "slug": "gravy-machine",
@@ -157,7 +160,8 @@ var JAGRUTI_PRODUCTS = [
         "Power Consumption",
         "1.5 Unit/HR"
       ]
-    ]
+    ],
+    "cutout": "assets/images/products/jagruti-gravy-cutout.webp"
   },
   {
     "slug": "chilly-cutter",
@@ -189,7 +193,8 @@ var JAGRUTI_PRODUCTS = [
         "Power Consumption",
         "1.5 Unit/HR"
       ]
-    ]
+    ],
+    "cutout": "assets/images/products/jagruti-chilly-cutter-cutout.webp"
   },
   {
     "slug": "sugarcane-juicer",
@@ -213,7 +218,8 @@ var JAGRUTI_PRODUCTS = [
         "Average Capacity",
         "200 Glass/HR"
       ]
-    ]
+    ],
+    "cutout": "assets/images/products/jagruti-sugarcane-juicer-cutout.webp"
   },
   {
     "slug": "vegetable-cutter",
@@ -241,7 +247,8 @@ var JAGRUTI_PRODUCTS = [
         "Average Capacity",
         "150–200 KG/HR"
       ]
-    ]
+    ],
+    "cutout": "assets/images/products/jagruti-vegetable-cutter-cutout.webp"
   },
   {
     "slug": "potato-slicer",
@@ -261,7 +268,8 @@ var JAGRUTI_PRODUCTS = [
         "Average Capacity",
         "200–250 KG/HR"
       ]
-    ]
+    ],
+    "cutout": "assets/images/products/jagruti-potato-slicer-cutout.webp"
   },
   {
     "slug": "potato-peeler",
@@ -293,7 +301,8 @@ var JAGRUTI_PRODUCTS = [
         "Average Capacity",
         "500 KG/HR"
       ]
-    ]
+    ],
+    "cutout": "assets/images/products/jagruti-potato-peeler-cutout.webp"
   },
   {
     "slug": "masala-grinder",
@@ -321,7 +330,8 @@ var JAGRUTI_PRODUCTS = [
         "Motor Speed",
         "25000 RPM"
       ]
-    ]
+    ],
+    "cutout": "assets/images/products/jagruti-masala-grinder-cutout.webp"
   },
   {
     "slug": "mixer-grinder",
