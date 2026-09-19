@@ -3084,6 +3084,60 @@ html.menu-open { overflow: hidden; }
    whatever the pin does. */
 .ranges-section { background: var(--white); }
 
+/* ---- The seams around the white heading band ----
+   This band has a full-bleed photograph above it and full-bleed video
+   below, and butted flat against either one it draws a hard horizontal
+   rule across the page. Each seam is feathered by a gradient painted on
+   the element that OWNS that edge, so the white arrives and leaves
+   instead of starting and stopping.
+
+   The TOP seam is not here: it belongs to the journey section, whose
+   sticky stage is what gets cut off at that line. See
+   .journey-panel:last-child::after. The bottom seam is below. */
+.ranges-section { position: relative; }
+
+/* Bottom seam. This one belongs on the PIN, not the runway. The runway is
+   only a scroll budget — a fade anchored to it would slide off the top of
+   the screen on the first scroll while the video it is supposed to be
+   blending stays pinned in place. On .range-pin it holds still with the
+   video for exactly as long as the video is on screen.
+
+   Only the FIRST pin carries it — the seam it covers is the one between
+   the white heading band and the first frame of video. Selected by
+   :not(--flip) rather than :first-of-type: the section's first element
+   child is the heading .container, so :first-of-type never matched the
+   panel at all. The unflipped panel is the first of the two. */
+.ranges-section .range-panel:not(.range-panel--flip) .range-pin::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 200px;
+  /* Over the flex children (.range-media / .range-content, both z-index
+     auto) inside the pin's own isolated context. */
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(to bottom,
+    var(--white) 0%,
+    rgba(255, 255, 255, .55) 55%,
+    rgba(255, 255, 255, 0) 100%);
+
+  /* The wash is only wanted while the seam is actually on screen. The pin
+     holds for a full extra screen after that, and left at full strength
+     the gradient stayed as a haze across the top of the settled video.
+
+     --split is already the scrub that drives the push (100vw on arrival,
+     50vw once settled), so it doubles as the progress signal: full
+     opacity at 100vw, gone by the time the split has opened. No new
+     tween, no JS — the fade retires exactly as the panel settles. */
+  opacity: clamp(0, calc((var(--split) - 50vw) / 50vw), 1);
+  transition: opacity .15s linear;
+}
+/* Reduced motion / no JS: --split is the settled 50vw from the first
+   frame, so the expression above is already 0 and the video is clean.
+   Stated explicitly so the seam does not depend on a calc over a length
+   that some engines refuse to divide. */
+.range-panel.is-static .range-pin::after { opacity: 0; }
+
 .range-panel {
   /* The runway. The sticky child inside is one viewport tall, so the hold
      lasts for this height MINUS that viewport — 200vh here gives ~one
@@ -5547,6 +5601,39 @@ html:not(.js) .stage-actions { justify-content: center; }
    three. A full viewport here is exactly the runway that was missing. */
 .journey-panel:last-child {
   height: 100svh;
+  position: relative;
+}
+
+/* ---- The seam into Two Ranges ----
+   The sticky stage unpins exactly at this section's bottom edge, so the
+   last photograph is cut off there by a hard horizontal line with the
+   white heading band below it. This feathers that edge: a white-to-clear
+   wash sitting over the LAST stretch of the final panel, so the picture
+   dissolves into the band instead of ending at a rule.
+
+   On the last panel rather than on the section, because the section's own
+   ::after would have to clear the copy layer (z-index 2) and would then
+   also sit over the text. Anchored to the panel's bottom, it covers only
+   the final screen — where the cut actually is. */
+.journey-panel:last-child::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  /* Deep enough to read as a dissolve rather than a soft-edged line. */
+  height: 42svh;
+  /* Above the photograph (the stage is z-index 1) but BELOW the copy
+     layer (.journey-body is z-index 2) — the wash is there to dissolve
+     the picture, not to grey out step four's text and its CTA, which
+     must stay fully legible as the section ends. The panel is inside
+     .journey-body, so a z-index here orders it against its siblings
+     within that layer; 0 keeps it behind the copy in the same panel. */
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, .35) 45%,
+    rgba(255, 255, 255, .8) 75%,
+    var(--white) 100%);
 }
 .journey-panel-inner {
   display: flex;
