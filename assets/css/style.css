@@ -4955,9 +4955,11 @@ html.preloading, html.preloading body { overflow: hidden; }
   font-family: var(--font-stage);
   font-weight: 700;
   /* --fit is written per scene by initMachinePosters: it measures the name
-     and solves for the size that lands it at --fit-target of the viewport.
-     A name can therefore be any length and still span the screen without
-     ever reaching the edge. The clamp is only a pre-JS floor/ceiling. */
+     and solves for the size that lands its INK exactly on the two
+     --stage-inset edges — the same rail the tagline above and the copy
+     column below sit on, so all three read as one left and one right edge
+     rather than three. A name can therefore be any length and still span
+     that band. The clamp is only a pre-JS floor/ceiling. */
   --fit: 14vw;
   /* The fitter's solved size is what makes every name span the section
      identically, so the ceiling must not clip it — a short name needs a

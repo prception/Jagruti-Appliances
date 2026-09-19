@@ -1183,68 +1183,81 @@
       return inkRect(p).width || p.word.offsetWidth;
     }
 
-    /* OPTICAL overhang for the edge glyphs.
-       Geometric alignment is not optical alignment. A flat-sided letter (E,
-       H, D, I) meets the edge with a full vertical stem, so the whole height
-       of the glyph sits on the alignment line. A round letter (O, C, S, 0)
-       only TOUCHES that line at a single tangent point and curves away above
-       and below it; a diagonal (A, V, W) touches at one corner. Aligned to
-       the same x, the round and diagonal ones read as inset even though the
-       measurement says they are flush.
+    /* NO optical edge compensation — the names are aligned geometrically,
+       and that is deliberate.
 
-       This is why ECO 500 alone looked wrong: it is the only name whose two
-       edges disagree — a flat E on the left against a round 0 on the right.
-       Every other name is flat/flat (Dough Kneader, Eco Pulverizer) or
-       round/round (Supreme 900), so both sides carried the SAME optical
-       error and it cancelled out.
+       Two attempts at an optical correction live in this file's history and
+       both made the section look worse, in opposite directions. The first
+       solved "ink + overhang == want", which SHRANK the glyph so its paint
+       stopped short of the rail: Supreme 900 sat 5.9px inside on both
+       sides, ECO 500 10px inside on the right only. The second fixed that
+       sign and solved "ink - overhang == want", but then the correction
+       read as too strong the other way — round-edged names visibly poked
+       out past the rail that the tagline and copy column sit on.
 
-       The correction is the standard typographic one: let the round and
-       diagonal edges overhang by a small fraction of the font size, so all
-       six names read as sitting on one margin. Expressed in em so it scales
-       with the fitted size. */
-    var ROUND_EDGE    = /[OQCGSU0368]/i;
-    var DIAGONAL_EDGE = /[AVWXYZ47]/i;
-    function opticalOverhang(ch) {
-      if (!ch) return 0;
-      if (ROUND_EDGE.test(ch))    return .022;  /* tangent touch  */
-      if (DIAGONAL_EDGE.test(ch)) return .014;  /* corner touch   */
-      return 0;                                 /* flat stem: none */
-    }
-
-    /* The first and last painted characters of a name. */
-    function edgeChars(p) {
-      var first = "", last = "";
-      for (var i = 0; i < p.letters.length; i++) {
-        var t = p.letters[i].textContent;
-        if (!t || !t.trim()) continue;
-        if (!first) first = t;
-        last = t;
-      }
-      return { first: first, last: last };
-    }
+       The honest reading is that at this size the poster is judged as a
+       LAYOUT, not as a line of type. The eye checks the giant name against
+       the hard vertical edge formed by the label, the product name and the
+       CTA stacked directly beneath it, and that edge is geometric. So the
+       ink's bounding box is fitted flush to the rail and every name gets
+       the same number, which is both what looks right and what is
+       predictable to reason about later. */
 
     var FIT_PROBE = 100;
     function fitTitles() {
       var box = (pin || root).getBoundingClientRect().width ||
                 document.documentElement.clientWidth;
       /* The share of the section width the name's INK is fitted to.
-         Wider viewports get a smaller share: a fixed percentage that reads
-         as comfortable at 1280 leaves the name almost touching the edges
-         once the section is 1920 wide, because the margin it leaves grows
-         far more slowly than the eye expects. Stepping the target down
-         keeps the breathing room on either side visually similar across
-         the range instead of shrinking as the window grows.
 
-         These are ink-to-edge margins at the top of each band:
-            1920 -> 0.80  = 192px each side
-            1440 -> 0.84  = 115px each side
-            1280 -> 0.86  =  90px each side
-             900 -> 0.90            560 -> 0.94 */
-      var target = box < 560 ? .94
-                 : box < 900 ? .90
-                 : box < 1360 ? .86
-                 : box < 1700 ? .84
-                 : .80;
+         This used to be a hand-tuned percentage band (.80 at 1920 up to
+         .94 at 560). The percentages were never wrong in themselves, but
+         they answered to nothing: every OTHER layer of this poster — the
+         stacked tagline, the copy column, the CTA pair — is positioned
+         from --stage-inset, while the name was positioned from a number
+         that happened to look about right. At 1920 that put the name's ink
+         on a 192px margin while the text directly above and below it sat
+         on the 110px rail, so the one element meant to span the poster
+         read as INSET from everything around it.
+
+         So the rail is the target now. The name is fitted to the width
+         between the two --stage-inset edges, which is exactly the band the
+         tagline and the copy column live in — the giant name, the small
+         label above it and the product copy below it all start and end on
+         one line down each side.
+
+         The floor keeps portrait sane: there --stage-inset collapses onto
+         --stage-rail (12-22px), and a name fitted to that would paint
+         right up against the screen edge.
+
+         The rail is MEASURED off an element that already sits on it, not
+         parsed from the token. --stage-inset is a calc() of two clamps, and
+         getPropertyValue hands back that expression as TEXT ("calc(clamp(
+         20px, 2.6vw, 44px) + 42px + ...)") rather than a resolved pixel
+         length — custom properties are substituted, not computed. parseFloat
+         on that is NaN, which fell through to a 0 inset and fitted the name
+         to the FULL section width, running it well outside the rail on both
+         sides. The tagline's own painted left edge cannot lie. */
+      var railEl = root.querySelector(".stage-tagline, .stage-copy");
+      var inset  = 0;
+      if (railEl) {
+        var rb = railEl.getBoundingClientRect();
+        var pb = (pin || root).getBoundingClientRect();
+        inset = rb.left - pb.left;
+      }
+      /* Portrait hides the tagline outright and full-bleeds the copy to
+         left:0, so neither can report the rail there. The prev arrow sits
+         ON --stage-rail and is the next best witness to it; below 700px
+         even that is display:none, so the last resort is the same ~7% the
+         old .94 target worked out to at phone widths. */
+      if (!(inset > 0) && prevBtn) {
+        var ab = prevBtn.getBoundingClientRect();
+        if (ab.width) inset = ab.left - (pin || root).getBoundingClientRect().left;
+      }
+      if (!(inset > 0)) inset = box * .07;
+      var target = box > 0 ? (box - inset * 2) / box : .86;
+      /* Never wider than the band the old percentages allowed at their
+         loosest, and never so narrow that the name stops spanning. */
+      target = Math.max(.72, Math.min(target, .94));
       parts.forEach(function (p) {
         if (!p.word) return;
         var want = box * target;
@@ -1279,19 +1292,6 @@
         }
         size = Math.min(size, cap);
 
-        /* Widen the target by the optical overhang the two edges need, so a
-           name with round edges is drawn slightly larger and its curves
-           reach the same apparent margin as a flat stem. */
-        var ec = edgeChars(p);
-        var over = opticalOverhang(ec.first) + opticalOverhang(ec.last);
-        if (over) {
-          p.word.style.fontSize = size + "px";
-          var wNow = inkWidth(p) || 1;
-          /* Solve size so that ink + overhang(size) == want. */
-          size = size * want / (wNow + over * size);
-          size = Math.min(size, cap);
-        }
-
         /* Centre on the PAINTED ink. translateX(-50%) centres the element
            BOX, and the box is not concentric with the ink: trailing
            letter-spacing sits inside it on the right, and the two edge
@@ -1304,14 +1304,10 @@
         var secBox = (pin || root).getBoundingClientRect();
         var cur = parseFloat(p.word.style.getPropertyValue("--fit-shift")) || 0;
         var ink = inkRect(p);
-        /* Centre on the OPTICAL edges, not the painted ones: a round left
-           edge is treated as reaching further left than it paints, and the
-           same on the right. When both edges are the same shape this is a
-           no-op; when they differ (ECO 500) it is what moves the name onto
-           the margin the eye reads. */
-        var ovL = opticalOverhang(ec.first) * size;
-        var ovR = opticalOverhang(ec.last)  * size;
-        var err = (((ink.left - ovL) + (ink.right + ovR)) / 2) -
+        /* Centre on the painted ink: the midpoint of the ink against the
+           midpoint of the section. No per-edge bias, so a name with unlike
+           edges is not pulled off-centre by one of them. */
+        var err = ((ink.left + ink.right) / 2) -
                   ((secBox.left + secBox.right) / 2);
 
         p.word.style.fontSize = prev;
