@@ -7196,7 +7196,11 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
    =================================================================== */
 .grid.grid-editorial {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 26px clamp(16px, 1.8vw, 26px);
+  /* The reference listing runs the photographs nearly edge to edge, with only
+     a hairline of the page ground between tiles in both directions, so the
+     grid reads as one continuous gallery rather than a set of separate cards
+     with air around them. */
+  gap: 10px 12px;
 }
 /* Strip the card: no ground, no border, no radius, no shadow, no lift. */
 .grid-editorial .product-card {
@@ -7260,7 +7264,7 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
    at equal specificity and later in the file, so omitting it here leaves the
    row stacked. */
 .grid-editorial .product-card .body {
-  padding: 14px 2px 0;
+  padding: 8px 2px 0;
   display: flex;
   flex-direction: row;
   align-items: baseline;
@@ -7336,10 +7340,10 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
 }
 
 @media (max-width: 767px) {
-  .grid.grid-editorial { gap: 32px 14px; }
+  .grid.grid-editorial { gap: 12px 12px; }
 }
 @media (max-width: 560px) {
-  .grid.grid-editorial { gap: 26px 12px; }
+  .grid.grid-editorial { gap: 12px 10px; }
   .grid-editorial .product-card .body { flex-direction: column; align-items: flex-start; gap: 3px; }
 }
 
@@ -8132,6 +8136,15 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
 }
 .ab-spread + .ab-spread { padding-top: clamp(48px, 7vh, 96px); }
 
+/* About-page ink tiers. The page is a long read on white, and the site-wide
+   --ink-500/--ink-300 sat light enough here that sub-lines and side captions
+   looked washed out against the letter. These sit a step darker while keeping
+   the same three-tier hierarchy — scoped to .ab-* so nothing else shifts. */
+:root {
+  --ab-ink-sub:     #4a5c6a;  /* sub-lines: role, notes, journey copy */
+  --ab-ink-caption: #7b8a95;  /* side captions in the left rail */
+}
+
 /* The statement is a NORMAL section heading, so it carries no typography of
    its own: family, size, weight, leading and tracking all come from the
    section-heading system at the end of this file, which .ab-statement is
@@ -8178,7 +8191,7 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
   margin: 0;
   font-size: var(--fs-small);
   line-height: var(--lh-body);
-  color: var(--ink-300);
+  color: var(--ab-ink-caption);
 }
 .ab-col-head {
   margin: 0 0 .6em;
@@ -8201,7 +8214,18 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
   line-height: 1.5;
   color: var(--ink-900);
 }
-.ab-signoff span { display: block; color: var(--ink-500); }
+.ab-signoff span { display: block; color: var(--ab-ink-sub); }
+
+/* The director's name carries the letter — set it up a size and a weight so
+   the eye lands on it, and let the role below stay at signoff scale. */
+.ab-signoff-name {
+  display: block;
+  font-size: 1.35em;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: var(--ink-900);
+  margin-bottom: 2px;
+}
 
 /* ---- Full-bleed media ---------------------------------------------------
    Breaks the gutter and runs edge to edge, the way the reference drops its
@@ -8282,7 +8306,7 @@ body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: 
   letter-spacing: var(--ls-display);
   color: var(--ink-900);
 }
-.ab-item p { margin: 0; font-size: .875em; line-height: 1.65; color: var(--ink-500); }
+.ab-item p { margin: 0; font-size: .875em; line-height: 1.65; color: var(--ab-ink-sub); }
 
 /* ---- Three-up capability columns (manufacturing) ----------------------- */
 .ab-cols {
