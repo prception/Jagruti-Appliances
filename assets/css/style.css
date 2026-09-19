@@ -6039,7 +6039,11 @@ html:not(.js) .stage-actions { justify-content: center; }
   display: flex;
   align-items: stretch;
   height: 100%;
-  padding-right: var(--gutter);
+  /* No trailing gutter. Travel is rail.scrollWidth - pin.clientWidth, so
+     any padding here parks that much bare band to the right of the last
+     card at the end of the run — a dead strip beside card 04. With the
+     padding gone the last card's own right edge IS the rail's, and it
+     lands flush against the screen. */
   transform: translate3d(0, 0, 0);
   will-change: transform;
 }
