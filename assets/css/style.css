@@ -3096,47 +3096,14 @@ html.menu-open { overflow: hidden; }
    .journey-panel:last-child::after. The bottom seam is below. */
 .ranges-section { position: relative; }
 
-/* Bottom seam. This one belongs on the PIN, not the runway. The runway is
-   only a scroll budget — a fade anchored to it would slide off the top of
-   the screen on the first scroll while the video it is supposed to be
-   blending stays pinned in place. On .range-pin it holds still with the
-   video for exactly as long as the video is on screen.
-
-   Only the FIRST pin carries it — the seam it covers is the one between
-   the white heading band and the first frame of video. Selected by
-   :not(--flip) rather than :first-of-type: the section's first element
-   child is the heading .container, so :first-of-type never matched the
-   panel at all. The unflipped panel is the first of the two. */
-.ranges-section .range-panel:not(.range-panel--flip) .range-pin::after {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 200px;
-  /* Over the flex children (.range-media / .range-content, both z-index
-     auto) inside the pin's own isolated context. */
-  z-index: 5;
-  pointer-events: none;
-  background: linear-gradient(to bottom,
-    var(--white) 0%,
-    rgba(255, 255, 255, .55) 55%,
-    rgba(255, 255, 255, 0) 100%);
-
-  /* The wash is only wanted while the seam is actually on screen. The pin
-     holds for a full extra screen after that, and left at full strength
-     the gradient stayed as a haze across the top of the settled video.
-
-     --split is already the scrub that drives the push (100vw on arrival,
-     50vw once settled), so it doubles as the progress signal: full
-     opacity at 100vw, gone by the time the split has opened. No new
-     tween, no JS — the fade retires exactly as the panel settles. */
-  opacity: clamp(0, calc((var(--split) - 50vw) / 50vw), 1);
-  transition: opacity .15s linear;
-}
-/* Reduced motion / no JS: --split is the settled 50vw from the first
-   frame, so the expression above is already 0 and the video is clean.
-   Stated explicitly so the seam does not depend on a calc over a length
-   that some engines refuse to divide. */
-.range-panel.is-static .range-pin::after { opacity: 0; }
+/* Bottom seam: REMOVED. There used to be a white wash on the first pin
+   feathering the join between the white heading band and the first frame
+   of video. It was driven off --split, which the scrub resets in a single
+   frame when you re-enter the panel from below — so on an upward scroll
+   the wash appeared abruptly over a video that was already framed, and on
+   the way down it read as a haze over the top of the shot. The seam it was
+   covering is not worth either artefact, so the video now meets the white
+   band directly. */
 
 .range-panel {
   /* The runway. The sticky child inside is one viewport tall, so the hold
@@ -3730,6 +3697,10 @@ html.menu-open { overflow: hidden; }
   overflow: hidden;
 }
 .site-footer > .container {
+  /* Footer copy is chrome: one step under the shared label size so the
+     signup line, link columns and address all read quieter than page
+     content. Scoped here so --fs-label stays untouched elsewhere. */
+  --fs-footer: .8125em;  /* 13px */
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -3749,10 +3720,10 @@ html.menu-open { overflow: hidden; }
   /* Deliberately below the section step — footer copy stays quieter than
      page content — but on the ramp (--fs-h4) with the shared heading
      leading and tracking rather than three hand-picked values. */
-  font-size: var(--fs-h4);
+  font-size: 1.5em;  /* 24px — was --fs-h4 (30px) */
   line-height: var(--lh-title);
   letter-spacing: var(--ls-title);
-  margin: 0 0 26px;
+  margin: 0 0 22px;
   max-width: 460px;
 }
 /* The underlined inline field: no box, just a rule with the arrow parked
@@ -3775,7 +3746,7 @@ html.menu-open { overflow: hidden; }
   padding: 4px 0;
   color: #fff;
   font-family: inherit;
-  font-size: 1.0625em;  /* 17px */
+  font-size: .9375em;  /* 15px */
 }
 .signup-form input::placeholder { color: rgba(255,255,255,.55); }
 .signup-form input:focus { outline: none; }
@@ -3795,17 +3766,33 @@ html.menu-open { overflow: hidden; }
   grid-template-columns: repeat(4, minmax(120px, max-content));
   gap: 30px 44px;
 }
+
 .footer-nav h5 {
   color: #fff;
-  font-size: var(--fs-label);
+  font-size: var(--fs-footer);
   font-weight: var(--fw-label);
   text-transform: none;
   letter-spacing: var(--ls-label-tight);
   margin-bottom: 16px;
 }
-.footer-nav li { margin-bottom: 9px; font-size: var(--fs-label); font-weight: var(--fw-body); }
-.footer-nav a { color: rgba(255,255,255,.78); transition: color .2s ease; }
-.footer-nav a:hover { color: #fff; }
+.footer-nav li { margin-bottom: 8px; font-size: var(--fs-footer); font-weight: var(--fw-body); }
+/* At 13px the old .78 -> 1.0 opacity shift was too quiet to register as a
+   hover, so the link also slides a couple of px and underlines. */
+.footer-nav a {
+  display: inline-block;
+  color: rgba(255,255,255,.78);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color .2s ease, transform .2s ease;
+}
+.footer-nav a:hover,
+.footer-nav a:focus-visible {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transform: translateX(2px);
+}
 .footer-addr {
   color: rgba(255,255,255,.6);
   max-width: 230px;
@@ -3813,7 +3800,7 @@ html.menu-open { overflow: hidden; }
      made the address the loudest thing in the footer — a step ABOVE the
      column heads it sits under. Footer copy is chrome, so it matches the
      link size beside it. */
-  font-size: var(--fs-label);
+  font-size: var(--fs-footer);
   line-height: var(--lh-body);
   margin-top: 14px;
 }
@@ -3863,8 +3850,9 @@ html.menu-open { overflow: hidden; }
   gap: 10px 26px;
   font-size: .8125em;  /* 13px */
 }
-.footer-base .legal-links a { color: rgba(255,255,255,.8); }
-.footer-base .legal-links a:hover { color: #fff; text-decoration: underline; }
+.footer-base .legal-links a { color: rgba(255,255,255,.8); cursor: pointer; transition: color .2s ease; }
+.footer-base .legal-links a:hover,
+.footer-base .legal-links a:focus-visible { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
 .footer-social { display: flex; gap: 10px; }
 .footer-social a {
   width: 36px; height: 36px;
@@ -3872,9 +3860,11 @@ html.menu-open { overflow: hidden; }
   background: rgba(255,255,255,.08);
   display: flex; align-items: center; justify-content: center;
   color: #fff;
+  cursor: pointer;
   transition: background .2s ease, transform .2s ease;
 }
-.footer-social a:hover { background: rgba(255,255,255,.18); transform: translateY(-2px); }
+.footer-social a:hover,
+.footer-social a:focus-visible { background: rgba(255,255,255,.18); transform: translateY(-2px); }
 .footer-social svg { width: 16px; height: 16px; }
 .footer-copy {
   display: flex;
@@ -4115,7 +4105,7 @@ html.menu-open { overflow: hidden; }
      it is stated here because the vh term can still drift on a tall narrow
      device; this keeps phone sections compact and content-driven. */
   .section { padding-block: clamp(44px, 5.5vh, 64px); }
-  .footer-signup h2 { font-size: 1.5em; }
+  .footer-signup h2 { font-size: 1.3125em; }
   .footer-nav { grid-template-columns: 1fr 1fr; gap: 26px 20px; }
   .footer-addr { max-width: none; }
   .footer-base { justify-content: flex-start; }
