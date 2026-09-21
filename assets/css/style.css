@@ -682,18 +682,31 @@ strong, b { font-weight: 700; }
 /* The bar sits over the page rather than pushing it down, so every page needs
    its own clearance. Pages that open on the light .hero pull it back up so
    header and hero read as one surface (as the reference does). */
-body { padding-top: var(--header-h); }
-body:has(> main > .hero:first-child),
-body:has(> main > .cat-hero:first-child),
-body:has(> main > .wj-hero:first-child) { padding-top: 0; }
-body:has(> main > .hero:first-child) main > .hero:first-child { padding-top: var(--header-h); }
+   Which of the three it gets is declared once per page as data-nav on <body>,
+   stamped by assets/js/build-partials.js from the page's opening section:
 
-/* Over the dark hero the MENU affordance inverts to white so it stays legible
-   on the photo. */
-body:has(> main > .hero:first-child) .site-header:not(.is-scrolled) .menu-btn-wrap,
-body:has(> main > .cat-hero:first-child) .site-header:not(.is-scrolled) .menu-btn-wrap,
-body:has(> main > .wj-hero:first-child) .site-header:not(.is-scrolled) .menu-btn-wrap {
+     data-nav="flow"        default. The page reserves header height, so its
+                            content starts below the floating bar.
+     data-nav="over-dark"   the page opens on a dark hero that runs up under
+                            the bar: no padding, scrim across the header band,
+                            white MENU.
+     data-nav="over-light"  same tuck-under, but on a light opening section:
+                            no padding, no scrim, dark MENU.
+
+   Anything page-specific (the homepage hero's inner padding, contact's
+   half-width scrim) stays with that page's own block further down. */
+body { padding-top: var(--header-h); }
+body[data-nav="over-dark"],
+body[data-nav="over-light"] { padding-top: 0; }
+body[data-nav="over-dark"] main > .hero:first-child { padding-top: var(--header-h); }
+
+/* Over a dark hero the MENU affordance inverts to white so it stays legible
+   on the photo. Over a light one it keeps the page's own ink. */
+body[data-nav="over-dark"] .site-header:not(.is-scrolled) .menu-btn-wrap {
   color: #fff;
+}
+body[data-nav="over-light"] .site-header:not(.is-scrolled) .menu-btn-wrap {
+  color: var(--ink-900);
 }
 /* The logo is never altered to suit the hero: no recolour, no shadow, no
    ground of its own. It renders as the brand artwork on every page. What
@@ -707,9 +720,7 @@ body:has(> main > .wj-hero:first-child) .site-header:not(.is-scrolled) .menu-btn
    header is fixed and .hero is overflow:hidden, which would clip it.
    Full-bleed and fading to nothing, it reads as depth in the photograph
    rather than as a panel behind the logo. */
-body:has(> main > .hero:first-child) .site-header:not(.is-scrolled)::before,
-body:has(> main > .cat-hero:first-child) .site-header:not(.is-scrolled)::before,
-body:has(> main > .wj-hero:first-child) .site-header:not(.is-scrolled)::before {
+body[data-nav="over-dark"] .site-header:not(.is-scrolled)::before {
   content: "";
   position: absolute; left: 0; right: 0; top: 0;
   height: calc(var(--header-h) + 46px);
@@ -723,9 +734,7 @@ body:has(> main > .wj-hero:first-child) .site-header:not(.is-scrolled)::before {
     transparent 100%);
 }
 /* The bar's own controls sit above the scrim. */
-body:has(> main > .hero:first-child) .site-header .nav-wrap,
-body:has(> main > .cat-hero:first-child) .site-header .nav-wrap,
-body:has(> main > .wj-hero:first-child) .site-header .nav-wrap { position: relative; z-index: 1; }
+.site-header .nav-wrap { position: relative; z-index: 1; }
 
 /* ---------- MENU button ----------
    Icon + lowercase caps label, exactly the reference's "menu" affordance.
@@ -2099,6 +2108,9 @@ html.menu-open { overflow: hidden; }
 
 /* page hero (inner pages) */
 .page-hero { background: var(--gradient-deep); color: #fff; padding: 58px 0 68px; text-align: center; }
+/* When it is the page's opening section the transparent bar sits over it
+   (data-nav="over-dark"), so it carries the header's clearance itself. */
+body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var(--header-h) + 58px); }
 .page-hero h1 { color: #fff; font-size: var(--fs-h1); line-height: var(--lh-title); letter-spacing: var(--ls-title); }
 
 /* ---------- Hero headlines: the display serif ----------
@@ -3339,7 +3351,10 @@ html.menu-open { overflow: hidden; }
 .no-results { text-align: center; padding: 60px 20px; color: var(--ink-500); display: none; }
 
 /* ---------- Product Detail Page ---------- */
+/* The breadcrumb sits on the bar's centre line at this width, so it needs more
+   than the body's header clearance to clear the wordmark behind it. */
 .pd-top { padding: 42px 0 20px; }
+body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
 .pd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: flex-start; }
 .pd-gallery img { width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--blue-100); box-shadow: var(--shadow-sm); }
 /* Transparent PNG/WebP cut-outs have no photographic ground of their own,
@@ -3570,16 +3585,99 @@ html.menu-open { overflow: hidden; }
   .cs-main { padding: 24px var(--gutter) 60px; }
 }
 
-/* ---------- FAQ ---------- */
-.faq-cat-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 34px; }
+/* ---------- FAQ ----------
+   Editorial, paper-white treatment: no dark hero band, no card chrome.
+   The questions are the page, so the accordions are hairline rules on
+   white and the only colour is the brand blue on the marker and links. */
+.faq-hero { background: var(--white); padding: 90px 0 30px; }
+.faq-hero-inner { max-width: none; margin: 0; }
+.faq-hero h1 {
+  /* Marcellus, the site's page face, at display size. Weight stays at
+     --fw-display (400) like .page-hero/.cat-hero: Marcellus ships only a
+     400, so asking for a bold here gets a smeared synthetic one. */
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: clamp(2em, 6.2vw, 5.2em);
+  line-height: 1.0;
+  letter-spacing: -0.01em;
+  color: var(--ink-900);
+  text-transform: uppercase;
+  margin: 0;
+  max-width: 15ch;
+}
+.faq-hero-tag { color: var(--blue-600); }
+.faq-hero-arrow { color: var(--blue-600); margin: 0 .06em 0 .02em; font-weight: 400; }
+
+/* The aside sits on the right and well below the headline, mirroring the
+   reference's diagonal reading path from the mark down to the contact line. */
+.faq-hero-aside {
+  margin: clamp(40px, 6.5vw, 88px) 0 0 auto;
+  max-width: 26ch; text-align: left;
+  color: var(--ink-700); font-size: 1em; line-height: 1.5;
+}
+.faq-hero p a { color: var(--blue-600); text-decoration: underline; text-underline-offset: 3px; }
+.faq-hero p a:hover { color: var(--blue-700); }
+
+.faq-section { background: var(--white); padding-top: 20px; }
+
+/* Category jump links — quiet pills that only fill in on hover. */
+.faq-cat-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 56px; }
+.faq-cat-nav a {
+  padding: 7px 15px; border: 1px solid var(--blue-100); border-radius: var(--radius-pill);
+  font-size: .8125em; font-weight: var(--fw-strong, 600); letter-spacing: .02em;
+  color: var(--ink-700); background: var(--white); transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+.faq-cat-nav a:hover { background: var(--brand-tint); border-color: var(--blue-300); color: var(--blue-700); }
+
+/* Each topic sits as its own block with a lot of air above it, the way
+   the reference separates "Free mockup" from "Licensing". */
+.faq-group { margin-bottom: 64px; scroll-margin-top: calc(var(--header-h) + 24px); }
+.faq-group:last-of-type { margin-bottom: 0; }
+.faq-group h3 {
+  font-size: .8125em; line-height: 1.3; letter-spacing: .14em; text-transform: uppercase;
+  font-weight: var(--fw-strong, 600); color: var(--blue-600);
+  margin: 0 0 6px; padding-bottom: 14px; border-bottom: 1px solid var(--ink-900);
+}
+
+/* Default (product pages, inside a tinted .section-alt): bordered cards. */
 .faq-item { border: 1px solid var(--blue-100); border-radius: var(--radius-md); margin-bottom: 12px; overflow: hidden; background: #fff; }
-.faq-item summary { padding: 18px 22px; font-weight: var(--fw-strong); font-size: 1.0625em; /* 17px */ line-height: var(--lh-card); cursor: pointer; display: flex; justify-content: space-between; align-items: center; list-style: none; }
+.faq-item summary { padding: 18px 22px; font-weight: var(--fw-strong); font-size: 1.0625em; line-height: var(--lh-card); cursor: pointer; display: flex; justify-content: space-between; align-items: center; list-style: none; }
 .faq-item summary::-webkit-details-marker { display: none; }
-.faq-item summary::after { content: "+"; font-size: 1.375em; /* 22px */ color: var(--blue-600); font-weight: 400; }
+.faq-item summary::after { content: "+"; font-size: 1.375em; color: var(--blue-600); font-weight: 400; }
 .faq-item[open] summary::after { content: "–"; }
 .faq-item .a { padding: 0 22px 20px; color: var(--ink-700); font-size: var(--fs-card-desc); line-height: var(--lh-body); }
-.faq-group h3 { font-size: var(--fs-card-title); line-height: var(--lh-card); color: var(--blue-700); margin: 34px 0 14px; }
-.faq-group:first-child h3 { margin-top: 0; }
+
+/* On the FAQ page: hairline-ruled rows on paper, rather than cards. */
+.faq-group .faq-item { border: 0; border-bottom: 1px solid var(--blue-100); border-radius: 0; margin: 0; background: transparent; overflow: hidden; }
+.faq-group .faq-item summary {
+  padding: 24px 44px 24px 0; position: relative;
+  font-weight: var(--fw-strong); font-size: 1.0625em; line-height: var(--lh-card);
+  color: var(--ink-900); cursor: pointer; display: block; list-style: none;
+  transition: color .18s ease;
+}
+.faq-group .faq-item summary:hover { color: var(--blue-600); }
+.faq-group .faq-item summary::-webkit-details-marker { display: none; }
+.faq-group .faq-item summary::after {
+  content: "+"; position: absolute; right: 2px; top: 50%; transform: translateY(-50%);
+  font-size: 1.5em; line-height: 1; color: var(--blue-600); font-weight: 300;
+  transition: transform .2s ease;
+}
+.faq-group .faq-item[open] summary { color: var(--blue-700); }
+.faq-group .faq-item[open] summary::after { content: "–"; }
+.faq-group .faq-item .a {
+  padding: 0 44px 26px 0; max-width: 660px;
+  color: var(--ink-500); font-size: var(--fs-card-desc); line-height: 1.7;
+}
+
+@media (max-width: 680px) {
+  .faq-hero { padding: 44px 0 18px; }
+  .faq-hero h1 { max-width: none; letter-spacing: -0.015em; }
+  .faq-hero-aside { margin-top: 32px; margin-left: 0; max-width: none; }
+  .faq-cat-nav { margin-bottom: 40px; }
+  .faq-group { margin-bottom: 48px; }
+  .faq-group .faq-item summary { padding: 20px 36px 20px 0; font-size: 1em; }
+  .faq-group .faq-item .a { padding-right: 0; }
+}
 
 /* ---------- Contact ---------- */
 .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: flex-start; }
@@ -6856,13 +6954,12 @@ body:has(> main > .connect-band-section:last-child) > main { background: var(--p
 /* The contact hero runs under the fixed header the same way the homepage hero
    does: the body drops its offset and the form column pads itself clear of the
    bar, so the photo fills the full frame including the strip behind the nav. */
-body:has(> main > .contact-hero:first-child) { padding-top: 0; }
-body:has(> main > .contact-hero:first-child) .contact-hero-form {
+body[data-nav="over-dark"] main > .contact-hero:first-child .contact-hero-form {
   padding-top: calc(var(--header-h) + clamp(24px, 3vw, 48px));
 }
 /* Dark scrim across the header band only, so the logo reads against the photo
    in the left column. Same treatment as the homepage hero. */
-body:has(> main > .contact-hero:first-child) .site-header:not(.is-scrolled)::before {
+body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:not(.is-scrolled)::before {
   content: "";
   position: absolute; left: 0; right: 50%; top: 0;
   height: calc(var(--header-h) + 46px);
@@ -6874,12 +6971,11 @@ body:has(> main > .contact-hero:first-child) .site-header:not(.is-scrolled)::bef
     rgba(0,22,36,.20) 80%,
     transparent 100%);
 }
-body:has(> main > .contact-hero:first-child) .site-header .nav-wrap { position: relative; z-index: 1; }
 
 @media (max-width: 900px) {
-  body:has(> main > .contact-hero:first-child) .contact-hero-form { padding-top: clamp(32px, 6vw, 48px); }
-  body:has(> main > .contact-hero:first-child) .contact-hero-media { padding-top: 0; }
-  body:has(> main > .contact-hero:first-child) .site-header:not(.is-scrolled)::before { right: 0; }
+  main > .contact-hero:first-child .contact-hero-form { padding-top: clamp(32px, 6vw, 48px); }
+  main > .contact-hero:first-child .contact-hero-media { padding-top: 0; }
+  body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:not(.is-scrolled)::before { right: 0; }
 }
 
 /* ---------- Contact hero form — reference styling ----------

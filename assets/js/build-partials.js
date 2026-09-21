@@ -15,6 +15,66 @@ const ACTIVE_TOKENS = {
   'why-jagruti': '__ACTIVE_WHY_JAGRUTI__',
 };
 
+// ---------------------------------------------------------------------------
+// Nav mode: every page carries data-nav on <body>, so the transparent header
+// is driven by one declared value per page instead of a growing :has() chain
+// of hero class names in the stylesheet.
+//
+//   over-dark   the page opens on a dark hero that runs up under the bar.
+//               Header sits over it: page padding drops to 0, a scrim fades
+//               down across the header band so the logo reads against the
+//               photo, and the MENU affordance inverts to white.
+//   over-light  the page opens on a light section that also runs up under the
+//               bar. Header still sits over it with no padding and no scrim;
+//               MENU stays dark ink, which is what carries on white.
+//   flow        default. Header floats transparent over a page that reserves
+//               header-height of padding, so content starts below the bar.
+//
+// A page can opt out of the inferred value by writing data-nav by hand; this
+// pass only fills in bodies that have no data-nav yet, and rewrites the ones
+// it stamped before (marked data-nav-auto).
+const NAV_MODES = {
+  'over-dark': [
+    'hero', 'cat-hero', 'wj-hero', 'contact-hero', 'page-hero',
+  ],
+  'over-light': [],
+};
+
+function inferNavMode(content) {
+  const mainIdx = content.indexOf('<main');
+  if (mainIdx === -1) return 'flow';
+  // First element inside <main> — that is what the header would sit over.
+  const openTag = /<(?:section|div|header|article)\b[^>]*\bclass="([^"]*)"/i.exec(
+    content.slice(mainIdx)
+  );
+  if (!openTag) return 'flow';
+  const classes = openTag[1].split(/\s+/);
+  for (const [mode, names] of Object.entries(NAV_MODES)) {
+    if (classes.some((c) => names.includes(c))) return mode;
+  }
+  return 'flow';
+}
+
+function applyNavMode(content) {
+  const bodyTag = /<body\b[^>]*>/i.exec(content);
+  if (!bodyTag) return { changed: false };
+  const tag = bodyTag[0];
+  // Respect a hand-written data-nav; only manage the ones this script stamped.
+  if (/\bdata-nav\b/.test(tag) && !/\bdata-nav-auto\b/.test(tag)) return { changed: false };
+
+  const mode = inferNavMode(content);
+  const stripped = tag
+    .replace(/\s*data-nav="[^"]*"/i, '')
+    .replace(/\s*data-nav-auto/i, '');
+  const newTag = stripped.replace(/>$/, ` data-nav="${mode}" data-nav-auto>`);
+  if (newTag === tag) return { changed: false };
+
+  return {
+    changed: true,
+    content: content.slice(0, bodyTag.index) + newTag + content.slice(bodyTag.index + tag.length),
+  };
+}
+
 const PARTIALS = [
   {
     name: 'navbar',
@@ -116,6 +176,12 @@ function processFile(file, templates) {
       content = result.content;
       anyChanged = true;
     }
+  }
+
+  const navResult = applyNavMode(content);
+  if (navResult.changed) {
+    content = navResult.content;
+    anyChanged = true;
   }
 
   if (anyChanged) fs.writeFileSync(file, content, 'utf8');
