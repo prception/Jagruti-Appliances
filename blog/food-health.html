@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="../assets/css/style.css">
 
 </head>
-<body data-nav="over-dark" data-nav-auto>
+<body data-nav="flow" data-nav-auto>
 
 <!-- NAVBAR:START -->
 <header class="site-header">
@@ -154,29 +154,59 @@
 
 <main>
 
-<section class="page-hero">
+<section class="blog-index-head">
   <div class="container">
-    <h1>Food &amp; Health</h1>
-    <p>The benefits of fresh flour, and what you can grind at home.</p>
+    <nav class="blog-crumbs" aria-label="Breadcrumb">
+      <a href="../index.html">Home</a>
+      <span class="sep" aria-hidden="true"></span>
+      <a href="blog.html">Blog</a>
+      <span class="sep" aria-hidden="true"></span>
+      <span aria-current="page">Food &amp; Health</span>
+    </nav>
+    <h1 class="blog-index-title">Food &amp; Health</h1>
+    <p class="blog-index-intro">The benefits of fresh flour, and what you can grind at home.</p>
+    <div class="blog-filter">
+      <label class="blog-filter-label" for="blog-tag">Filter by Tag</label>
+      <span class="blog-select-wrap">
+        <select class="blog-select" id="blog-tag" data-blog-filter>
+          <option value="blog.html">All Posts</option>
+          <option value="buying-guides.html">Buying Guides</option>
+          <option value="product-guides.html">Product Guides</option>
+          <option value="food-health.html" selected>Food &amp; Health</option>
+        </select>
+      </span>
+    </div>
   </div>
 </section>
-<section class="section">
+
+<section class="section" style="padding-top:0;">
   <div class="container">
-    <div class="grid grid-3"><a class="blog-card" href="../blog/benefits-of-freshly-ground-flour.html">
-  <div class="thumb"><span>Food &amp; Health</span></div>
-  <div class="body">
-    <div class="cat">Food &amp; Health</div>
-    <h3>Benefits of Freshly Ground Flour</h3>
-    <p>Why more Indian households are grinding their own atta at home.</p>
-  </div>
-</a><a class="blog-card" href="../blog/grains-you-can-grind-at-home.html">
-  <div class="thumb"><span>Food &amp; Health</span></div>
-  <div class="body">
-    <div class="cat">Food &amp; Health</div>
-    <h3>Types of Grains You Can Grind at Home</h3>
-    <p>Beyond wheat - what else you can grind with a domestic flour mill.</p>
-  </div>
-</a></div>
+    <div class="blog-grid">
+      <a class="blog-card" href="benefits-of-freshly-ground-flour.html">
+        <div class="thumb">
+          <span class="blog-date"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 9.5h17M8 3.5V6M16 3.5V6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><time datetime="2025-07-15">July 15, 2025</time></span>
+          <span class="ph">Food &amp; Health</span>
+          <img src="../assets/images/Resources/Blog/benefits-of-freshly-ground-flour.jpg" alt="Benefits of Freshly Ground Flour" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="body">
+          <div class="cat">Food &amp; Health</div>
+          <h3>Benefits of Freshly Ground Flour</h3>
+          <p>Why more Indian households are grinding their own atta at home.</p>
+        </div>
+      </a>
+      <a class="blog-card" href="grains-you-can-grind-at-home.html">
+        <div class="thumb">
+          <span class="blog-date"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 9.5h17M8 3.5V6M16 3.5V6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><time datetime="2025-06-24">June 24, 2025</time></span>
+          <span class="ph">Food &amp; Health</span>
+          <img src="../assets/images/Resources/Blog/grains-you-can-grind-at-home.jpg" alt="Types of Grains You Can Grind at Home" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="body">
+          <div class="cat">Food &amp; Health</div>
+          <h3>Types of Grains You Can Grind at Home</h3>
+          <p>Beyond wheat - what else you can grind with a domestic flour mill.</p>
+        </div>
+      </a>
+    </div>
   </div>
 </section>
 

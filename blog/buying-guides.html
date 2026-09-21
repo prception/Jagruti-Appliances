@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="../assets/css/style.css">
 
 </head>
-<body data-nav="over-dark" data-nav-auto>
+<body data-nav="flow" data-nav-auto>
 
 <!-- NAVBAR:START -->
 <header class="site-header">
@@ -154,36 +154,71 @@
 
 <main>
 
-<section class="page-hero">
+<section class="blog-index-head">
   <div class="container">
-    <h1>Buying Guides</h1>
-    <p>Practical guides to choosing the right Jagruti flour mill, roti making machine or food processing equipment.</p>
+    <nav class="blog-crumbs" aria-label="Breadcrumb">
+      <a href="../index.html">Home</a>
+      <span class="sep" aria-hidden="true"></span>
+      <a href="blog.html">Blog</a>
+      <span class="sep" aria-hidden="true"></span>
+      <span aria-current="page">Buying Guides</span>
+    </nav>
+    <h1 class="blog-index-title">Buying Guides</h1>
+    <p class="blog-index-intro">Practical guides to choosing the right Jagruti flour mill, roti making machine or food processing equipment.</p>
+    <div class="blog-filter">
+      <label class="blog-filter-label" for="blog-tag">Filter by Tag</label>
+      <span class="blog-select-wrap">
+        <select class="blog-select" id="blog-tag" data-blog-filter>
+          <option value="blog.html">All Posts</option>
+          <option value="buying-guides.html" selected>Buying Guides</option>
+          <option value="product-guides.html">Product Guides</option>
+          <option value="food-health.html">Food &amp; Health</option>
+        </select>
+      </span>
+    </div>
   </div>
 </section>
-<section class="section">
+
+<section class="section" style="padding-top:0;">
   <div class="container">
-    <div class="grid grid-3"><a class="blog-card" href="../blog/best-flour-mill-for-home.html">
-  <div class="thumb"><span>Buying Guides</span></div>
-  <div class="body">
-    <div class="cat">Buying Guides</div>
-    <h3>Best Flour Mill for Home - Complete Buying Guide</h3>
-    <p>How to choose the right domestic atta chakki for your family - capacity, motor, cleaning and more.</p>
-  </div>
-</a><a class="blog-card" href="../blog/how-to-choose-roti-making-machine.html">
-  <div class="thumb"><span>Buying Guides</span></div>
-  <div class="body">
-    <div class="cat">Buying Guides</div>
-    <h3>How to Choose the Right Roti Making Machine for Your Business</h3>
-    <p>From 300 to 2000 rotis an hour - a practical guide to matching capacity to your kitchen.</p>
-  </div>
-</a><a class="blog-card" href="../blog/domestic-vs-commercial-flour-mill.html">
-  <div class="thumb"><span>Buying Guides</span></div>
-  <div class="body">
-    <div class="cat">Buying Guides</div>
-    <h3>Domestic vs. Commercial Flour Mill: What's the Difference?</h3>
-    <p>Understand the real differences before choosing between a home atta chakki and a commercial flour mill.</p>
-  </div>
-</a></div>
+    <div class="blog-grid">
+      <a class="blog-card" href="best-flour-mill-for-home.html">
+        <div class="thumb">
+          <span class="blog-date"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 9.5h17M8 3.5V6M16 3.5V6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><time datetime="2025-11-18">November 18, 2025</time></span>
+          <span class="ph">Buying Guides</span>
+          <img src="../assets/images/Resources/Blog/best-flour-mill-for-home.jpg" alt="Best Flour Mill for Home - Complete Buying Guide" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="body">
+          <div class="cat">Buying Guides</div>
+          <h3>Best Flour Mill for Home - Complete Buying Guide</h3>
+          <p>How to choose the right domestic atta chakki for your family - capacity, motor, cleaning and more.</p>
+        </div>
+      </a>
+      <a class="blog-card" href="how-to-choose-roti-making-machine.html">
+        <div class="thumb">
+          <span class="blog-date"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 9.5h17M8 3.5V6M16 3.5V6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><time datetime="2025-10-28">October 28, 2025</time></span>
+          <span class="ph">Buying Guides</span>
+          <img src="../assets/images/Resources/Blog/how-to-choose-roti-making-machine.jpg" alt="How to Choose the Right Roti Making Machine for Your Business" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="body">
+          <div class="cat">Buying Guides</div>
+          <h3>How to Choose the Right Roti Making Machine for Your Business</h3>
+          <p>From 300 to 2000 rotis an hour - a practical guide to matching capacity to your kitchen.</p>
+        </div>
+      </a>
+      <a class="blog-card" href="domestic-vs-commercial-flour-mill.html">
+        <div class="thumb">
+          <span class="blog-date"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 9.5h17M8 3.5V6M16 3.5V6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><time datetime="2025-10-07">October 7, 2025</time></span>
+          <span class="ph">Buying Guides</span>
+          <img src="../assets/images/Resources/Blog/domestic-vs-commercial-flour-mill.jpg" alt="Domestic vs. Commercial Flour Mill: What's the Difference?" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="body">
+          <div class="cat">Buying Guides</div>
+          <h3>Domestic vs. Commercial Flour Mill: What's the Difference?</h3>
+          <p>Understand the real differences before choosing between a home atta chakki and a commercial flour mill.</p>
+        </div>
+      </a>
+    </div>
   </div>
 </section>
 

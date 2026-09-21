@@ -582,6 +582,19 @@
     });
   }
 
+  /* ---------------- Blog "Filter by Tag" ----------------
+     The select navigates: each option's value is the page for that tag, so
+     the control degrades to a plain form field if this script never runs —
+     and with JS on, choosing a tag loads its category page. */
+  function initBlogFilter() {
+    var sel = document.querySelector("[data-blog-filter]");
+    if (!sel) return;
+    sel.addEventListener("change", function () {
+      var href = sel.value;
+      if (href) window.location.href = href;
+    });
+  }
+
   /* ---------------- Contact form → WhatsApp ---------------- */
   function initContactForm() {
     var form = document.querySelector("[data-contact-form]");
@@ -2410,6 +2423,7 @@
     initProductFilter();
     initCompare();
     initFaqNav();
+    initBlogFilter();
     initContactForm();
     initYear();
     initScrollReveal();

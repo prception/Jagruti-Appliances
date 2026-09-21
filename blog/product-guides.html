@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="../assets/css/style.css">
 
 </head>
-<body data-nav="over-dark" data-nav-auto>
+<body data-nav="flow" data-nav-auto>
 
 <!-- NAVBAR:START -->
 <header class="site-header">
@@ -154,29 +154,59 @@
 
 <main>
 
-<section class="page-hero">
+<section class="blog-index-head">
   <div class="container">
-    <h1>Product Guides</h1>
-    <p>Side-by-side looks at specific Jagruti models to help you choose with confidence.</p>
+    <nav class="blog-crumbs" aria-label="Breadcrumb">
+      <a href="../index.html">Home</a>
+      <span class="sep" aria-hidden="true"></span>
+      <a href="blog.html">Blog</a>
+      <span class="sep" aria-hidden="true"></span>
+      <span aria-current="page">Product Guides</span>
+    </nav>
+    <h1 class="blog-index-title">Product Guides</h1>
+    <p class="blog-index-intro">Side-by-side looks at specific Jagruti models to help you choose with confidence.</p>
+    <div class="blog-filter">
+      <label class="blog-filter-label" for="blog-tag">Filter by Tag</label>
+      <span class="blog-select-wrap">
+        <select class="blog-select" id="blog-tag" data-blog-filter>
+          <option value="blog.html">All Posts</option>
+          <option value="buying-guides.html">Buying Guides</option>
+          <option value="product-guides.html" selected>Product Guides</option>
+          <option value="food-health.html">Food &amp; Health</option>
+        </select>
+      </span>
+    </div>
   </div>
 </section>
-<section class="section">
+
+<section class="section" style="padding-top:0;">
   <div class="container">
-    <div class="grid grid-3"><a class="blog-card" href="../blog/aura-vs-aura-plus.html">
-  <div class="thumb"><span>Product Guides</span></div>
-  <div class="body">
-    <div class="cat">Product Guides</div>
-    <h3>Aura vs. Aura Plus: Which Jagruti Flour Mill Should You Choose?</h3>
-    <p>A side-by-side look at Jagruti's two most popular domestic flour mill models.</p>
-  </div>
-</a><a class="blog-card" href="../blog/eco-300-vs-eco-500-vs-premium-600.html">
-  <div class="thumb"><span>Product Guides</span></div>
-  <div class="body">
-    <div class="cat">Product Guides</div>
-    <h3>ECO 300 vs. ECO 500 vs. PREMIUM 600: Choosing Your Roti Machine Capacity</h3>
-    <p>A closer look at Jagruti's three most common roti making machine capacities.</p>
-  </div>
-</a></div>
+    <div class="blog-grid">
+      <a class="blog-card" href="aura-vs-aura-plus.html">
+        <div class="thumb">
+          <span class="blog-date"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 9.5h17M8 3.5V6M16 3.5V6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><time datetime="2025-09-16">September 16, 2025</time></span>
+          <span class="ph">Product Guides</span>
+          <img src="../assets/images/Resources/Blog/aura-vs-aura-plus.jpg" alt="Aura vs. Aura Plus: Which Jagruti Flour Mill Should You Choose?" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="body">
+          <div class="cat">Product Guides</div>
+          <h3>Aura vs. Aura Plus: Which Jagruti Flour Mill Should You Choose?</h3>
+          <p>A side-by-side look at Jagruti's two most popular domestic flour mill models.</p>
+        </div>
+      </a>
+      <a class="blog-card" href="eco-300-vs-eco-500-vs-premium-600.html">
+        <div class="thumb">
+          <span class="blog-date"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 9.5h17M8 3.5V6M16 3.5V6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><time datetime="2025-08-26">August 26, 2025</time></span>
+          <span class="ph">Product Guides</span>
+          <img src="../assets/images/Resources/Blog/eco-300-vs-eco-500-vs-premium-600.jpg" alt="ECO 300 vs. ECO 500 vs. PREMIUM 600: Choosing Your Roti Machine Capacity" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="body">
+          <div class="cat">Product Guides</div>
+          <h3>ECO 300 vs. ECO 500 vs. PREMIUM 600: Choosing Your Roti Machine Capacity</h3>
+          <p>A closer look at Jagruti's three most common roti making machine capacities.</p>
+        </div>
+      </a>
+    </div>
   </div>
 </section>
 
