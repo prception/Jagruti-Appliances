@@ -2948,7 +2948,7 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
     min-height: 0;
     max-height: none;
     align-items: flex-start;
-    padding: calc(var(--header-h) + 48px) 0 80px;
+    padding: 32px 0 80px;
   }
   /* The desktop flex column exists to divide a fixed viewport between head
      and grid. Here there is no fixed height to divide, so it is unwound —
@@ -2996,7 +2996,11 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
      sitting in it at full strength, and the cards begin below that. Travel is
      shortened and the script tightens the stagger to match. */
   .section.why-section {
-    padding: calc(var(--header-h) + 296px) 0 64px;
+    /* The opening band is 268px tall and starts at the very top of the
+       section, so the copy clears it by exactly that plus one gap. The old
+       value assumed a band inset by --header-h and left a dead strip of
+       empty wall above the machine. */
+    padding: 28px 0 64px;
     align-items: flex-start;
   }
   .why-bg img { object-position: 40% 50%; }
@@ -3009,16 +3013,24 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
      show a slice of the machine. The band is given real height instead and
      sits full-bleed, which is what lets the mill read at this size. */
   .why-product {
-    width: 100%; right: 0;
-    top: calc(var(--header-h) + 40px); bottom: auto;
-    height: 320px;
+    /* Right-hand band: the copy now starts at the top of the section on the
+       clear left, so the machine holds the right side beside it rather than
+       occupying a full-width strip above it. */
+    width: 62%; right: 0;
+    /* Starts at the section's own top edge — the previous inset left a
+       band of bare wall between the section start and the machine. */
+    top: 0; bottom: auto;
+    height: 300px;
     opacity: 1;
+    /* Only the foot is feathered now. The old 90deg gradient erased the
+       whole left 22% of a full-bleed band, and with the machine crop
+       centred it took a visible bite out of the mill. */
     -webkit-mask-image:
-      linear-gradient(180deg, #000 60%, transparent 100%),
-      linear-gradient(90deg, transparent 0%, #000 22%);
+      linear-gradient(180deg, #000 68%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, #000 18%);
     mask-image:
-      linear-gradient(180deg, #000 60%, transparent 100%),
-      linear-gradient(90deg, transparent 0%, #000 22%);
+      linear-gradient(180deg, #000 68%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, #000 18%);
     -webkit-mask-composite: source-in;
     mask-composite: intersect;
   }
@@ -3027,13 +3039,17 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
   .why-product img { object-position: 78% 45%; }
   /* The head sits in that same opening band, over the clear left of it. */
   .why-section .section-head { margin-bottom: 26px; }
+  /* The wash starts clear over the opening band so the machine actually
+     reads, and only comes up to full strength below it where the cards
+     need the contrast. */
   .why-section::before {
     background:
-      linear-gradient(180deg,
-        rgba(255,255,255,.42) 0%,
-        rgba(255,255,255,.72) 30%,
-        rgba(255,255,255,.90) 52%,
-        rgba(233,242,247,.92) 100%);
+      linear-gradient(160deg,
+        rgba(255,255,255,.80) 0%,
+        rgba(255,255,255,.55) 22%,
+        rgba(255,255,255,.35) 38%,
+        rgba(255,255,255,.88) 56%,
+        rgba(233,242,247,.94) 100%);
   }
   .why-grid { grid-template-columns: 1fr; gap: 14px; width: 100%; max-width: none; }
   .why-item { min-height: 0; padding: 20px 20px 22px; border-radius: 22px; }
@@ -5375,7 +5391,17 @@ html.preloading, html.preloading body { overflow: hidden; }
     max-width: none;
     justify-content: center;
   }
-  .stage-actions .btn { min-height: 44px; flex: 0 1 auto; }
+  /* The featured pills are sized for the desktop copy column; at tablet
+     and phone widths that same size eats the band between the copy and the
+     callout row. Scaled down to a compact pill that still clears the 44px
+     touch target. */
+  .stage-actions .btn {
+    min-height: 40px;
+    flex: 0 1 auto;
+    padding: .55rem .95rem;
+    font-size: .82rem;
+    gap: .4rem;
+  }
   .stage-nav {
     left: 0;
     right: 0;
@@ -5386,8 +5412,15 @@ html.preloading, html.preloading body { overflow: hidden; }
 
 @media (max-width: 430px) {
   /* Two pills side by side get tight here, so they stack and go full width. */
-  .stage-actions { flex-direction: column; gap: 8px; align-items: stretch; }
-  .stage-actions .btn { width: 100%; }
+  /* Kept side by side rather than stacked full-width: at this size the two
+     shrunken pills fit on one line, and the stacked pair was what pushed the
+     callout row off the bottom of the scene. */
+  .stage-actions { gap: 8px; }
+  .stage-actions .btn {
+    min-height: 36px;
+    padding: .45rem .8rem;
+    font-size: .76rem;
+  }
   /* The pills stack here, making the copy column taller. It is anchored to
      the machine's bottom edge (see the 860px block), so it needs no bottom
      value of its own — the stack simply grows downward from that edge and
@@ -5989,7 +6022,12 @@ html:not(.js) .stage-actions { justify-content: center; }
 @media (max-width: 860px) {
   .journey-section {
     view-timeline-name: none;
-    padding-top: var(--section-pad-y);
+    /* No top pad. The section above already closes on its own bottom
+       padding, so adding a second one here opened a band of empty page
+       between them — the white gap that showed above the first
+       photograph on phones and tablets. The bottom pad stays: nothing
+       follows it that supplies its own. */
+    padding-top: 0;
     padding-bottom: var(--section-pad-y);
   }
   .journey-stage { display: none; }
@@ -6014,6 +6052,17 @@ html:not(.js) .stage-actions { justify-content: center; }
     height: auto;
   }
   .journey-copy { max-width: none; }
+  /* Stacked, every step is a full-width block, so the right-hand panels'
+     flush-right setting has no column to hold it — it just left a ragged
+     edge mid-screen on steps 02 and 04. All four read from the same edge
+     here, and the desktop gutter insets go with it. */
+  .journey-panel--left  .journey-copy,
+  .journey-panel--right .journey-copy {
+    align-items: flex-start;
+    text-align: left;
+    margin-left: 0;
+    margin-right: 0;
+  }
   /* Each panel gets its own photograph back, inline above the copy. */
   .journey-panel::before {
     content: "";
@@ -6030,18 +6079,66 @@ html:not(.js) .stage-actions { justify-content: center; }
   .journey-panel[data-journey-slide="2"]::before { background-image: url("../images/Home page/grain to fresh floor/3new.png.png"); }
   .journey-panel[data-journey-slide="3"]::before { background-image: url("../images/Home page/grain to fresh floor/4new.png"); }
 
-  /* The entrance and exit above are timed against a panel that owns a
-     whole screen. Stacked, a panel is a fraction of that, so the same
-     ranges leave copy half-faded while it is sitting still in front of
-     the reader — and the exit would dim a step that is simply further up
-     a list. Neither has anything to scrub against here, so both are off
-     and the copy is present. */
+  /* The desktop entrance and exit are scrubbed against a panel that owns a
+     whole screen. Stacked, a panel is a fraction of that, so those ranges
+     would leave copy half-faded while it sits still in front of the reader,
+     and the exit would dim a step that is merely further up a list. Both
+     are cancelled here and replaced by the reveal below. */
   .journey-copy,
   .journey-copy > * {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-    filter: none !important;
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  /* ---- The animation, kept for phones and tablets ----
+     Rather than dropping the motion with the pinned stage, each stacked
+     panel gets its own view-timeline and plays the same idea — the
+     photograph settling out of a soft zoom, the words rising under it — as
+     it scrolls into view. It runs ONCE per panel across the lower part of
+     the screen, so a step is fully legible well before it is centred, and
+     nothing animates while it is being read. */
+  .journey-panel {
+    view-timeline-name: --journey-card;
+    view-timeline-axis: block;
+  }
+
+  @supports (animation-timeline: view()) {
+    @keyframes journey-card-photo {
+      from { opacity: 0; transform: scale(1.06); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes journey-card-copy {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .journey-panel::before {
+      animation: journey-card-photo both;
+      animation-timeline: --journey-card;
+      animation-range: entry 8% entry 62%;
+      animation-timing-function: cubic-bezier(.22, .61, .36, 1);
+      /* Scaling a background-image box: keeps the crop clean at the corners
+         while the photograph settles. */
+      transform-origin: center;
+      will-change: opacity, transform;
+    }
+
+    /* The copy follows the picture in a short stagger, so the step reads as
+       one block arriving rather than six separate fades. */
+    .journey-copy > * {
+      animation: journey-card-copy both;
+      animation-timeline: --journey-card;
+      animation-timing-function: cubic-bezier(.22, .61, .36, 1);
+      will-change: opacity, transform;
+    }
+    .journey-copy > *:nth-child(1) { animation-range: entry 20% entry 66%; }
+    .journey-copy > *:nth-child(2) { animation-range: entry 24% entry 70%; }
+    .journey-copy > *:nth-child(3) { animation-range: entry 28% entry 74%; }
+    .journey-copy > *:nth-child(4) { animation-range: entry 32% entry 78%; }
+    .journey-copy > *:nth-child(5) { animation-range: entry 36% entry 82%; }
+    .journey-copy > *:nth-child(6) { animation-range: entry 40% entry 86%; }
   }
 }
 
@@ -8579,7 +8676,10 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
 .blog-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 56px 40px;
+  /* Tight, near-flush columns with just enough room under each card for its
+     caption — the editorial rail the brief pointed at, rather than the wide
+     52/40 gutters a card-panel grid needs. */
+  gap: 34px 10px;
   margin-top: 52px;
 }
 
@@ -8602,7 +8702,9 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
   position: relative;
   display: block;
   aspect-ratio: 16 / 9;
-  border-radius: var(--radius-lg);
+  /* Barely-rounded, near-square corners, matching the reference rail. The
+     22px --radius-lg read as a soft card panel; this reads as a still. */
+  border-radius: 4px;
   overflow: hidden;
   /* Doubles as the fallback ground when a post has no photo yet: the card
      still reads as a card instead of collapsing to a white gap. */
@@ -8729,7 +8831,7 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
   position: relative;
   margin: 34px 0 0;
   aspect-ratio: 16 / 7;
-  border-radius: var(--radius-lg);
+  border-radius: 4px;
   overflow: hidden;
   background: linear-gradient(135deg, var(--blue-600), var(--blue-300));
 }
@@ -8757,11 +8859,11 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
   color: var(--ink-900);
 }
 /* Three across inside the narrower related rail, where the index runs two. */
-.blog-related .blog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 26px; margin-top: 0; }
+.blog-related .blog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px 10px; margin-top: 0; }
 
 /* ---- Responsive ---- */
 @media (max-width: 900px) {
-  .blog-grid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+  .blog-grid { grid-template-columns: minmax(0, 1fr); gap: 30px; }
   .blog-related .blog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .blog-index-title { margin-top: 34px; }
 }
@@ -8781,9 +8883,29 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
    they have on the products page instead of being squeezed into the prose
    column. Heading matches the related-posts rail above it. */
 .blog-recommended { padding-top: 0; }
+/* Heading and card grid both sit on the same centred 900px column as
+   .article-lede, which carries the article headline and the "Keep Reading"
+   rail above — so the whole band lines up with everything above it. */
+.blog-recommended > .container > h2,
+.blog-recommended > .container > .grid {
+  max-width: 900px;
+  margin-inline: auto;
+}
+/* The tiles use .grid-editorial — the flat, gallery-style listing the
+   products category pages use (photo, then a name / Get Price row, no card
+   chrome). That grid ships at four across for a full-width page; three fits
+   the three recommended models inside the narrower 900px column. */
+.blog-recommended > .container > .grid-editorial {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
 .blog-recommended > .container > h2 {
-  margin: 0 0 30px;
+  /* Block margins only — the shorthand would reset the `margin-inline: auto`
+     above and drop the heading back to the page edge. */
+  margin-block: 0 30px;
   font-size: var(--fs-h5);
   letter-spacing: -0.005em;
   color: var(--ink-900);
+}
+@media (max-width: 680px) {
+  .blog-recommended > .container > .grid-editorial { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
