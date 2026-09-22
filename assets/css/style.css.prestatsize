@@ -2021,7 +2021,7 @@ html.menu-open { overflow: hidden; }
 .stats-strip .stats-eyebrow {
   text-align: center;
   color: var(--ink-500);
-  font-size: calc(var(--fs-stat-label) * 1.15);
+  font-size: var(--fs-stat-label);
   font-weight: var(--fw-label);
   letter-spacing: .14em;
   text-transform: uppercase;
@@ -2063,28 +2063,27 @@ html.menu-open { overflow: hidden; }
   opacity: .32;
 }
 .hero-stats .ic { flex: none; color: var(--blue-500); }
-.hero-stats .ic svg { width: 32px; height: 32px; }
+.hero-stats .ic svg { width: 26px; height: 26px; }
 .hero-stats div div { display: flex; flex-direction: column; line-height: 1.25; }
 /* The figure has to out-rank its label by size AND weight, or the strip
    reads as five short sentences. It was 17px/600 over a 12.5px label — a
    gap too small to register as a statistic.
 
    This strip is a five-across icon+text row, not a stacked stat grid, so
-   it takes a contained step — 22px/700 over a 14px/500 label. A 40px
+   it takes a contained step — 22px/700 over a 13px/500 label. A 40px
    figure would break the five columns, and two of the five entries are
    words ("ISO 9001:2015", "Pan India") rather than short numerals, so the
-   size has to hold those without wrapping too — hence the em-based figure,
-   which the strip's own font-size keeps in range on narrow desktops. */
+   size has to hold those without wrapping too. */
 .hero-stats strong {
   color: var(--ink-900);
-  font-size: 1.375em;            /* 22px */
+  font-size: 1.0625em;           /* 17px */
   font-weight: var(--fw-title);
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-title);
 }
 .hero-stats span {
   color: var(--ink-500);
-  font-size: .875rem;
+  font-size: .75rem;
   font-weight: var(--fw-label);
   line-height: var(--lh-tight);
 }
@@ -4250,8 +4249,8 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
     padding: 16px 12px;
   }
   .hero-stats div div { align-items: center; }
-  .hero-stats .ic svg { width: 32px; height: 32px; }
-  .hero-stats strong { font-size: 1.25em; }
+  .hero-stats .ic svg { width: 28px; height: 28px; }
+  .hero-stats strong { font-size: 1em; }
   .hero-stats > div:last-child {
     flex: 0 0 100%;
     flex-direction: row;
