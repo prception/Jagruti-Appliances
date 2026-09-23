@@ -1823,20 +1823,60 @@
        width breaks the line differently. */
     function splitHeading() {
       if (!heading) return;
-      // Keep the original wording verbatim to rebuild from on every re-split.
-      if (!heading.dataset.text) heading.dataset.text = heading.textContent;
-      var text = heading.dataset.text;
+      /* Keep the original MARKUP to rebuild from, not just the text: the
+         heading carries inline spans (.why-hl / .why-hl-num highlight the
+         "31+ Years" claim) and reading textContent here used to throw them
+         away on the first frame, so any styling on them silently vanished
+         in the browser while looking correct in the source. */
+      if (!heading.dataset.html) heading.dataset.html = heading.innerHTML;
+      heading.innerHTML = heading.dataset.html;
 
-      // Lay every word out individually so their positions can be read.
-      heading.textContent = "";
-      var probes = text.split(/\s+/).map(function (word) {
-        var s = document.createElement("span");
-        s.textContent = word;
-        s.style.display = "inline-block";
-        heading.appendChild(s);
-        heading.appendChild(document.createTextNode(" "));
-        return s;
-      });
+      /* Split into words WITHOUT flattening markup: walk the text nodes and
+         wrap each word in its own probe span, leaving element wrappers in
+         place so a highlight spanning several words survives the split. */
+      var probes = [];
+      (function wrapWords(node) {
+        var kids = Array.prototype.slice.call(node.childNodes);
+        kids.forEach(function (child) {
+          if (child.nodeType === 3) {
+            /* Record whether this text node began or ended on whitespace
+               BEFORE dropping it. A space that sits at the edge of a text
+               node is the gap between a plain word and an adjacent inline
+               span ("on" + <span>31+</span>), and it lives in neither probe
+               — losing it is what fused "on31+" and "ManufacturingExperience".
+               Carrying it as a flag on the probe lets the rebuild put a real
+               space back at exactly those boundaries. */
+            var raw = child.textContent;
+            var leadWS = /^\s/.test(raw);
+            var tailWS = /\s$/.test(raw);
+            var words = raw.split(/\s+/).filter(Boolean);
+            if (!words.length) {
+              /* A pure-whitespace node between two elements: mark the last
+                 probe so far as needing a trailing space. */
+              if (probes.length) probes[probes.length - 1].dataset.space = "1";
+              node.removeChild(child);
+              return;
+            }
+            if (leadWS && probes.length) probes[probes.length - 1].dataset.space = "1";
+            var frag = document.createDocumentFragment();
+            words.forEach(function (word, i) {
+              var s = document.createElement("span");
+              s.textContent = word;
+              s.style.display = "inline-block";
+              // Every word but the last is followed by a space inside this node.
+              if (i < words.length - 1) s.dataset.space = "1";
+              frag.appendChild(s);
+              // A real space between probes so measurement matches the render.
+              if (i < words.length - 1) frag.appendChild(document.createTextNode(" "));
+              probes.push(s);
+            });
+            if (tailWS) probes[probes.length - 1].dataset.space = "1";
+            node.replaceChild(frag, child);
+          } else if (child.nodeType === 1) {
+            wrapWords(child);
+          }
+        });
+      })(heading);
 
       // Group by vertical position — same offsetTop means the same line.
       var lines = [];
@@ -1847,16 +1887,56 @@
           lines.push([]);
           currentTop = top;
         }
-        lines[lines.length - 1].push(probe.textContent);
+        /* Keep the probe element, not its text — the rebuild below re-homes
+           the real nodes so their wrappers (and styling) come along. */
+        lines[lines.length - 1].push(probe);
       });
 
-      // Rebuild as clipped rows.
+      /* Rebuild as clipped rows by MOVING the probe spans into each row.
+         Cloning the nearest highlight wrapper keeps .why-hl-num's colour on
+         the words that had it, and inserting an explicit space between
+         probes restores the gap that words.join(" ") used to drop whenever a
+         line break fell between two words ("ManufacturingExperience"). */
       heading.textContent = "";
-      lines.forEach(function (words) {
+      lines.forEach(function (probeRow) {
         var outer = document.createElement("span");
         outer.className = "why-line";
         var inner = document.createElement("span");
-        inner.textContent = words.join(" ");
+        /* Read every flag up front: the loop below clears each probe's
+           dataset as it re-homes it, so reading probeRow[i-1] inside the loop
+           would see a flag that iteration i-1 had already deleted and drop
+           every space. */
+        var gaps = probeRow.map(function (probe) {
+          return probe.dataset.space === "1";
+        });
+        probeRow.forEach(function (probe, i) {
+          /* Space BEFORE this word only if the previous word recorded one.
+             Driving it off the recorded flag rather than the index keeps the
+             gaps the source actually had, including the ones that fell on an
+             inline-span boundary, and adds none where there were none. */
+          if (i && gaps[i - 1]) {
+            inner.appendChild(document.createTextNode(" "));
+          }
+          // Re-create any inline wrappers the word sat inside (e.g. .why-hl-num).
+          var wrapper = probe.parentNode;
+          var node = probe;
+          probe.style.display = "";
+          delete probe.dataset.space;
+          while (wrapper && wrapper !== heading && wrapper.nodeType === 1) {
+            var clone = wrapper.cloneNode(false);
+            clone.appendChild(node);
+            node = clone;
+            wrapper = wrapper.parentNode;
+          }
+          inner.appendChild(node);
+          /* A line that ends mid-sentence keeps its trailing space INSIDE the
+             row. Each .why-line is its own block, so a gap emitted between
+             rows belongs to neither and is lost — that is what fused the two
+             words straddling a line break ("ofManufacturing"). */
+          if (i === probeRow.length - 1 && gaps[i]) {
+            inner.appendChild(document.createTextNode(" "));
+          }
+        });
         outer.appendChild(inner);
         heading.appendChild(outer);
       });

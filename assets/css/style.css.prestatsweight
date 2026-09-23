@@ -2020,9 +2020,9 @@ html.menu-open { overflow: hidden; }
    between two heavy sections. */
 .stats-strip .stats-eyebrow {
   text-align: center;
-  color: var(--ink-700);
+  color: var(--ink-500);
   font-size: calc(var(--fs-stat-label) * 1.15);
-  font-weight: var(--fw-display);
+  font-weight: var(--fw-label);
   letter-spacing: .14em;
   text-transform: uppercase;
   margin: 0 0 22px;
@@ -2040,7 +2040,7 @@ html.menu-open { overflow: hidden; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 11px;
+  gap: 9px;
   text-align: left;
   padding: 0 4px;
   background: none;
@@ -2075,50 +2075,22 @@ html.menu-open { overflow: hidden; }
    words ("ISO 9001:2015", "Pan India") rather than short numerals, so the
    size has to hold those without wrapping too — hence the em-based figure,
    which the strip's own font-size keeps in range on narrow desktops. */
-/* The figure is on Marcellus, the page face — font consistency across the
-   site is the requirement here.
-
-   Marcellus ships ONE weight (400), so the 700 below is SYNTHESISED by the
-   browser. That is a deliberate, accepted choice (the same trade-off the
-   whole site already makes — see the --font-sans note near the top), not an
-   oversight: it is the only way to add weight without leaving the family.
-   Size, black ink and tight tracking carry most of the emphasis; the
-   synthesised bold adds the rest. */
 .hero-stats strong {
-  font-family: var(--font-display);
-  color: var(--blue-700);
-  font-size: 1.75em;             /* 28px — size is the honest lever here */
-  font-weight: 700;              /* synthesised on Marcellus; see above */
+  color: var(--ink-900);
+  font-size: 1.375em;            /* 22px */
+  font-weight: var(--fw-title);
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-title);
-  font-variant-numeric: tabular-nums;
-  /* Thickens every stroke by .4px in the SAME colour as the fill. On a font
-     with no bold cut this is what actually adds mass — the synthesised 700
-     alone mostly just smears the edges. Kept low: past ~.6px the serif's
-     hairlines start to close up and the numerals go muddy. Drawn in
-     currentColor, not a fixed ink, so the reveal's blue-to-ink colour
-     transition carries the stroke with it instead of leaving a dark
-     outline around a blue numeral mid-animation. */
-  -webkit-text-stroke: .4px currentColor;
-  paint-order: stroke fill;
 }
-/* The label sits on the same page serif, black. It renders in its authored
-   sentence case ("Certified Company"), NOT all-caps — the separation from
-   the figure comes from size, colour and the figure's weight instead.
-   Slight tracking is kept so the small serif does not set too tight. */
 .hero-stats span {
-  font-family: var(--font-display);
-  color: var(--ink-900);
+  color: var(--ink-500);
   font-size: .875rem;
-  font-weight: 600;              /* synthesised on Marcellus */
+  font-weight: var(--fw-label);
   line-height: var(--lh-tight);
-  letter-spacing: .01em;
 }
 
-/* Reveal: the stat lands in light brand blue and DEEPENS to --blue-700 a
-   beat later. (It used to resolve to ink; the figure is blue at rest now, so
-   the travel is light-blue to deep-blue — a quieter settle than before, but
-   it keeps the figure moving as it arrives.) The colour transition is
+/* Reveal: the stat lands in brand blue and resolves to ink a beat later, so
+   the eye is pulled to the figure as it arrives. The colour transition is
    deliberately slower than the lift and shares the same stagger delay that
    main.js writes onto [data-reveal-child]. Gated on html.js like every other
    reveal, so with JS off the final colours are what render. */
@@ -2132,7 +2104,7 @@ html.menu-open { overflow: hidden; }
   transition: color .9s ease .25s;
 }
 .js .stats-strip[data-reveal] [data-reveal-child] span { transition: color .9s ease .25s; }
-.js .stats-strip[data-reveal].is-revealed [data-reveal-child] strong { color: var(--blue-700); }
+.js .stats-strip[data-reveal].is-revealed [data-reveal-child] strong { color: var(--ink-900); }
 .js .stats-strip[data-reveal].is-revealed [data-reveal-child] .ic { color: var(--blue-600); }
 
 /* page hero (inner pages) */
@@ -2345,7 +2317,7 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
   .js .split-grid[data-reveal] .split-card:nth-child(2) .content {
     opacity: 1 !important; transform: none !important; transition: none !important;
   }
-  .js .stats-strip[data-reveal] [data-reveal-child] strong { color: var(--blue-700) !important; }
+  .js .stats-strip[data-reveal] [data-reveal-child] strong { color: var(--ink-900) !important; }
   .js .stats-strip[data-reveal] [data-reveal-child] .ic { color: var(--blue-600) !important; }
   .js .stats-strip[data-reveal] [data-reveal-child] strong,
   .js .stats-strip[data-reveal] [data-reveal-child] .ic,
@@ -2660,15 +2632,8 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
      that looked custom-built. It now takes the shared step; the section
      still fits because --fs-title is well under the old ceiling. */
   margin-bottom: 0;
-  /* A shade heavier and tighter than the shared step, so the section's
-     opening line reads as the headline the client asked it to be. */
-  font-weight: 700;
-  letter-spacing: -.02em;
-  line-height: 1.12;
 }
-/* "31+ Years" is the claim the whole section rests on. The phrase itself is
-   marked with a soft accent underline drawn behind the baseline rather than a
-   colour swap, so the heading stays one colour and still points at the claim. */
+
 /* Four across, two down, inside the left band. The right ~34% is left for
    the machine by capping the grid's width rather than by padding it — the
    cards then get their full share of the space instead of being squeezed. */
@@ -2715,11 +2680,7 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
      overflow:hidden — on a short *and* wide window vh wins and the cards go
      tight again, which is the one case still worth checking in a browser. */
   flex: 0 1 auto;
-  /* +1.4rem over the previous 30.4/31.9 pair: the larger card title (16px)
-     and copy (14px) need slightly more room than the smaller icon disc gives
-     back, so the track grows with them rather than letting the longest cards
-     re-overflow the glass. */
-  height: clamp(31.8rem, 49vh, 33.3rem);
+  height: clamp(30.4rem, 47vh, 31.9rem);
   min-height: 0;
 }
 
@@ -2857,9 +2818,7 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
   /* rem, to match the rem-sized track and type above: a px icon would hold
      its 48px while the copy around it grew with the fluid root, eating the
      card's budget from the top on wide screens. */
-  /* Reduced from 2.375rem: the disc is decoration, and every pixel it gives
-     back goes to the heading and paragraph, which now run larger. */
-  width: 1.875rem; height: 1.875rem; margin: 0 0 .4375rem;
+  width: 2.375rem; height: 2.375rem; margin: 0 0 .5rem;
   border-radius: 50%;
   background: rgba(255,255,255,.34);
   border: 1px solid rgba(255,255,255,.55);
@@ -2868,17 +2827,14 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
   box-shadow: 0 6px 16px rgba(19,167,236,.16);
   transition: box-shadow .35s ease, color .35s ease;
 }
-.why-item .icon svg { width: .9375rem; height: .9375rem; position: relative; z-index: 1; }
+.why-item .icon svg { width: 1.1875rem; height: 1.1875rem; position: relative; z-index: 1; }
 /* Sized in rem, not em: the card is a small-typed context and an em-based
    heading would compound down into the hyphenation the old layout showed. */
 .why-item h4 {
-  /* Up from .875rem and a weight heavier: the card title is the thing being
-     scanned, so it carries more presence than the copy under it. */
-  font-size: 1rem;           /* 16px */
-  font-weight: 700;
-  line-height: 1.22;
-  letter-spacing: -.005em;
-  margin-bottom: 6px;
+  font-size: .875rem;        /* 14px */
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 5px;
   color: var(--blue-800);
   /* The headings are short noun phrases — never break them mid-word. */
   hyphens: none;
@@ -2889,7 +2845,7 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
      compounded as the fluid root grew, which is what ran the four longest
      cards a line past the glass on wide screens. Fixed rem plus a tighter
      leading keeps every paragraph inside its card. */
-  font-size: .875rem;        /* 14px, up from 13px */
+  font-size: .8125rem;       /* 13px */
   line-height: 1.45;
   margin: 0;
   color: var(--ink-700);
@@ -3098,8 +3054,8 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
   }
   .why-grid { grid-template-columns: 1fr; gap: 14px; width: 100%; max-width: none; }
   .why-item { min-height: 0; padding: 20px 20px 22px; border-radius: 22px; }
-  .why-item .icon { width: 32px; height: 32px; margin-bottom: 9px; }
-  .why-item .icon svg { width: 16px; height: 16px; }
+  .why-item .icon { width: 38px; height: 38px; margin-bottom: 10px; }
+  .why-item .icon svg { width: 19px; height: 19px; }
   .why-section .section-head { margin-bottom: 32px; }
 
   .js .why-section[data-why] .why-bg { transform: scale(1.04); }
@@ -4295,7 +4251,7 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
   }
   .hero-stats div div { align-items: center; }
   .hero-stats .ic svg { width: 32px; height: 32px; }
-  .hero-stats strong { font-size: 1.5em; }
+  .hero-stats strong { font-size: 1.25em; }
   .hero-stats > div:last-child {
     flex: 0 0 100%;
     flex-direction: row;
@@ -7035,30 +6991,6 @@ body:has(> main > .connect-band-section:last-child) > main { background: var(--p
   .journey-copy h2,
   .cta-band h2,
   .ab-statement { font-size: 1.8em; }
-}
-
-/* ---- "31+ Years" in the Why Jagruti heading ----
-   Placed after the consolidated heading block above on purpose: that block
-   sets font-family/size/weight on .why-section .section-head h2 and, being
-   later in the file at equal specificity, used to win over an earlier rule
-   here and flatten this emphasis back to the heading's own style.
-
-   The emphasis is colour, not weight: the heading is Marcellus, which ships
-   a single weight, so a bolder span would only get a synthesised faux-bold.
-   --blue-500 is the brightest step of the brand scale and is already the
-   section's accent (the eyebrow and the card icons carry it), so the number
-   lifts off the --blue-800 heading while staying inside the palette. */
-.why-section .section-head h2 .why-hl { white-space: nowrap; }
-.why-section .section-head h2 .why-hl-num {
-  color: var(--blue-500);
-  /* Weight is unavailable here — Marcellus ships one cut — so the lift comes
-     from size and colour instead: ~15% larger than the words around it, which
-     is enough to register as the figure being claimed without re-wrapping the
-     line. */
-  font-size: 1.15em;
-  /* The serif sets figures a touch loose at display size; a hair tighter
-     keeps "31+" reading as one unit. */
-  letter-spacing: -.015em;
 }
 
 /* ==========================================================================
