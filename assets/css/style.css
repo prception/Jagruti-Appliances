@@ -7693,6 +7693,16 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
   background: radial-gradient(ellipse at center, transparent 0%, rgba(4,14,22,.92) 100%);
   opacity: .62;
 }
+/* .rf-contain: the photograph fills the panel exactly — sized to the panel
+   itself, with no parallax oversize and no hover zoom, so only the minimum
+   is trimmed. --rf-pos keeps the machine in frame for each photo. */
+.grid-editorial .rf-contain img {
+  top: 0; height: 100%;
+  object-fit: cover; object-position: var(--rf-pos, center);
+  will-change: auto;
+}
+.grid-editorial .rf-contain:hover img { transform: none; }
+
 /* Copy sits bottom-right with the headline pulled to the left edge — the
    reference's align-items:flex-end plus align-self:flex-start on the title. */
 .grid-editorial .rf-content {
