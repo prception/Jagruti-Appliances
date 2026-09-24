@@ -7702,6 +7702,14 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
   will-change: auto;
 }
 .grid-editorial .rf-contain:hover img { transform: none; }
+/* A contained panel that opts back into parallax gets just enough oversize
+   for the drift. --px-travel must equal data-parallax (0.22 -> 22%). */
+.grid-editorial .rf-contain img[data-parallax] {
+  --px-travel: 22%;
+  top: calc(var(--px-travel) * -1);
+  height: calc(100% + var(--px-travel) * 2);
+  will-change: transform;
+}
 
 /* Copy sits bottom-right with the headline pulled to the left edge — the
    reference's align-items:flex-end plus align-self:flex-start on the title. */
