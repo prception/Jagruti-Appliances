@@ -159,32 +159,21 @@
      blocks above), NOT hotlinked from Fontshare's CDN, so the site owns
      its own delivery and leaks no visitor data to a third party.
 
-     NOTE: General Sans is no longer the page face — Marcellus runs the whole
-     site (see --font-sans just below). It is still USED in exactly one place:
-     --font-stage, the home page's giant background product name, which needs
-     a real 700. The four GeneralSans-*.woff2 files and their @font-face
-     blocks therefore stay, and the whole change can be reverted by pointing
-     --font-sans back at "General Sans". */
+     General Sans is the page face again (it briefly was Marcellus). Only the
+     family was reverted: every --fs-*, --lh-*, --ls-* and --fw-* token below
+     was left exactly as tuned during the Marcellus period. The Marcellus
+     @font-face blocks above are now unused and can be removed. */
 
   /* ---- The page face ----
-     Marcellus, site-wide: headings, body, buttons, nav, labels.
-
-     KNOWN TRADE-OFF, made deliberately: Marcellus ships ONE weight (400).
-     The --fw-label/--fw-strong/--fw-title steps below (500/600/700) are kept
-     as they were, so the browser SYNTHESISES those bolds by smearing the 400
-     outlines. That is accepted here to preserve the existing weight
-     hierarchy; it is not an oversight. If the faux-bold ever needs to go,
-     there are two exits: flatten every --fw-* to 400 (loses the hierarchy),
-     or swap in a serif that ships real 400–700 (e.g. EB Garamond).
-
-     Georgia is the fallback: also a high-contrast old-style serif, so a
-     failed load degrades in kind rather than to a grotesque. */
-  --font-sans: Marcellus, Georgia, "Times New Roman", serif;
+     General Sans, site-wide: headings, body, buttons, nav, labels. */
+  --font-sans: "General Sans", "Segoe UI", -apple-system, BlinkMacSystemFont,
+               "Helvetica Neue", Arial, sans-serif;
 
   /* Kept as its own token so headline-only tuning (the display line-height
      and tracking below) stays separable from the page face, even though both
      now resolve to the same family. */
-  --font-display: Marcellus, Georgia, "Times New Roman", serif;
+  --font-display: "General Sans", "Segoe UI", -apple-system, BlinkMacSystemFont,
+                  "Helvetica Neue", Arial, sans-serif;
   --fw-display: 400;
 
   /* The survivor of the General Sans era, for the two places that are drawn
@@ -1710,14 +1699,17 @@ html.menu-open { overflow: hidden; }
   position: absolute; z-index: 5;
   left: var(--gutter);
   top: 50%; transform: translateY(-50%);
-  width: min(38%, 430px);
+  /* Wide enough for the 600-weight headline to set in two lines ("Powerful
+     Grinding," / "Made Easy"). At 430px it wrapped to three and the block
+     grew down into the scene tabs (.hero-dots) below it. */
+  width: min(38%, 640px);
   text-align: left;
   color: #fff;
   text-shadow: 0 1px 16px rgba(0,32,52,.55), 0 1px 3px rgba(0,32,52,.5);
 }
 .hc-eyebrow {
   margin: 0 0 .5em;
-  font-size: var(--fs-label); font-weight: var(--fw-label);
+  font-size: var(--fs-label); font-weight: var(--fw-strong);
   letter-spacing: var(--ls-label-tight); text-transform: none;
   color: rgba(255,255,255,.86);
 }
@@ -1727,11 +1719,11 @@ html.menu-open { overflow: hidden; }
      and optically smaller than the 700 grotesque this slot was sized for, so
      it needs more scale to carry the hero. */
   font-size: clamp(30px, 4.2vw, 66px);
-  /* The display serif, as on every other hero headline on the site. Weight is
-     400 because Marcellus ships no other weight — the old 700 would be
-     synthesised into a faux-bold. */
+  /* Heavier than the other display headlines (--fw-display, 400) so the
+     copy holds its own over the busy scene artwork. General Sans ships a
+     real 600, so this is a true cut, not a synthesised bold. */
   font-family: var(--font-display);
-  font-weight: var(--fw-display);
+  font-weight: 600;
   line-height: var(--lh-display);
   letter-spacing: var(--ls-display);
   color: #fff;
@@ -1741,6 +1733,7 @@ html.menu-open { overflow: hidden; }
 .hc-sub {
   margin: 0 0 1.4em;
   font-size: clamp(13px, 1.05vw, 16px); line-height: 1.5;
+  font-weight: var(--fw-label);
   color: rgba(255,255,255,.90);
   max-width: 30em;
 }
@@ -2036,7 +2029,9 @@ html.menu-open { overflow: hidden; }
 }
 .hero-stats > div {
   position: relative;
-  flex: 1 1 0;
+  /* Sized to content, not equal fifths: the long figures ("35,000+ sq.ft.",
+     "ISO 9001:2015") would otherwise be squeezed into wrapping. */
+  flex: 1 1 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2087,20 +2082,14 @@ html.menu-open { overflow: hidden; }
 .hero-stats strong {
   font-family: var(--font-display);
   color: var(--blue-700);
-  font-size: 1.75em;             /* 28px — size is the honest lever here */
-  font-weight: 700;              /* synthesised on Marcellus; see above */
+  /* Fluid, so all five figures stay on one row, each on one line, from the
+     900px breakpoint up; 34px cap on wide screens. */
+  font-size: clamp(24px, 2.45vw, 34px);
+  font-weight: 700;
+  white-space: nowrap;
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-title);
   font-variant-numeric: tabular-nums;
-  /* Thickens every stroke by .4px in the SAME colour as the fill. On a font
-     with no bold cut this is what actually adds mass — the synthesised 700
-     alone mostly just smears the edges. Kept low: past ~.6px the serif's
-     hairlines start to close up and the numerals go muddy. Drawn in
-     currentColor, not a fixed ink, so the reveal's blue-to-ink colour
-     transition carries the stroke with it instead of leaving a dark
-     outline around a blue numeral mid-animation. */
-  -webkit-text-stroke: .4px currentColor;
-  paint-order: stroke fill;
 }
 /* The label sits on the same page serif, black. It renders in its authored
    sentence case ("Certified Company"), NOT all-caps — the separation from
@@ -4204,6 +4193,8 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
     padding: 16px 18px;
   }
   .hero-stats > div:last-child { flex: 0 0 100%; justify-content: center; }
+  /* 2-up tiles: sized so "35,000+ sq.ft." still fits a half-width tile. */
+  .hero-stats strong { font-size: clamp(22px, 3.6vw, 32px); }
   .cs-columns { grid-template-columns: 1fr; }
   .cs-tabs { grid-template-columns: repeat(2, 1fr); }
   .compare-table td.attr { width: 40%; }
@@ -4295,7 +4286,9 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
   }
   .hero-stats div div { align-items: center; }
   .hero-stats .ic svg { width: 32px; height: 32px; }
-  .hero-stats strong { font-size: 1.5em; }
+  /* Icon-over-figure tiles are narrower; sized so the longest figure
+     stays on one line down to a 360px phone. */
+  .hero-stats strong { font-size: clamp(18px, 5.2vw, 28px); }
   .hero-stats > div:last-child {
     flex: 0 0 100%;
     flex-direction: row;
