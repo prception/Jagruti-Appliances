@@ -5595,11 +5595,11 @@ html:not(.js) .stage-actions { justify-content: center; }
 
    The shape of it: two layers share one section.
 
-   .journey-stage is position:sticky, one viewport tall, and holds the four
+   .journey-stage is position:sticky, one viewport tall, and holds the three
    photographs stacked on top of each other — each absolutely placed,
    filling the frame, object-fit:cover. .journey-body is pulled back OVER
-   that stage with margin-top:-100svh and holds four 100svh text panels.
-   So the section is four screens tall, the copy scrolls normally, and the
+   that stage with margin-top:-100svh and holds three 100svh text panels.
+   So the section is three screens tall, the copy scrolls normally, and the
    picture layer stays pinned behind it for the whole run.
 
    Stacking: photograph 0 sits on top, 3 at the bottom, via
@@ -5642,7 +5642,7 @@ html:not(.js) .stage-actions { justify-content: center; }
   /* clip rather than hidden — hidden on the ancestor would defeat the
      sticky stage, clip does not create a scroll container. */
   overflow-x: clip;
-  /* The section's own height comes entirely from .journey-body's four
+  /* The section's own height comes entirely from .journey-body's three
      panels, so the vertical padding every other .section carries would
      just add dead space above the first frame. */
   padding-top: 0;
@@ -6112,10 +6112,9 @@ html:not(.js) .stage-actions { justify-content: center; }
     background-size: cover;
     background-position: center center;
   }
-  .journey-panel[data-journey-slide="0"]::before { background-image: url("../images/Home page/grain to fresh floor/1new.png"); }
-  .journey-panel[data-journey-slide="1"]::before { background-image: url("../images/Home page/grain to fresh floor/2new.png.png"); }
-  .journey-panel[data-journey-slide="2"]::before { background-image: url("../images/Home page/grain to fresh floor/3new.png.png"); }
-  .journey-panel[data-journey-slide="3"]::before { background-image: url("../images/Home page/grain to fresh floor/4new.png"); }
+  .journey-panel[data-journey-slide="0"]::before { background-image: url("../images/Home page/grain to fresh floor/new3.png"); }
+  .journey-panel[data-journey-slide="1"]::before { background-image: url("../images/Home page/grain to fresh floor/new2.png"); }
+  .journey-panel[data-journey-slide="2"]::before { background-image: url("../images/Home page/grain to fresh floor/new1.png"); }
 
   /* The desktop entrance and exit are scrubbed against a panel that owns a
      whole screen. Stacked, a panel is a fraction of that, so those ranges
@@ -7370,6 +7369,23 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
    upper half, and the default framing pushed them down behind the headline.
    Pulling the focal point up keeps the subject clear of the copy. */
 .cat-hero-wide .ch-img { object-position: 50% 28%; }
+
+/* Slideshow banner: a hero carrying data-hero-slides stacks several .ch-img
+   pictures in the same box and main.js (initHeroSlides) moves .is-active
+   along them. Only the active one is opaque; the swap is a slow crossfade
+   with a faint settle in scale so the change reads as a dissolve, not a cut. */
+.cat-hero[data-hero-slides] .ch-img {
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity .8s ease, transform 3s ease-out;
+}
+.cat-hero[data-hero-slides] .ch-img.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cat-hero[data-hero-slides] .ch-img { transform: none; transition: opacity .4s linear; }
+}
 
 /* The collection grid sits CLOSE under the banner rather than a full
    --section-pad-y (up to 120px) below it: on a collection page the products

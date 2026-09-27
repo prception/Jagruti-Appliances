@@ -2130,14 +2130,6 @@
     var narrow = function () { return window.innerWidth < 768; };
     if (quiet) return;
 
-    /* The intro is sized at half the pin MINUS this, which slides the first
-       card's divider left onto the same line as the Two Ranges video edge
-       above. Both sides compute to half the screen on paper, yet render a
-       little apart; this is an empirical correction, measured off the
-       rendered page rather than derived, so re-measure it if that section's
-       layout changes. */
-    var SPLIT_NUDGE = 12;
-
     /* Travel is the rail's overflow: how far it has to move for its right
        edge to reach the right edge of the screen. Everything below is
        derived from this one number. */
@@ -2158,17 +2150,18 @@
         return;
       }
       VH = window.innerHeight;
-      /* The intro is sized from the PIN, not from 50vw. Both this band and
-         the Two Ranges split above are nominally "half the screen", but a
-         vw unit is half the viewport INCLUDING the scrollbar, while the
-         video's half is measured inside .range-pin, which is overflow:hidden
-         and has none. That mismatch left the first card's divider a few px
-         off the video's edge. pin.clientWidth excludes the scrollbar, so
-         half of it puts the divider on exactly the same line. The CSS
-         width:50vw stays as the pre-JS fallback. */
+      /* The intro keeps its CSS width:50vw. The Two Ranges video above ends
+         at --split:50vw — the same unit, scrollbar included — so the first
+         card's divider lands on exactly the video's edge. Any inline width
+         left from an earlier measurement is cleared. */
       var introEl = rail.querySelector(".services-intro");
-      if (introEl) introEl.style.width = (pin.clientWidth / 2 - SPLIT_NUDGE) + "px";
-      travel = Math.max(0, rail.scrollWidth - pin.clientWidth);
+      if (introEl) introEl.style.width = "";
+      /* Measured from the last panel's layout box, not rail.scrollWidth:
+         scrollWidth counts the 40px entrance offset on a card that is not
+         yet .is-in, which overshot the run and parked a bare strip of band
+         to the right of card 04. offsetLeft/offsetWidth ignore transforms. */
+      var last = panels[panels.length - 1];
+      travel = Math.max(0, last.offsetLeft + last.offsetWidth - pin.clientWidth);
       /* A rail only a little wider than the screen gives a run so short it
          reads as a twitch. Below a screen of overflow the section is not
          worth pinning at all, so it falls back to a static band. */
@@ -2321,6 +2314,45 @@
         } });
   });
     window.addEventListener("load", function () { ScrollTrigger.refresh(); });
+  }
+
+  /* ---------------- Category hero slideshow ----------------
+     A .cat-hero with data-hero-slides holds several .ch-img pictures; this
+     rotates .is-active through them every few seconds and the CSS
+     crossfades. It pauses while the tab is hidden so a background tab does
+     not keep cycling, and only the visible picture is exposed to assistive
+     tech. */
+  function initHeroSlides() {
+    var heroes = document.querySelectorAll(".cat-hero[data-hero-slides]");
+    Array.prototype.forEach.call(heroes, function (hero) {
+      var slides = hero.querySelectorAll(".ch-img");
+      if (slides.length < 2) return;
+      var current = 0;
+      var timer = null;
+
+      function show(i) {
+        slides[current].classList.remove("is-active");
+        slides[current].setAttribute("aria-hidden", "true");
+        current = i;
+        slides[current].classList.add("is-active");
+        slides[current].removeAttribute("aria-hidden");
+      }
+      function start() {
+        if (timer) return;
+        timer = setInterval(function () {
+          show((current + 1) % slides.length);
+        }, 2000);
+      }
+      function stop() {
+        clearInterval(timer);
+        timer = null;
+      }
+
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) stop(); else start();
+      });
+      start();
+    });
   }
 
   function initTwoRanges() {
@@ -2512,6 +2544,7 @@
     initWhyReveal();
     initServices();
     initTwoRanges();
+    initHeroSlides();
 
     // The hero's opening entrance is the first thing a visitor should see, so
     // it starts only once the curtain is on its way up — otherwise scene 1
