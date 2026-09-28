@@ -2403,6 +2403,18 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
   .need-tile:hover video { transform: scale(1.05); }
   .need-tile:hover .need-tile-link { color: var(--white); }
 }
+.need-tile-arrow {
+  display: inline-grid; place-items: center;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px solid currentColor;
+  transition: background-color .35s ease, border-color .35s ease, color .35s ease, transform .35s ease;
+}
+.need-tile-arrow svg { width: 16px; height: 16px; }
+.need-tile:hover .need-tile-arrow,
+.need-tile:focus-visible .need-tile-arrow {
+  background: var(--white); border-color: var(--white); color: var(--blue-700);
+  transform: translateX(4px);
+}
 .need-tile:focus-visible { outline: 3px solid var(--blue-300); outline-offset: -3px; }
 
 @media (max-width: 1080px) {
@@ -6404,6 +6416,37 @@ html:not(.js) .stage-actions { justify-content: center; }
 .service-card:hover .service-num,
 .service-card:focus-visible .service-num { color: var(--white); }
 
+/* Link cue: a circled arrow in the number's row, so every panel reads as
+   clickable before it is hovered. It fills and turns to point forward on
+   hover/focus. */
+.service-arrow {
+  grid-row: 1;
+  grid-column: 1;
+  justify-self: start;
+  align-self: center;
+  display: inline-grid;
+  place-items: center;
+  width: clamp(44px, 3.4vw, 56px);
+  height: clamp(44px, 3.4vw, 56px);
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, .55);
+  color: var(--white);
+  transition: background-color .4s ease, border-color .4s ease, color .4s ease;
+}
+.service-arrow svg {
+  width: 45%;
+  height: 45%;
+  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+}
+.service-card:hover .service-arrow,
+.service-card:focus-visible .service-arrow {
+  background: var(--white);
+  border-color: var(--white);
+  color: var(--blue-700);
+}
+.service-card:hover .service-arrow svg,
+.service-card:focus-visible .service-arrow svg { transform: rotate(45deg); }
+
 .service-num   { grid-row: 1; }
 .service-title { grid-row: 3; }
 .service-copy  { grid-row: 5; }
@@ -6521,6 +6564,8 @@ html:not(.js) .stage-actions { justify-content: center; }
   .service-bg,
   .service-media,
   .service-num,
+  .service-arrow,
+  .service-arrow svg,
   .js .service-card,
   .js .services-intro { transition: none !important; }
   .service-bg { clip-path: inset(0% 0% 0% 0%); }
