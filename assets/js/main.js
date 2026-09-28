@@ -523,7 +523,7 @@
         { label: "Warranty", value: function (p) { return esc(specValue(p, "Warranty")); } },
         { label: "Service", value: function () { return '<a href="support/service.html">Service &amp; repairs &rarr;</a>'; } },
         { label: "Spare Parts", value: function () { return '<a href="support/spare-parts.html">Spare parts &rarr;</a>'; } },
-        { label: "Customer Care", value: function () { return '<a href="tel:+917070705922">+91 70707 05922</a>'; } }
+        { label: "Customer Care", value: function () { return '<a href="tel:+919512305922">+91 95123 05922</a>'; } }
       ]);
     }
 
