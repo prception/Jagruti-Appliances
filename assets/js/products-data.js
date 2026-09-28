@@ -4,64 +4,50 @@ var JAGRUTI_PRODUCTS = [
     "slug": "supreme",
     "name": "Jagruti Supreme Domestic Flour Mill",
     "category": "domestic-flour-mill",
-    "image": "assets/images/products/jagruti-supreme-flour-mill.jpg",
+    "image": "assets/images/products/jagruti-supreme-flour-mill-1.webp",
     "specs": []
   },
   {
     "slug": "supreme-plus",
     "name": "Jagruti Supreme Plus Domestic Flour Mill",
     "category": "domestic-flour-mill",
-    "image": "assets/images/products/jagruti-supreme-plus-flour-mill.jpg",
+    "image": "assets/images/products/jagruti-supreme-plus-flour-mill-1.webp",
     "specs": []
   },
   {
     "slug": "kerona",
     "name": "Jagruti Kerona Domestic Flour Mill",
     "category": "domestic-flour-mill",
-    "image": "assets/images/products/jagruti-kerona-flour-mill.jpg",
+    "image": "assets/images/products/jagruti-kerona-flour-mill-1.webp",
     "specs": []
   },
   {
     "slug": "kerona-plus",
     "name": "Jagruti Kerona Plus Domestic Flour Mill",
     "category": "domestic-flour-mill",
-    "image": "assets/images/products/jagruti-kerona-plus-flour-mill.jpg",
+    "image": "assets/images/products/jagruti-kerona-plus-flour-mill-1.webp",
     "specs": []
   },
   {
     "slug": "aura",
     "name": "Jagruti Aura Domestic Flour Mill",
     "category": "domestic-flour-mill",
-    "image": "assets/images/products/jagruti-aura-flour-mill.jpg",
+    "image": "assets/images/products/jagruti-aura-flour-mill-1.webp",
     "specs": []
   },
   {
     "slug": "aura-plus",
     "name": "Jagruti Aura Plus Domestic Flour Mill",
     "category": "domestic-flour-mill",
-    "image": "assets/images/products/jagruti-aura-plus-flour-mill.jpg",
+    "image": "assets/images/products/jagruti-aura-plus-flour-mill-1.webp",
     "specs": [],
-    "cutout": "assets/images/products/jagruti-aura-plus-cutout.webp"
+    "cutout": "assets/images/products/jagruti-aura-plus-flour-mill-1.webp"
   },
   {
-    "slug": "premium",
-    "name": "Jagruti Premium Domestic Flour Mill",
+    "slug": "royal",
+    "name": "Jagruti Royal 5 KG Domestic Flour Mill",
     "category": "domestic-flour-mill",
-    "image": "assets/images/products/jagruti-premium-flour-mill.jpg",
-    "specs": []
-  },
-  {
-    "slug": "premium-plus",
-    "name": "Jagruti Premium Plus Domestic Flour Mill",
-    "category": "domestic-flour-mill",
-    "image": "assets/images/products/jagruti-premium-plus-flour-mill.jpg",
-    "specs": []
-  },
-  {
-    "slug": "gelanto",
-    "name": "Jagruti Gelanto Domestic Flour Mill",
-    "category": "domestic-flour-mill",
-    "image": "assets/images/products/jagruti-gelanto-flour-mill.jpg",
+    "image": "assets/images/products/jagruti-royal-flour-mill-1.webp",
     "specs": []
   },
   {

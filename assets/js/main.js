@@ -2526,6 +2526,26 @@
     window.addEventListener("load", function () { ScrollTrigger.refresh(); });
   }
 
+  /* ---------------- Product door-design picker ----------------
+     Each swatch carries the full image in data-src; picking one swaps the
+     gallery's main image and moves the pressed state. */
+  function initVariants() {
+    document.querySelectorAll(".pd-variants").forEach(function (group) {
+      var main = group.parentElement.querySelector(":scope > img");
+      if (!main) return;
+      group.addEventListener("click", function (e) {
+        var btn = e.target.closest(".pd-variant");
+        if (!btn) return;
+        main.src = btn.getAttribute("data-src");
+        group.querySelectorAll(".pd-variant").forEach(function (b) {
+          var on = b === btn;
+          b.classList.toggle("is-active", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     // First: the showcase's wheel bridge expects `lenis` to already exist.
     initSmoothScroll();
@@ -2545,6 +2565,7 @@
     initServices();
     initTwoRanges();
     initHeroSlides();
+    initVariants();
 
     // The hero's opening entrance is the first thing a visitor should see, so
     // it starts only once the curtain is on its way up — otherwise scene 1

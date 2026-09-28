@@ -3436,6 +3436,25 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
   padding: 12px;
   background: var(--blue-50);
 }
+/* The flour mill cut-outs are upright (~1:2), so at full column width they
+   would run far below the fold. Cap the height and let `contain` centre the
+   machine in the column instead. */
+.pd-gallery > img.is-cutout { max-height: 620px; object-fit: contain; }
+@media (max-width: 640px) { .pd-gallery > img.is-cutout { max-height: 440px; } }
+/* Door-design picker: one swatch per artwork the model ships in. */
+.pd-variants { display: flex; justify-content: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.pd-variant {
+  width: 58px; height: 78px; padding: 4px; cursor: pointer;
+  background: var(--blue-50); border: 1.5px solid transparent; border-radius: var(--radius-md, 10px);
+  transition: border-color .2s ease;
+}
+.pd-variant:hover { border-color: var(--blue-100); }
+.pd-variant.is-active { border-color: var(--blue-600); }
+.pd-variant:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 2px; }
+.pd-gallery .pd-variant img {
+  width: 100%; height: 100%; object-fit: contain;
+  border: none; border-radius: 0; box-shadow: none;
+}
 .pd-gallery .cap { text-align: center; font-size: var(--fs-caption); color: var(--ink-500); margin-top: 10px; }
 .pd-info .cat-tag { font-size: var(--fs-tag); font-weight: var(--fw-label); text-transform: none; letter-spacing: var(--ls-label-tight); color: var(--blue-600); }
 /* h2 step, not h1: this sits in a half-width column beside the gallery,
