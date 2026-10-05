@@ -3514,7 +3514,8 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
 .spec-table td:first-child { font-weight: 400; color: var(--ink-900); white-space: nowrap; }
 .spec-table-wrap { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--blue-100); }
 
-.fit-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.fit-grid { --fit-cols: 5; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.fit-grid > .fit-pill { flex: 0 1 calc((100% - (var(--fit-cols) - 1) * 12px) / var(--fit-cols)); }
 .fit-pill { background: var(--blue-50); border: 1px solid var(--blue-100); border-radius: var(--radius-md); padding: 16px 12px; text-align: center; font-size: var(--fs-label); font-weight: var(--fw-body); color: var(--blue-800); }
 
 .related-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
@@ -4141,7 +4142,7 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
      above — an override at this breakpoint is what previously collapsed
      that grid into a narrow strip. */
   .related-strip { grid-template-columns: repeat(2, 1fr); }
-  .fit-grid { grid-template-columns: repeat(3, 1fr); }
+  .fit-grid { --fit-cols: 3; }
   /* Tablet keeps the two columns — there is still width for them — with the
      cards and gutter stepped down proportionally. */
   .split-grid { gap: 20px; }
@@ -4324,7 +4325,7 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
 
   .related-strip { grid-template-columns: 1fr 1fr; }
   .feature-list { grid-template-columns: 1fr; }
-  .fit-grid { grid-template-columns: repeat(2, 1fr); }
+  .fit-grid { --fit-cols: 2; }
   /* The token's own clamp floor already lands near this on a phone, but
      it is stated here because the vh term can still drift on a tall narrow
      device; this keeps phone sections compact and content-driven. */
