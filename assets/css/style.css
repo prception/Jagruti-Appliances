@@ -2374,6 +2374,11 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
    food-processing shot sits higher in its frame and needs centring instead
    (.need-tile--center), or its subject runs off the bottom edge. */
 .need-tile--center video { object-position: center center; }
+/* The roti clip's mixer sits right of frame centre, so the crop is slid
+   right to bring the machine and its bowl back to the middle of the card. */
+.need-tile--right video { object-position: 65% bottom; }
+/* The home clip's flour mill is only just right of centre, so a lighter nudge. */
+.need-tile--right-slight video { object-position: 58% bottom; }
 
 .need-tile::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
@@ -3439,8 +3444,41 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
 /* The flour mill cut-outs are upright (~1:2), so at full column width they
    would run far below the fold. Cap the height and let `contain` centre the
    machine in the column instead. */
-.pd-gallery > img.is-cutout { max-height: 620px; object-fit: contain; }
-@media (max-width: 640px) { .pd-gallery > img.is-cutout { max-height: 440px; } }
+.pd-gallery > img.is-cutout,
+.pd-stage > img.is-cutout { max-height: 620px; object-fit: contain; }
+@media (max-width: 640px) { .pd-gallery > img.is-cutout, .pd-stage > img.is-cutout { max-height: 440px; } }
+/* The product's name set large behind the machine, the way .stage-word sits
+   behind each machine in the homepage Featured showcase - same face, weight,
+   tracking and low-opacity blue - but scaled to this image column instead of
+   the viewport. initProductWord (main.js) solves the size so the widest line
+   spans the column; the clamp below is only the pre-JS fallback. */
+.pd-stage { position: relative; container-type: inline-size; }
+.pd-stage > img { position: relative; z-index: 1; display: block; }
+/* Held smaller than the column so more of the name shows on either side. */
+.pd-stage > img.is-cutout { width: 58%; max-height: 400px; margin: 0 auto; }
+@media (max-width: 640px) { .pd-stage > img.is-cutout { width: 64%; max-height: 300px; } }
+.pd-word {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  z-index: 0;
+  margin: 0;
+  width: max-content;
+  max-width: none;
+  white-space: nowrap;
+  text-align: center;
+  font-family: var(--font-stage);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 16cqw, 10rem);
+  line-height: .82;
+  letter-spacing: -.055em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+  opacity: 1;
+  pointer-events: none;
+  user-select: none;
+  transform: translate(-50%, -50%);
+}
 /* Door-design picker: one swatch per artwork the model ships in. */
 .pd-variants { display: flex; justify-content: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
 .pd-variant {
@@ -4659,8 +4697,12 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
   .hc-cta {
     font-size: clamp(12px, 2.9vw, 14px);
     padding: .7em 1.4em;
-    pointer-events: auto;
   }
+  /* All four copies share one grid cell, so only the visible scene's CTA
+     may take clicks - otherwise the last (invisible) copy's link sits on
+     top and every tap goes to that one product page. The .js .is-current
+     rule below re-enables its copy; without JS there is no sequence. */
+  html:not(.js) .hero-copy:first-child .hc-cta { pointer-events: auto; }
 
   /* Slide-up entrance, since the copy is no longer vertically centred. */
   .js .hero-copy.is-current {
@@ -5191,8 +5233,7 @@ html.preloading, html.preloading body { overflow: hidden; }
      box-centring leaves the visible machine off centre and the giant name
      behind it then reads as shifted the other way. Measured alpha-bounds
      offsets (ink centre vs box centre, as a share of file width):
-        aura-plus       +2.87%      eco-pulverizer  +5.30%
-        sugarcane       +2.68%      premium-1000    -2.29%
+        pride-blender   +1.59%      premium-1000    -2.29%
         all others       ~0%
      --ink-off is that correction, set per scene below and defaulting to
      zero, so a machine whose art is already centred is untouched. It only
@@ -5204,9 +5245,7 @@ html.preloading, html.preloading body { overflow: hidden; }
 /* Per-machine ink corrections. The value is the measured offset expressed
    against the RENDERED width, which is what translate percentages resolve
    against, so it holds at every size the machine is drawn at. */
-.stage-scene[data-name="Jagruti Aura Plus Domestic Flour Mill"] .stage-machine { --ink-off: 2.87%; }
-.stage-scene[data-name="Jagruti Eco Pulverizer"] .stage-machine { --ink-off: 5.30%; }
-.stage-scene[data-name="Jagruti Sugarcane Juicer"] .stage-machine { --ink-off: 2.68%; }
+.stage-scene[data-name="Jagruti Pride Portable Hand Blender"] .stage-machine { --ink-off: 1.59%; }
 .stage-scene[data-name="Jagruti PREMIUM 1000 Automatic Roti Making Machine"] .stage-machine { --ink-off: -2.29%; }
 /* Feathers a machine that ships as a hard rectangle (a photograph carrying
    its own background) into the ground, rather than letting its edges cut.
@@ -6477,6 +6516,16 @@ html:not(.js) .stage-actions { justify-content: center; }
   line-height: 118%;
   letter-spacing: var(--ls-display);
   color: var(--white);
+}
+.service-title--yt {
+  display: flex;
+  align-items: center;
+  gap: .45em;
+}
+.service-yt-icon {
+  flex: none;
+  width: 1.3em;
+  height: auto;
 }
 .service-copy {
   display: block;
@@ -9069,3 +9118,17 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
 @media (max-width: 680px) {
   .blog-recommended > .container > .grid-editorial { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* ---------- Product pages: light-blue ground ----------
+   Client request: the product pages (everything under /products/) run on a
+   soft light-blue gradient instead of the near-white --page-bg. The gradient
+   sits on <main> so it spans the whole content column in one sweep; the
+   sections inside go transparent so it isn't restarted per section. Cards,
+   tables and pills keep their own white/tinted fills on top of it. */
+body.page-products { background: var(--blue-200); }
+body.page-products > main {
+  background: linear-gradient(180deg, var(--blue-200) 0%, #a1d5ed 50%, var(--blue-300) 100%);
+}
+body.page-products .section,
+body.page-products .section-alt,
+body.page-products .pd-top { background: transparent; }

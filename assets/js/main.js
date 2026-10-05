@@ -1059,7 +1059,10 @@
       word.textContent = "";
       for (var i = 0; i < text.length; i++) {
         var s = document.createElement("span");
-        s.textContent = text[i] === " " ? " " : text[i];
+        /* A span holding only a plain space collapses to zero width, which
+           ran two-word names together ("SUPREMEPLUS"), so the gap is a
+           non-breaking space. */
+        s.textContent = text[i] === " " ? " " : text[i];
         word.appendChild(s);
       }
       word.dataset.split = "1";
@@ -1303,7 +1306,37 @@
           p.word.style.fontSize = size + "px";
           size = size * want / (inkWidth(p) || 1);
         }
-        size = Math.min(size, cap);
+        p.word.style.fontSize = prev;
+        p.fit = Math.min(size, cap);
+      });
+
+      /* A short name ("Aura") fitted to the full rail solves to ~3x the
+         size of the others and grows TALL enough to run over the tagline
+         above and the copy below. So no name may exceed a modest multiple
+         of the typical (median) size: long names still span the rail, and
+         a short one stays centred, a little narrower than the band. */
+      var sizes = parts.filter(function (p) { return p.word; })
+                       .map(function (p) { return p.fit; })
+                       .sort(function (a, b) { return a - b; });
+      var maxFit = sizes.length ? sizes[Math.floor(sizes.length / 2)] * 1.42 : Infinity;
+
+      parts.forEach(function (p) {
+        if (!p.word) return;
+        var prev = p.word.style.fontSize;
+        var size = Math.min(p.fit, maxFit);
+
+        /* A capped name is shorter than the rail, so open its tracking to
+           STRETCH it wider without making it any taller — towards ~78% of
+           the band, but never more than +.14em so it still reads as one
+           word. Reset first so a resize re-solves from the stylesheet. */
+        p.word.style.letterSpacing = "";
+        p.word.style.fontSize = size + "px";
+        var gaps = (p.letters ? p.letters.length : 0) - 1;
+        if (p.fit > maxFit && gaps > 0) {
+          var extra = (box * target * .78 - inkWidth(p)) / gaps / size;
+          extra = Math.max(0, Math.min(extra, .14));
+          p.word.style.letterSpacing = (-.055 + extra).toFixed(3) + "em";
+        }
 
         /* Centre on the PAINTED ink. translateX(-50%) centres the element
            BOX, and the box is not concentric with the ink: trailing
@@ -2531,7 +2564,7 @@
      gallery's main image and moves the pressed state. */
   function initVariants() {
     document.querySelectorAll(".pd-variants").forEach(function (group) {
-      var main = group.parentElement.querySelector(":scope > img");
+      var main = group.parentElement.querySelector(":scope > img, :scope > .pd-stage > img");
       if (!main) return;
       group.addEventListener("click", function (e) {
         var btn = e.target.closest(".pd-variant");
@@ -2546,7 +2579,38 @@
     });
   }
 
+  /* ---------------- Product name behind the gallery image ----------------
+     Sizes each .pd-word so its widest line spans the full width of its .pd-stage,
+     refitting whenever the column resizes or the webfont arrives. */
+  function initProductWord() {
+    var words = document.querySelectorAll(".pd-word");
+    if (!words.length) return;
+    function fit(word) {
+      var stage = word.parentElement;
+      var target = stage.clientWidth;
+      if (!target) return;
+      word.style.fontSize = "100px";
+      var w = word.scrollWidth;
+      if (w) word.style.fontSize = (100 * target / w) + "px";
+    }
+    function fitAll() { words.forEach(fit); }
+    fitAll();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
+    if ("ResizeObserver" in window) {
+      var ro = new ResizeObserver(function (entries) {
+        entries.forEach(function (en) {
+          var w = en.target.querySelector(".pd-word");
+          if (w) fit(w);
+        });
+      });
+      words.forEach(function (w) { ro.observe(w.parentElement); });
+    } else {
+      window.addEventListener("resize", fitAll);
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
+    initProductWord();
     // First: the showcase's wheel bridge expects `lenis` to already exist.
     initSmoothScroll();
     initParallax();
