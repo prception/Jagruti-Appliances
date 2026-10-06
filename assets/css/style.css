@@ -1838,9 +1838,10 @@ html.menu-open { overflow: hidden; }
 .js .hero-copy { opacity: 0; pointer-events: none; }
 /* Copy is state-driven like the scenes: JS marks the active one, so it
    plays the same entrance whether the scene was reached on the timer or by
-   clicking the indicator. It rides in a beat after its product lands. */
+   clicking the indicator. It rides in while the scene is finishing, so it
+   lands with the burst (~1.45s) rather than after everything has stopped. */
 .js .hero-copy.is-current {
-  animation: heroCopyIn 900ms cubic-bezier(.22,.7,.24,1) 1250ms both;
+  animation: heroCopyIn 650ms cubic-bezier(.22,.7,.24,1) 800ms both;
   pointer-events: auto;
 }
 .js .hero-copy.is-leaving {
@@ -4707,7 +4708,7 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
 
   /* Slide-up entrance, since the copy is no longer vertically centred. */
   .js .hero-copy.is-current {
-    animation: heroCopyInFlat 900ms cubic-bezier(.22,.7,.24,1) 1250ms both;
+    animation: heroCopyInFlat 650ms cubic-bezier(.22,.7,.24,1) 800ms both;
     pointer-events: auto;
   }
   .js .hero-copy.is-leaving { animation: heroCopyOutFlat 400ms ease both; }
@@ -7642,6 +7643,14 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
 }
 /* A slower, smaller push than the base card's .35s/1.06 — at this size the
    image is the whole tile, so the movement wants to be barely there. */
+/* The All Products grid gets the same framing as the category pages: the
+   whole product contained with air around it, rather than the base card's
+   cover crop, which zoomed the photos in and sliced the machines. */
+.grid-3[data-product-grid] .product-card .thumb img,
+.grid-3[data-product-grid] .product-card .thumb img.is-cutout {
+  object-fit: contain;
+  padding: 6%;
+}
 .grid-editorial .product-card .thumb img { transition: transform .6s cubic-bezier(.22,.61,.36,1); }
 .grid-editorial .product-card:hover .thumb img { transform: scale(1.03); }
 
@@ -7826,9 +7835,9 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
 }
 .grid-editorial .rf-contain:hover img { transform: none; }
 /* A contained panel that opts back into parallax gets just enough oversize
-   for the drift. --px-travel must equal data-parallax (0.22 -> 22%). */
+   for the drift. --px-travel must equal data-parallax (0.16 -> 16%). */
 .grid-editorial .rf-contain img[data-parallax] {
-  --px-travel: 22%;
+  --px-travel: 16%;
   top: calc(var(--px-travel) * -1);
   height: calc(100% + var(--px-travel) * 2);
   will-change: transform;

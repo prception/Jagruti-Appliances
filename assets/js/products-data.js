@@ -323,7 +323,7 @@ var JAGRUTI_PRODUCTS = [
     "slug": "mixer-grinder",
     "name": "Jagruti Supreme 900 Mixer Grinder",
     "category": "kitchen-appliances",
-    "image": "assets/images/products/jagruti-supreme-900-mixer-grinder-photo.webp",
+    "image": "assets/images/products/kitchen%20appliance/Supreme%20900%20Mixer%20Grinder.webp",
     "specs": [
       [
         "Motor",
@@ -375,7 +375,7 @@ var JAGRUTI_PRODUCTS = [
     "slug": "juicer-mixer-grinder",
     "name": "Jagruti Supreme Gold Juicer Mixer Grinder",
     "category": "kitchen-appliances",
-    "image": "assets/images/products/jagruti-supreme-gold-juicer-mixer-grinder-photo.webp",
+    "image": "assets/images/products/kitchen%20appliance/Supreme%20Gold%20Juicer%20Mixer%20Grinder.webp",
     "specs": [
       [
         "Motor",
@@ -427,7 +427,7 @@ var JAGRUTI_PRODUCTS = [
     "slug": "hand-blender",
     "name": "Jagruti Pride Portable Hand Blender",
     "category": "kitchen-appliances",
-    "image": "assets/images/products/jagruti-pride-hand-blender-photo.webp",
+    "image": "assets/images/products/kitchen%20appliance/Pride%20Hand%20Blender.webp",
     "specs": [
       [
         "Motor Type & No.",
