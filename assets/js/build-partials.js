@@ -162,7 +162,9 @@ function processFile(file, templates) {
     console.warn(`SKIP ${rel}: nested more than one folder deep (script assumes max depth 1)`);
     return false;
   }
-  const rootPrefix = depth === 0 ? '' : '../'.repeat(depth);
+  // 404.html is served by the host for ANY missing URL, at any folder depth,
+  // so its links must be root-absolute rather than relative to its own file.
+  const rootPrefix = rel === '404.html' ? '/' : depth === 0 ? '' : '../'.repeat(depth);
   const activePage = path.basename(file, '.html');
 
   let content = fs.readFileSync(file, 'utf8');
