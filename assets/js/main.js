@@ -2100,6 +2100,8 @@
     var root = document.querySelector("[data-journey-scroll]");
     if (!root) return;
 
+    initJourneyStacked(root);
+
     /* The CSS is already doing it, and doing it better. */
     if (window.CSS && CSS.supports && CSS.supports("animation-timeline: view()")) return;
 
@@ -2130,6 +2132,32 @@
     Array.prototype.forEach.call(panels, function (panel) { obs.observe(panel); });
   }
 
+  /* Phones and tablets (<= 860px): the stacked layout. Marks the section
+     .is-journey-anim so the stylesheet hides each step, then adds
+     .is-journey-in to a panel once its top fifth is on screen, which
+     plays that step's entrance (see "The animation, kept for phones and
+     tablets" in style.css). Each step plays once. The class is only added
+     when JS runs, so without it everything is simply visible. */
+  function initJourneyStacked(root) {
+    if (!window.matchMedia || !("IntersectionObserver" in window)) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    var panels = root.querySelectorAll("[data-journey-slide]");
+    if (!panels.length) return;
+
+    root.classList.add("is-journey-anim");
+
+    var obs = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        if (!entries[i].isIntersecting) continue;
+        entries[i].target.classList.add("is-journey-in");
+        obs.unobserve(entries[i].target);
+      }
+    }, { threshold: 0.2, rootMargin: "0px 0px -8% 0px" });
+
+    Array.prototype.forEach.call(panels, function (panel) { obs.observe(panel); });
+  }
+
   /* ---------------- Service showcase ----------------
      A pinned horizontal run, after the reference site's Chapter III.
 
@@ -2145,6 +2173,35 @@
 
      The phone layout and reduced motion are handled entirely in CSS — a
      plain vertical stack — so the engine never starts for either. */
+  /* ---------------- Service spotlight (touch) ----------------
+     The cards' photograph is revealed by :hover on desktop. Phones and
+     touch tablets have no hover, so scrolling stands in for it: whichever
+     card crosses the middle of the screen gets .is-active, and the
+     stylesheet gives it the same reveal (mask open, photo in colour,
+     arrow filled). The centre band is a box in BOTH axes, so it works for
+     the vertical stack on phones and the horizontal rail on tablets alike —
+     IntersectionObserver follows the rail's transform. */
+  function initServiceSpotlight() {
+    var root = document.querySelector("[data-services]");
+    if (!root || !window.matchMedia || !("IntersectionObserver" in window)) return;
+
+    var touch = window.matchMedia("(hover: none), (max-width: 767px)");
+    if (!touch.matches) return;
+
+    var cards = root.querySelectorAll(".service-card");
+    if (!cards.length) return;
+
+    root.classList.add("is-spotlight");
+
+    var obs = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        entries[i].target.classList.toggle("is-active", entries[i].isIntersecting);
+      }
+    }, { rootMargin: "-42% -45% -42% -45%", threshold: 0 });
+
+    Array.prototype.forEach.call(cards, function (card) { obs.observe(card); });
+  }
+
   function initServices() {
     var root = document.querySelector("[data-services]");
     if (!root) return;
@@ -2609,6 +2666,49 @@
     }
   }
 
+  /* ---------------- Back-to-top button ----------------
+     Built here rather than in each page's markup so every page gets it from
+     one place. A tint rises inside the pill with scroll progress; the
+     button only appears once the visitor is part-way down the page. */
+  function initBackToTop() {
+    if (document.querySelector(".to-top")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "to-top";
+    btn.setAttribute("aria-label", "Back to top");
+    btn.innerHTML =
+      '<span class="to-top__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></span>' +
+      '<span class="to-top__label" aria-hidden="true">TOP</span>';
+    document.body.appendChild(btn);
+
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      var p = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
+      btn.style.setProperty("--tt-fill", p.toFixed(3));
+      btn.classList.toggle("is-visible", y > window.innerHeight * 0.6);
+    }
+    function onScroll() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    update();
+
+    btn.addEventListener("click", function () {
+      // Through Lenis when it owns the scroll, so the trip up glides at the
+      // same pace as the rest of the page instead of fighting it.
+      if (lenis) lenis.scrollTo(0, { duration: 1.4 });
+      else {
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+      }
+      btn.blur();
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initProductWord();
     // First: the showcase's wheel bridge expects `lenis` to already exist.
@@ -2627,9 +2727,11 @@
     initJourney();
     initWhyReveal();
     initServices();
+    initServiceSpotlight();
     initTwoRanges();
     initHeroSlides();
     initVariants();
+    initBackToTop();
 
     // The hero's opening entrance is the first thing a visitor should see, so
     // it starts only once the curtain is on its way up — otherwise scene 1

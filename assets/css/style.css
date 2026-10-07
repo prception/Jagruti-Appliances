@@ -392,6 +392,19 @@ h4 { margin: 0 0 .4em;   font-size: var(--fs-h4); line-height: var(--lh-card); l
 h5 { margin: 0 0 .4em;   font-size: var(--fs-h5); line-height: var(--lh-tight); letter-spacing: -0.01em; }
 h6 { margin: 0 0 .4em;   font-size: var(--fs-h6); line-height: var(--lh-tight); letter-spacing: -0.01em; }
 
+/* Visually hidden but read by search engines and screen readers - used for
+   section headings that keep the H1-H6 outline unbroken without adding
+   visible text to the design. */
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Prose. 400 weight, the open body leading, and the one body size — the
    contrast against the 700 headings above is what carries the hierarchy,
    so body copy never needs to reach for a heavier weight to be read. */
@@ -2799,7 +2812,8 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
 /* The label is the whole content now, so it carries the weight the heading
    and paragraph used to share. Kept to two lines at every width by the
    column count below rather than by shrinking the type. */
-.trust-item h4 {
+.trust-item h4,
+.trust-item h3 {
   margin: 0;
   font-size: .9375rem;       /* 15px */
   font-weight: 600;
@@ -2878,7 +2892,8 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
 .why-item .icon svg { width: .9375rem; height: .9375rem; position: relative; z-index: 1; }
 /* Sized in rem, not em: the card is a small-typed context and an em-based
    heading would compound down into the hyphenation the old layout showed. */
-.why-item h4 {
+.why-item h4,
+.why-item h3 {
   /* Up from .875rem and a weight heavier: the card title is the thing being
      scanned, so it carries more presence than the copy under it. */
   font-size: 1rem;           /* 16px */
@@ -3390,7 +3405,8 @@ body[data-nav="over-dark"] main > .page-hero:first-child { padding-top: calc(var
 .steps-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; counter-reset: step; }
 .step { text-align: center; padding: 20px; position: relative; }
 .step .num { width: 42px; height: 42px; border-radius: 50%; background: var(--blue-600); color: #fff; font-weight: 500; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
-.step h4 { font-size: 1em; margin-bottom: 4px; }
+.step h4,
+.step h3 { font-size: 1em; line-height: var(--lh-card); letter-spacing: -0.01em; margin-bottom: 4px; }
 .step p { font-size: var(--fs-label); }
 
 /* testimonial */
@@ -3811,7 +3827,8 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
 .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--blue-500); }
 .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .contact-info-card { background: var(--blue-50); border: 1px solid var(--blue-100); border-radius: var(--radius-lg); padding: 26px; margin-bottom: 18px; }
-.contact-info-card h4 { font-size: .875rem; font-weight: 600; line-height: 1.25; text-transform: none; letter-spacing: var(--ls-label-tight); color: var(--blue-600); margin-bottom: 5px; }
+.contact-info-card h4,
+.contact-info-card h3 { font-size: .875rem; font-weight: 600; line-height: 1.25; text-transform: none; letter-spacing: var(--ls-label-tight); color: var(--blue-600); margin-bottom: 5px; }
 .contact-info-card .val { font-size: .8125rem; line-height: 1.45; font-weight: var(--fw-label); color: var(--ink-900); }
 /* The address wraps to several lines, so it sits one step down from the
    single-line phone/email values; the email keeps the root size so a long
@@ -3991,7 +4008,10 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
   gap: 30px 44px;
 }
 
-.footer-nav h5 {
+.footer-nav h5,
+.footer-nav h3 {
+  margin-top: 0;
+  line-height: var(--lh-tight);
   color: #fff;
   font-size: var(--fs-footer);
   font-weight: var(--fw-label);
@@ -4637,15 +4657,60 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
     to   { opacity: 1; transform: scale(1.10); }
   }
 
-  /* Legibility for white copy over the bright sky: a soft top-down scrim
-     rather than the desktop's left-column vignette. */
+  /* No full-height scrim in portrait: stacked under the header scrim it
+     turned the whole top band navy. The header scrim behind the logo is the
+     desktop one, unchanged, so the top reads the same at every size; below
+     it the sky keeps its own colour and the copy's text-shadow carries
+     legibility. */
+  /* Re-used as a LIGHT wash rather than a dark scrim: the scene's sky sits
+     at a deep saturated blue on portrait, so a pale sky tint over the upper
+     band lifts it towards the lighter sky of the artwork's own horizon.
+     It fades out above the machine so the product keeps its own colour.
+     z-index 4: over the scenes, under the leaf frame (5) and copy (6). */
   .hero-parallax::before {
     content: ""; position: absolute; inset: 0; z-index: 4;
     pointer-events: none;
     background: linear-gradient(180deg,
-      rgba(0,34,56,.52) 0%, rgba(0,34,56,.30) 26%,
-      rgba(0,34,56,.06) 46%, transparent 62%);
+      rgba(214,236,250,0)   0%,
+      rgba(214,236,250,.26) 10%,
+      rgba(214,236,250,.30) 22%,
+      rgba(214,236,250,.20) 32%,
+      rgba(214,236,250,.08) 40%,
+      rgba(214,236,250,0)   48%);
   }
+  /* The band above the stage is filled with the section's own ground, so it
+     is lifted to the same paler sky or it would show as a darker strip. */
+  .hero-parallax {
+    background:
+      linear-gradient(180deg,
+        #7fb6de 0%, #79b2dc 18%,
+        #5b9dce 32%, #4fa0d0 62%,
+        #4d9fd0 82%, #4d9fd0 100%);
+  }
+
+  /* Portrait header scrim: the desktop scrim's dark top is kept (same
+     colour, same .86 at the top edge behind the logo); only its fall-off
+     is reshaped. It starts easing off inside the bar and trails out in
+     ever-smaller steps well below it, so there is no point where the
+     shade visibly ends. Homepage only; other over-dark heroes keep the
+     desktop scrim. */
+  body[data-nav="over-dark"]:has(.hero-parallax) .site-header:not(.is-scrolled)::before {
+    /* Holds dark through the whole bar so the logo has a solid ground,
+       then trails off over a long, eased run below it. */
+    height: calc(var(--header-h) + 100px);
+    background: linear-gradient(180deg,
+      rgba(0,22,36,.92) 0,
+      rgba(0,22,36,.86) calc(var(--header-h) * .35),
+      rgba(0,22,36,.76) calc(var(--header-h) * .7),
+      rgba(0,22,36,.62) var(--header-h),
+      rgba(0,22,36,.46) calc(var(--header-h) + 14px),
+      rgba(0,22,36,.30) calc(var(--header-h) + 30px),
+      rgba(0,22,36,.17) calc(var(--header-h) + 48px),
+      rgba(0,22,36,.08) calc(var(--header-h) + 66px),
+      rgba(0,22,36,.03) calc(var(--header-h) + 84px),
+      rgba(0,22,36,0) 100%);
+  }
+
 
   /* --- Copy: centred, in the upper band, over the artwork --------------- */
   .hero-parallax .hero-copywrap {
@@ -4662,7 +4727,7 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
     padding: 0 clamp(20px, 5vw, 40px);
     text-align: center;
     color: #fff;
-    text-shadow: 0 1px 18px rgba(0,32,52,.55), 0 1px 3px rgba(0,32,52,.5);
+    text-shadow: 0 1px 18px rgba(0,32,52,.6), 0 1px 3px rgba(0,32,52,.55);
   }
   /* Portrait type runs a step smaller than desktop: the artwork is the hero
      and the copy has to clear the machine below it, so the block is kept
@@ -4758,6 +4823,24 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
 /* Phones are too narrow for three scene labels on one row - the indicator
    drops to bare ticks there and the label is carried by the copy's eyebrow. */
 @media (max-aspect-ratio: 1/1) and (max-width: 560px) {
+  /* Flour mill (scene 4): the machine is far taller than the other three
+     products, so its top rises into the CTA. The whole plate is
+     shrunk around the podium and nudged down - every layer moves together,
+     so the machine stays registered on its podium. Uses the individual
+     `scale`/`translate` properties so it composes with the plate's own
+     transform-based entrance animation instead of replacing it. */
+  .hero-scene-4 .hero-plate {
+    transform-origin: 50% 80%;
+    scale: .9;
+    translate: 0 3svh;
+    /* Shrinking the plate pulls the artwork's top edge down below the
+       stage's own edge fade, where it showed as a hard horizontal cut.
+       The plate carries its own fade so that edge dissolves into the
+       sky ground the same way the other scenes' edges do. */
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 22%);
+            mask-image: linear-gradient(180deg, transparent 0, #000 22%);
+  }
+
   .hero-dots .hd { font-size: 0; gap: 0; padding: 6px 3px; }
   .hero-dots { gap: .5em; }
   .hero-dots .hd i { width: 18px; }
@@ -6029,6 +6112,10 @@ html:not(.js) .stage-actions { justify-content: center; }
   margin-top: 8px;
 }
 
+/* Inline photograph for the stacked phone/tablet layout only; on desktop
+   the pinned .journey-stage carries the pictures. */
+.journey-photo { display: none; }
+
 /* ---- Entrance of the copy ----
    Each panel's text rises and settles as its own frame comes forward, so
    the words arrive with the photograph rather than sitting there waiting
@@ -6151,6 +6238,15 @@ html:not(.js) .stage-actions { justify-content: center; }
     display: block;
   }
   .journey-panel + .journey-panel { margin-top: clamp(40px, 7vw, 72px); }
+  /* The desktop seam wash feathers the pinned photograph into Two Ranges.
+     Stacked there is no pinned photograph under it, so it just sat on
+     top of step 03's copy and CTA as a washed-out white box. */
+  .journey-panel:last-child::after { content: none; }
+  /* Instead, the section's own bottom padding fades to white so it meets
+     the white Two Ranges band without a hard grey edge. */
+  .journey-section {
+    background-image: linear-gradient(to bottom, transparent calc(100% - var(--section-pad-y) - 40px), var(--white));
+  }
   /* The inner is the pinned stage on desktop — a sticky, one-viewport-tall
      box. Stacked, there is nothing to pin it against, and leaving it at
      100svh gave every step a screen of empty space beneath it and pushed
@@ -6173,20 +6269,52 @@ html:not(.js) .stage-actions { justify-content: center; }
     margin-left: 0;
     margin-right: 0;
   }
-  /* Each panel gets its own photograph back, inline above the copy. */
-  .journey-panel::before {
-    content: "";
+  /* Each panel gets its own photograph back, inline above the copy. It is
+     a real <img> inside .journey-photo (hidden on desktop) rather than a
+     background, so the frame and the picture inside it can move apart. */
+  .journey-photo {
     display: block;
+    position: relative;
+    overflow: hidden;
     width: 100%;
     aspect-ratio: 16 / 10;
-    margin-bottom: 20px;
+    margin: 0 0 20px;
     border-radius: 16px;
-    background-size: cover;
-    background-position: center center;
   }
-  .journey-panel[data-journey-slide="0"]::before { background-image: url("../images/Home page/grain to fresh floor/new3.png"); }
-  .journey-panel[data-journey-slide="1"]::before { background-image: url("../images/Home page/grain to fresh floor/new2.png"); }
-  .journey-panel[data-journey-slide="2"]::before { background-image: url("../images/Home page/grain to fresh floor/new1.png"); }
+  .journey-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Panel 01 carries the section's own title as well as step 01. Stacked,
+     its photograph sat above both, so the section opened on a picture with
+     the heading underneath it. Here the title block leads, then each step
+     follows with its photograph above it, like steps 02 and 03.
+
+     The inner and copy wrappers dissolve (display: contents) so the
+     photograph and the copy's children become siblings that can be
+     reordered; the container's gutter is put back on the copy items. */
+  .journey-panel:first-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .journey-panel:first-child .journey-panel-inner,
+  .journey-panel:first-child .journey-copy { display: contents; }
+  .journey-panel:first-child .journey-copy > * {
+    order: 2;
+    margin-inline: max(var(--gutter), (100% - var(--container)) / 2 + var(--gutter));
+  }
+  .journey-panel:first-child .journey-copy > .eyebrow,
+  .journey-panel:first-child .journey-copy > h2,
+  .journey-panel:first-child .journey-copy > .journey-lead { order: 0; }
+  .journey-panel:first-child .journey-photo {
+    order: 1;
+    margin: 18px 0 6px;
+  }
 
   /* The desktop entrance and exit are scrubbed against a panel that owns a
      whole screen. Stacked, a panel is a fraction of that, so those ranges
@@ -6202,52 +6330,105 @@ html:not(.js) .stage-actions { justify-content: center; }
   }
 
   /* ---- The animation, kept for phones and tablets ----
-     Rather than dropping the motion with the pinned stage, each stacked
-     panel gets its own view-timeline and plays the same idea — the
-     photograph settling out of a soft zoom, the words rising under it — as
-     it scrolls into view. It runs ONCE per panel across the lower part of
-     the screen, so a step is fully legible well before it is centred, and
-     nothing animates while it is being read. */
-  .journey-panel {
-    view-timeline-name: --journey-card;
-    view-timeline-axis: block;
+     Time-based, not scroll-scrubbed: main.js marks the section
+     .is-journey-anim and adds .is-journey-in to each panel as it comes on
+     screen, and everything below plays from those two classes. That works
+     in every browser (iOS Safari before 26 has no animation-timeline, which
+     is why the old scrubbed version never ran there), and it also plays for
+     step 01, which is already on screen when the page loads. Without JS
+     the classes never appear and the section is simply shown.
+
+     Per panel, in order:
+       1. the frame wipes open from the panel's own side (left panels from
+          the left, right panels from the right),
+       2. the photograph settles out of a zoom, then keeps a slow drift so
+          the picture stays alive while it is read,
+       3. a single light sweep crosses it,
+       4. the copy rises in a stagger, sliding in from the same side,
+       5. the step number pops and a short accent line draws under the title. */
+  .journey-section.is-journey-anim .journey-photo {
+    clip-path: inset(0 100% 0 0 round 16px);
+    transition: clip-path 1.1s cubic-bezier(.77, 0, .18, 1);
+  }
+  .journey-section.is-journey-anim .journey-panel--right .journey-photo {
+    clip-path: inset(0 0 0 100% round 16px);
+  }
+  .journey-section.is-journey-anim .journey-photo img {
+    scale: 1.28;
+    transition: scale 1.8s cubic-bezier(.22, .61, .36, 1);
+    will-change: scale, translate;
+  }
+  .journey-section.is-journey-anim .journey-photo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .45) 50%, transparent 65%);
+    transform: translateX(-120%);
+    pointer-events: none;
   }
 
-  @supports (animation-timeline: view()) {
-    @keyframes journey-card-photo {
-      from { opacity: 0; transform: scale(1.06); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-    @keyframes journey-card-copy {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+  .journey-section.is-journey-anim .journey-panel.is-journey-in .journey-photo {
+    clip-path: inset(0 0 0 0 round 16px);
+  }
+  .journey-section.is-journey-anim .journey-panel.is-journey-in .journey-photo img {
+    scale: 1;
+    /* Uses the separate translate property so it never fights the scale
+       transition above. Starts once the zoom has mostly landed. */
+    animation: journey-drift 9s ease-in-out 1.6s infinite alternate;
+  }
+  .journey-section.is-journey-anim .journey-panel.is-journey-in .journey-photo::after {
+    animation: journey-sweep 1.2s ease-out .9s both;
+  }
+  @keyframes journey-drift {
+    from { translate: 0 0; }
+    to   { translate: -3% -2%; }
+  }
+  @keyframes journey-sweep {
+    from { transform: translateX(-120%); }
+    to   { transform: translateX(120%); }
+  }
 
-    .journey-panel::before {
-      animation: journey-card-photo both;
-      animation-timeline: --journey-card;
-      animation-range: entry 8% entry 62%;
-      animation-timing-function: cubic-bezier(.22, .61, .36, 1);
-      /* Scaling a background-image box: keeps the crop clean at the corners
-         while the photograph settles. */
-      transform-origin: center;
-      will-change: opacity, transform;
-    }
+  /* The copy: hidden and offset toward the panel's side until it is in. */
+  .journey-section.is-journey-anim .journey-copy > * {
+    opacity: 0;
+    transform: translate(-28px, 16px);
+    transition: opacity .7s ease, transform .9s cubic-bezier(.22, .61, .36, 1);
+  }
+  .journey-section.is-journey-anim .journey-panel--right .journey-copy > * {
+    transform: translate(28px, 16px);
+  }
+  .journey-section.is-journey-anim .journey-panel.is-journey-in .journey-copy > * {
+    opacity: 1;
+    transform: none;
+  }
+  .journey-section.is-journey-anim .journey-panel.is-journey-in .journey-copy > *:nth-child(1) { transition-delay: .35s; }
+  .journey-section.is-journey-anim .journey-panel.is-journey-in .journey-copy > *:nth-child(2) { transition-delay: .45s; }
+  .journey-section.is-journey-anim .journey-panel.is-journey-in .journey-copy > *:nth-child(3) { transition-delay: .55s; }
+  .journey-section.is-journey-anim .journey-panel.is-journey-in .journey-copy > *:nth-child(4) { transition-delay: .65s; }
+  .journey-section.is-journey-anim .journey-panel.is-journey-in .journey-copy > *:nth-child(5) { transition-delay: .75s; }
+  .journey-section.is-journey-anim .journey-panel.is-journey-in .journey-copy > *:nth-child(6) { transition-delay: .85s; }
 
-    /* The copy follows the picture in a short stagger, so the step reads as
-       one block arriving rather than six separate fades. */
-    .journey-copy > * {
-      animation: journey-card-copy both;
-      animation-timeline: --journey-card;
-      animation-timing-function: cubic-bezier(.22, .61, .36, 1);
-      will-change: opacity, transform;
-    }
-    .journey-copy > *:nth-child(1) { animation-range: entry 20% entry 66%; }
-    .journey-copy > *:nth-child(2) { animation-range: entry 24% entry 70%; }
-    .journey-copy > *:nth-child(3) { animation-range: entry 28% entry 74%; }
-    .journey-copy > *:nth-child(4) { animation-range: entry 32% entry 78%; }
-    .journey-copy > *:nth-child(5) { animation-range: entry 36% entry 82%; }
-    .journey-copy > *:nth-child(6) { animation-range: entry 40% entry 86%; }
+  /* Step number pops once its row has arrived. */
+  .journey-section.is-journey-anim .journey-step-num {
+    display: inline-block;
+    transform: scale(.4);
+    opacity: 0;
+    transition: transform .6s cubic-bezier(.34, 1.56, .64, 1), opacity .3s ease;
+  }
+  .journey-section.is-journey-anim .journey-panel.is-journey-in .journey-step-num {
+    transform: none;
+    opacity: 1;
+    transition-delay: .7s;
+  }
+
+  /* Accent line drawn under each step title. */
+  .journey-section.is-journey-anim .journey-copy h3 {
+    background: linear-gradient(var(--brand-primary), var(--brand-primary)) no-repeat left bottom / 0 3px;
+    padding-bottom: 8px;
+    transition: opacity .7s ease, transform .9s cubic-bezier(.22, .61, .36, 1), background-size .8s cubic-bezier(.22, .61, .36, 1);
+  }
+  .journey-section.is-journey-anim .journey-panel.is-journey-in .journey-copy h3 {
+    background-size: 56px 3px;
   }
 }
 
@@ -6262,12 +6443,20 @@ html:not(.js) .stage-actions { justify-content: center; }
     transform: none !important;
     filter: none !important;
   }
-  .journey-copy > * {
+  .journey-copy > *,
+  .journey-step-num,
+  .journey-photo,
+  .journey-photo img {
     animation: none !important;
+    transition: none !important;
     opacity: 1 !important;
     transform: none !important;
+    scale: none !important;
+    translate: none !important;
+    clip-path: none !important;
     filter: none !important;
   }
+  .journey-photo::after { display: none !important; }
 }
 
 /* ==========================================================================
@@ -6601,6 +6790,48 @@ html:not(.js) .stage-actions { justify-content: center; }
   .service-media { transform: none; }
   .js .service-card,
   .js .services-intro { opacity: 1; transform: none; }
+}
+
+/* ---- Touch spotlight --------------------------------------------------
+   No hover on phones and touch tablets, so initServiceSpotlight() in
+   main.js marks the section .is-spotlight and gives the card crossing the
+   middle of the screen .is-active. That card gets the full desktop hover
+   treatment; the rest wait in a muted state, so the photographs light up
+   one by one as the visitor scrolls. */
+.is-spotlight .service-card.is-active .service-bg { clip-path: inset(0% 0% 0% 0%); }
+.is-spotlight .service-card.is-active .service-media { transform: translate3d(0, -3%, 0); }
+.is-spotlight .service-card.is-active .service-num { color: var(--white); }
+.is-spotlight .service-card.is-active .service-arrow {
+  background: var(--white);
+  border-color: var(--white);
+  color: var(--blue-700);
+}
+.is-spotlight .service-card.is-active .service-arrow svg { transform: rotate(45deg); }
+
+/* The lit card swaps the flat wash for a gradient: dark only where the
+   title and copy sit, so the photograph shows in its real colours. */
+.is-spotlight .service-wash {
+  transition: background-color .6s ease, opacity .6s ease;
+}
+.is-spotlight .service-card.is-active .service-wash {
+  background: linear-gradient(to top, rgba(5, 40, 60, .82) 0%, rgba(5, 40, 60, .25) 50%, rgba(5, 40, 60, .45) 100%);
+}
+.is-spotlight .service-media img {
+  transition: filter .7s ease, transform 1.2s cubic-bezier(.16, 1, .3, 1);
+}
+.is-spotlight .service-card.is-active .service-media img { transform: scale(1.16); }
+
+@media (max-width: 767px) {
+  /* Phone: the stack keeps every photograph uncovered, so the resting
+     cards are muted (greyed, under the blue wash) and the lit one comes
+     up to full colour. */
+  .is-spotlight .service-media img { filter: grayscale(1) brightness(.85); }
+  .is-spotlight .service-card.is-active .service-media img { filter: none; }
+  .is-spotlight .service-title,
+  .is-spotlight .service-copy {
+    transition: transform .6s cubic-bezier(.16, 1, .3, 1);
+  }
+  .is-spotlight .service-card.is-active .service-title { transform: translateY(-6px); }
 }
 
 /* ---- Stillness --------------------------------------------------------
@@ -9142,3 +9373,81 @@ body.page-products > main {
 body.page-products .section,
 body.page-products .section-alt,
 body.page-products .pd-top { background: transparent; }
+
+/* ==========================================================================
+   Back-to-top button — injected on every page by initBackToTop() in main.js.
+   A slim frosted-glass pill tucked into the bottom-right corner: chevron over
+   a small "TOP" label. A brand-blue fill rises inside it as the page is read,
+   so it doubles as a reading-progress gauge; on hover it fills completely.
+   ========================================================================== */
+.to-top {
+  --tt-fill: 0;
+  position: fixed; z-index: 60;
+  right: 18px;
+  bottom: calc(var(--mobile-bar-h) + 18px);
+  width: 36px; height: 54px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  padding: 0; border-radius: 999px; cursor: pointer; overflow: hidden;
+  isolation: isolate;
+  color: var(--blue-800);
+  background: rgba(255, 255, 255, .72);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(7, 81, 116, .14);
+  box-shadow: 0 12px 30px rgba(5, 61, 87, .16), 0 2px 6px rgba(5, 61, 87, .08),
+              inset 0 1px 0 rgba(255,255,255,.9);
+  font: 600 7.5px/1 var(--font-sans);
+  letter-spacing: .22em; text-indent: .22em;   /* indent re-centres the tracked word */
+  opacity: 0; visibility: hidden;
+  transform: translateY(24px);
+  transition: opacity .45s ease, transform .6s cubic-bezier(.16,1,.3,1),
+              visibility 0s linear .6s, color .35s ease, box-shadow .35s ease, border-color .35s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.to-top.is-visible {
+  opacity: 1; visibility: visible; transform: none;
+  transition: opacity .45s ease, transform .6s cubic-bezier(.16,1,.3,1),
+              visibility 0s, color .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+/* The rising fill: a faint tint tracks scroll progress, the solid brand
+   gradient takes over on hover. */
+.to-top::before, .to-top::after {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  transform-origin: bottom;
+}
+.to-top::before {
+  background: linear-gradient(0deg, rgba(13,138,196,.22), rgba(13,138,196,.08));
+  transform: scaleY(var(--tt-fill));
+}
+.to-top::after {
+  background: linear-gradient(160deg, var(--blue-600) 0%, var(--blue-800) 100%);
+  transform: scaleY(0);
+  transition: transform .5s cubic-bezier(.16,1,.3,1);
+}
+.to-top__icon { width: 14px; height: 14px; display: block; }
+.to-top__icon svg {
+  width: 100%; height: 100%; display: block;
+  fill: none; stroke: currentColor; stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round;
+  transition: transform .5s cubic-bezier(.16,1,.3,1);
+}
+.to-top__label { display: block; }
+@media (hover: hover) {
+  .to-top:hover {
+    color: #fff; border-color: transparent;
+    transform: translateY(-4px);
+    box-shadow: 0 18px 38px rgba(5, 61, 87, .30), 0 3px 8px rgba(5, 61, 87, .12);
+  }
+  .to-top:hover::after { transform: scaleY(1); }
+  .to-top:hover .to-top__icon svg { transform: translateY(-3px); }
+}
+.to-top:active { transform: scale(.95); }
+.to-top:focus-visible { outline: 2px solid var(--blue-500); outline-offset: 3px; }
+@media (max-width: 640px) {
+  .to-top { right: 14px; bottom: calc(var(--mobile-bar-h) + 14px); width: 34px; height: 50px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .to-top, .to-top.is-visible, .to-top__icon svg { transition: opacity .2s ease, visibility 0s; transform: none; }
+  .to-top::after { transition: none; }
+}
+@media print { .to-top { display: none; } }
