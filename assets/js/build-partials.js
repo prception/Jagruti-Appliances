@@ -162,9 +162,6 @@ function processFile(file, templates) {
     console.warn(`SKIP ${rel}: nested more than one folder deep (script assumes max depth 1)`);
     return false;
   }
-  // 404.html is served by the host for ANY missing URL, at any folder depth.
-  // Its links stay relative and resolve from the <base> tag in its <head>,
-  // which picks the site root on both the real domain and GitHub Pages.
   const rootPrefix = depth === 0 ? '' : '../'.repeat(depth);
   const activePage = path.basename(file, '.html');
 
