@@ -3473,8 +3473,7 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
 .pd-stage > img { position: relative; z-index: 1; display: block; }
 /* Held smaller than the column so more of the name shows on either side. */
 .pd-stage > img.is-cutout { width: 58%; max-height: 400px; margin: 0 auto; }
-@media (max-width: 640px) { .pd-stage > img.is-cutout { width: 64%; max-height: 300px; } }
-.pd-word {
+@media (max-width: 640px) { .pd-stage > img.is-cutout { width: 64%; max-height: 300px; } }.pd-word {
   position: absolute;
   left: 50%;
   top: 46%;
