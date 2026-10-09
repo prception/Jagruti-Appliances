@@ -1,6 +1,6 @@
 # Jagruti Appliances
 
-> Jagruti Appliances LLP is an ISO 9001:2015 certified manufacturer based in Rajkot, Gujarat, India, making domestic and commercial flour mills (atta chakki), pulverizers, food processing machinery, automatic roti making machines and kitchen appliances since 1995. Every machine is manufactured in-house. Pricing, availability and delivery are confirmed directly with the sales team over WhatsApp rather than through online checkout.
+> Jagruti Appliances LLP is an ISO 9001:2015 certified manufacturer based in Rajkot, Gujarat, India, making domestic flour mills (atta chakki), pulverizers, food processing machinery, automatic roti making machines and kitchen appliances since 1995. Every machine is manufactured in-house. Pricing, availability and delivery are confirmed directly with the sales team over WhatsApp rather than through online checkout.
 
 - Address: Iscon Industrial Area, Plot No. 13-14, Lodhika Road, Ravki, Rajkot, Gujarat 360004, India
 - Customer care: +91 70707 05922
@@ -20,7 +20,6 @@
 
 - [All products](https://www.jagrutiappliances.com/products/products.html): The complete Jagruti product range
 - [Domestic flour mills](https://www.jagrutiappliances.com/products/domestic-flour-mill.html): Fully automatic home atta chakkis
-- [Commercial flour mills](https://www.jagrutiappliances.com/products/commercial-flour-mill.html): Flour mills for high-volume grain processing
 - [Pulverizers](https://www.jagrutiappliances.com/products/pulverizer.html): Pulverizer machines for fine, consistent grinding
 - [Roti making machines](https://www.jagrutiappliances.com/products/roti-maker-machine.html): Automatic roti machines from 300 to 2000 rotis per hour
 - [Food processing machinery](https://www.jagrutiappliances.com/products/food-processing-machinery.html): Machines for restaurants and food businesses
@@ -30,13 +29,15 @@
 
 ## Domestic flour mills
 
-- [Aura](https://www.jagrutiappliances.com/products/aura.html): Fully automatic domestic atta chakki
-- [Aura Plus](https://www.jagrutiappliances.com/products/aura-plus.html): Flagship domestic flour mill with automatic cleaning and digital controls
-- [Supreme](https://www.jagrutiappliances.com/products/supreme.html): Fully automatic domestic atta chakki
-- [Supreme Plus](https://www.jagrutiappliances.com/products/supreme-plus.html): Upgraded Supreme for daily grinding
-- [Kerona](https://www.jagrutiappliances.com/products/kerona.html): Compact domestic flour mill for smaller kitchens
-- [Kerona Plus](https://www.jagrutiappliances.com/products/kerona-plus.html): Enhanced Kerona with easier cleaning
-- [Royal 5 KG](https://www.jagrutiappliances.com/products/royal.html): Fully automatic domestic atta chakki
+- [Royal](https://www.jagrutiappliances.com/products/royal.html): 5 KG, 1HP motor, ms cutter, 5 years motor warranty
+- [Royal Plus](https://www.jagrutiappliances.com/products/royal-plus.html): 6.5 KG, 1HP motor, ms cutter, 5 years motor warranty
+- [Supreme](https://www.jagrutiappliances.com/products/supreme.html): 6 KG, 1HP motor, ms cutter, 5 years motor warranty
+- [Supreme Plus](https://www.jagrutiappliances.com/products/supreme-plus.html): 8 KG, 1HP motor, ms cutter, 5 years motor warranty
+- [Kerona](https://www.jagrutiappliances.com/products/kerona.html): 6 KG, 1HP motor, diamond cutter, 10 years motor warranty
+- [Kerona Plus](https://www.jagrutiappliances.com/products/kerona-plus.html): 8 KG, 1HP motor, diamond cutter, 10 years motor warranty
+- [Aura](https://www.jagrutiappliances.com/products/aura.html): 6 KG, 1HP motor, ss cutter, 10 years motor warranty
+- [Aura Plus](https://www.jagrutiappliances.com/products/aura-plus.html): 8 KG, 1HP motor, ss cutter, 10 years motor warranty
+- [Gelanto 2HP](https://www.jagrutiappliances.com/products/gelanto-2hp.html): 6.5 KG, 2HP motor, diamond cutter, 1 year motor warranty
 
 ## Pulverizers
 
@@ -81,8 +82,6 @@
 ## Guides
 
 - [Best flour mill for home](https://www.jagrutiappliances.com/blog/best-flour-mill-for-home.html)
-- [Domestic vs commercial flour mill](https://www.jagrutiappliances.com/blog/domestic-vs-commercial-flour-mill.html)
-- [How to choose a commercial flour mill](https://www.jagrutiappliances.com/blog/how-to-choose-commercial-flour-mill.html)
 - [How to choose a roti making machine](https://www.jagrutiappliances.com/blog/how-to-choose-roti-making-machine.html)
 - [ECO 300 vs ECO 500 vs PREMIUM 600](https://www.jagrutiappliances.com/blog/eco-300-vs-eco-500-vs-premium-600.html)
 - [Aura vs Aura Plus](https://www.jagrutiappliances.com/blog/aura-vs-aura-plus.html)

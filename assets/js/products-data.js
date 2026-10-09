@@ -5,42 +5,288 @@ var JAGRUTI_PRODUCTS = [
     "name": "Jagruti Supreme Domestic Flour Mill",
     "category": "domestic-flour-mill",
     "image": "assets/images/products/jagruti-supreme-flour-mill-1.webp",
-    "specs": []
+    "specs": [
+      [
+        "Capacity",
+        "6 KG"
+      ],
+      [
+        "Motor",
+        "1HP Single Phase"
+      ],
+      [
+        "Power Consumption",
+        "0.75 Unit/hr (approx)"
+      ],
+      [
+        "Dimensions (L x W x H)",
+        "20.5 x 15 x 33 inch"
+      ],
+      [
+        "Weight",
+        "41 kg (approx)"
+      ],
+      [
+        "Cutter",
+        "MS Cutter"
+      ],
+      [
+        "Beater",
+        "SS 4-Blade Beater"
+      ],
+      [
+        "Cloth / Filter",
+        "Sliding Cloth System"
+      ],
+      [
+        "Door",
+        "Auto-Close Front Door"
+      ],
+      [
+        "Warranty",
+        "Lifetime chamber, 1 yr product, 5 yr motor"
+      ]
+    ]
   },
   {
     "slug": "supreme-plus",
     "name": "Jagruti Supreme Plus Domestic Flour Mill",
     "category": "domestic-flour-mill",
     "image": "assets/images/products/jagruti-supreme-plus-flour-mill-1.webp",
-    "specs": []
+    "specs": [
+      [
+        "Capacity",
+        "8 KG"
+      ],
+      [
+        "Motor",
+        "1HP Single Phase"
+      ],
+      [
+        "Power Consumption",
+        "0.75 Unit/hr (approx)"
+      ],
+      [
+        "Dimensions (L x W x H)",
+        "20.5 x 15 x 37 inch"
+      ],
+      [
+        "Weight",
+        "44 kg (approx)"
+      ],
+      [
+        "Cutter",
+        "MS Cutter"
+      ],
+      [
+        "Beater",
+        "SS 4-Blade Beater"
+      ],
+      [
+        "Cloth / Filter",
+        "Sliding Cloth System"
+      ],
+      [
+        "Door",
+        "Auto-Close Front Door"
+      ],
+      [
+        "Warranty",
+        "Lifetime chamber, 1 yr product, 5 yr motor"
+      ]
+    ]
   },
   {
     "slug": "kerona",
     "name": "Jagruti Kerona Domestic Flour Mill",
     "category": "domestic-flour-mill",
     "image": "assets/images/products/jagruti-kerona-flour-mill-1.webp",
-    "specs": []
+    "specs": [
+      [
+        "Capacity",
+        "6 KG"
+      ],
+      [
+        "Motor",
+        "1HP Single Phase"
+      ],
+      [
+        "Power Consumption",
+        "0.75 Unit/hr (approx)"
+      ],
+      [
+        "Dimensions (L x W x H)",
+        "20.5 x 15 x 33 inch"
+      ],
+      [
+        "Weight",
+        "41 kg (approx)"
+      ],
+      [
+        "Cutter",
+        "Diamond Cutter"
+      ],
+      [
+        "Beater",
+        "SS 6-Blade Beater"
+      ],
+      [
+        "Cloth / Filter",
+        "Sliding Cloth System"
+      ],
+      [
+        "Door",
+        "Auto-Close Front Door"
+      ],
+      [
+        "Warranty",
+        "Lifetime chamber, 1 yr product, 10 yr motor"
+      ]
+    ]
   },
   {
     "slug": "kerona-plus",
     "name": "Jagruti Kerona Plus Domestic Flour Mill",
     "category": "domestic-flour-mill",
     "image": "assets/images/products/jagruti-kerona-plus-flour-mill-1.webp",
-    "specs": []
+    "specs": [
+      [
+        "Capacity",
+        "8 KG"
+      ],
+      [
+        "Motor",
+        "1HP Single Phase"
+      ],
+      [
+        "Power Consumption",
+        "0.75 Unit/hr (approx)"
+      ],
+      [
+        "Dimensions (L x W x H)",
+        "20.5 x 15 x 37 inch"
+      ],
+      [
+        "Weight",
+        "44 kg (approx)"
+      ],
+      [
+        "Cutter",
+        "Diamond Cutter"
+      ],
+      [
+        "Beater",
+        "SS 6-Blade Beater"
+      ],
+      [
+        "Cloth / Filter",
+        "Sliding Cloth System"
+      ],
+      [
+        "Door",
+        "Auto-Close Front Door"
+      ],
+      [
+        "Warranty",
+        "Lifetime chamber, 1 yr product, 10 yr motor"
+      ]
+    ]
   },
   {
     "slug": "aura",
     "name": "Jagruti Aura Domestic Flour Mill",
     "category": "domestic-flour-mill",
     "image": "assets/images/products/jagruti-aura-flour-mill-1.webp",
-    "specs": []
+    "specs": [
+      [
+        "Capacity",
+        "6 KG"
+      ],
+      [
+        "Motor",
+        "1HP Single Phase"
+      ],
+      [
+        "Power Consumption",
+        "0.75 Unit/hr (approx)"
+      ],
+      [
+        "Dimensions (L x W x H)",
+        "20.5 x 15 x 33 inch"
+      ],
+      [
+        "Weight",
+        "41 kg (approx)"
+      ],
+      [
+        "Cutter",
+        "SS Cutter"
+      ],
+      [
+        "Beater",
+        "SS 6-Blade Beater"
+      ],
+      [
+        "Cloth / Filter",
+        "Special Air-Cooled Filter"
+      ],
+      [
+        "Door",
+        "Soft-Close Front Door & Top Door"
+      ],
+      [
+        "Warranty",
+        "Lifetime chamber, 1 yr product, 10 yr motor"
+      ]
+    ]
   },
   {
     "slug": "aura-plus",
     "name": "Jagruti Aura Plus Domestic Flour Mill",
     "category": "domestic-flour-mill",
     "image": "assets/images/products/jagruti-aura-plus-flour-mill-1.webp",
-    "specs": [],
+    "specs": [
+      [
+        "Capacity",
+        "8 KG"
+      ],
+      [
+        "Motor",
+        "1HP Single Phase"
+      ],
+      [
+        "Power Consumption",
+        "0.75 Unit/hr (approx)"
+      ],
+      [
+        "Dimensions (L x W x H)",
+        "20.5 x 15 x 37 inch"
+      ],
+      [
+        "Weight",
+        "44 kg (approx)"
+      ],
+      [
+        "Cutter",
+        "SS Cutter"
+      ],
+      [
+        "Beater",
+        "SS 6-Blade Beater"
+      ],
+      [
+        "Cloth / Filter",
+        "Special Air-Cooled Filter"
+      ],
+      [
+        "Door",
+        "Soft-Close Front Door & Top Door"
+      ],
+      [
+        "Warranty",
+        "Lifetime chamber, 1 yr product, 10 yr motor"
+      ]
+    ],
     "cutout": "assets/images/products/jagruti-aura-plus-flour-mill-1.webp"
   },
   {
@@ -48,7 +294,136 @@ var JAGRUTI_PRODUCTS = [
     "name": "Jagruti Royal 5 KG Domestic Flour Mill",
     "category": "domestic-flour-mill",
     "image": "assets/images/products/jagruti-royal-flour-mill-1.webp",
-    "specs": []
+    "specs": [
+      [
+        "Capacity",
+        "5 KG"
+      ],
+      [
+        "Motor",
+        "1HP Single Phase"
+      ],
+      [
+        "Power Consumption",
+        "0.75 Unit/hr (approx)"
+      ],
+      [
+        "Dimensions (L x W x H)",
+        "20.5 x 15 x 32 inch"
+      ],
+      [
+        "Weight",
+        "40 kg (approx)"
+      ],
+      [
+        "Cutter",
+        "MS Cutter"
+      ],
+      [
+        "Beater",
+        "SS 4-Blade Beater"
+      ],
+      [
+        "Cloth / Filter",
+        "Direct Cloth System"
+      ],
+      [
+        "Warranty",
+        "Lifetime chamber, 1 yr product, 5 yr motor"
+      ]
+    ]
+  },
+  {
+    "slug": "royal-plus",
+    "name": "Jagruti Royal Plus 6.5 Kg Domestic Flour Mill",
+    "category": "domestic-flour-mill",
+    "image": "assets/images/products/jagruti-royal-flour-mill-1.webp",
+    "specs": [
+      [
+        "Capacity",
+        "6.5 KG"
+      ],
+      [
+        "Motor",
+        "1HP Single Phase"
+      ],
+      [
+        "Power Consumption",
+        "0.75 Unit/hr (approx)"
+      ],
+      [
+        "Dimensions (L x W x H)",
+        "20.5 x 15 x 36 inch"
+      ],
+      [
+        "Weight",
+        "42 kg (approx)"
+      ],
+      [
+        "Cutter",
+        "MS Cutter"
+      ],
+      [
+        "Beater",
+        "SS 4-Blade Beater"
+      ],
+      [
+        "Cloth / Filter",
+        "Direct Cloth System"
+      ],
+      [
+        "Warranty",
+        "Lifetime chamber, 1 yr product, 5 yr motor"
+      ]
+    ]
+  },
+  {
+    "slug": "gelanto-2hp",
+    "name": "Jagruti Gelanto 2HP Domestic Flour Mill",
+    "category": "domestic-flour-mill",
+    "image": "assets/images/products/jagruti-gelanto-2hp-flour-mill-1.webp",
+    "specs": [
+      [
+        "Capacity",
+        "6.5 KG"
+      ],
+      [
+        "Motor",
+        "2HP Single Phase"
+      ],
+      [
+        "Power Consumption",
+        "1.5 Unit/hr (approx)"
+      ],
+      [
+        "Dimensions (L x W x H)",
+        "21 x 16 x 36 inch"
+      ],
+      [
+        "Weight",
+        "56 kg (approx)"
+      ],
+      [
+        "Cutter",
+        "Diamond Cutter"
+      ],
+      [
+        "Beater",
+        "SS 6-Blade Beater"
+      ],
+      [
+        "Cloth / Filter",
+        "Direct Cloth System"
+      ],
+      [
+        "Door",
+        "Auto-Close Front Door"
+      ],
+      [
+        "Warranty",
+        "Lifetime chamber, 1 yr product, 1 yr motor"
+      ]
+    ]
   },
   {
     "slug": "eco-pulverizer",
@@ -74,7 +449,7 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Grinding Capacity",
-        "11–14 KG"
+        "11\u201314 KG"
       ],
       [
         "Power Consumption",
@@ -106,8 +481,12 @@ var JAGRUTI_PRODUCTS = [
         "59 KG"
       ],
       [
+        "Phase",
+        "Single"
+      ],
+      [
         "Grinding Capacity",
-        "11–14 KG"
+        "11\u201314 KG"
       ],
       [
         "Power Consumption",
@@ -139,12 +518,20 @@ var JAGRUTI_PRODUCTS = [
         "35 KG"
       ],
       [
+        "Phase",
+        "Single"
+      ],
+      [
         "Grinding Capacity",
-        "34–40 KG"
+        "34\u201340 KG"
       ],
       [
         "Power Consumption",
         "1.5 Unit/HR"
+      ],
+      [
+        "Warranty",
+        "1 Year"
       ]
     ],
     "cutout": "assets/images/products/jagruti-gravy-cutout.webp"
@@ -172,12 +559,20 @@ var JAGRUTI_PRODUCTS = [
         "26 KG"
       ],
       [
+        "Phase",
+        "Single"
+      ],
+      [
         "Capacity",
-        "30–60 KG/HR"
+        "30\u201360 KG/HR"
       ],
       [
         "Power Consumption",
         "1.5 Unit/HR"
+      ],
+      [
+        "Warranty",
+        "1 Year"
       ]
     ],
     "cutout": "assets/images/products/jagruti-chilly-cutter-cutout.webp"
@@ -203,6 +598,10 @@ var JAGRUTI_PRODUCTS = [
       [
         "Average Capacity",
         "200 Glass/HR"
+      ],
+      [
+        "Warranty",
+        "1 Year"
       ]
     ],
     "cutout": "assets/images/products/jagruti-sugarcane-juicer-cutout.webp"
@@ -231,7 +630,11 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Average Capacity",
-        "150–200 KG/HR"
+        "150\u2013200 KG/HR"
+      ],
+      [
+        "Warranty",
+        "1 Year"
       ]
     ],
     "cutout": "assets/images/products/jagruti-vegetable-cutter-cutout.webp"
@@ -252,7 +655,11 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Average Capacity",
-        "200–250 KG/HR"
+        "200\u2013250 KG/HR"
+      ],
+      [
+        "Warranty",
+        "1 Year"
       ]
     ],
     "cutout": "assets/images/products/jagruti-potato-slicer-cutout.webp"
@@ -273,7 +680,7 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Motor",
-        "1 HP (1φ)"
+        "1 HP (1\u03c6)"
       ],
       [
         "Weight",
@@ -286,6 +693,10 @@ var JAGRUTI_PRODUCTS = [
       [
         "Average Capacity",
         "500 KG/HR"
+      ],
+      [
+        "Warranty",
+        "1 Year"
       ]
     ],
     "cutout": "assets/images/products/jagruti-potato-peeler-cutout.webp"
@@ -331,7 +742,7 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Power Supply",
-        "230–240V AC, 50–60 Hz"
+        "230\u2013240V AC, 50\u201360 Hz"
       ],
       [
         "Power Consumption",
@@ -358,7 +769,7 @@ var JAGRUTI_PRODUCTS = [
         "2.15 m, 5A 3-pin plug"
       ],
       [
-        "Net Weight",
+        "Net Weight (with carton)",
         "5.5 KG (approx.)"
       ],
       [
@@ -367,7 +778,7 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Jar Capacity",
-        "Blender 1750 ml · Dry Grinder 1000 ml · Chutney Grinder 500 ml"
+        "Blender 1750 ml \u00b7 Dry Grinder 1000 ml \u00b7 Chutney Grinder 500 ml"
       ]
     ]
   },
@@ -383,7 +794,7 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Power Supply",
-        "230–240V AC, 50–60 Hz"
+        "230\u2013240V AC, 50\u201360 Hz"
       ],
       [
         "Power Consumption",
@@ -410,7 +821,7 @@ var JAGRUTI_PRODUCTS = [
         "2.15 m, 5A 3-pin plug"
       ],
       [
-        "Net Weight",
+        "Net Weight (with carton)",
         "7.0 KG (approx.)"
       ],
       [
@@ -419,7 +830,7 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Jar Capacity",
-        "Juicer — continuous (90 min) · Blender 1750 ml · Dry Grinder 1000 ml"
+        "Juicer - continuous (90 min) \u00b7 Blender 1750 ml \u00b7 Dry Grinder 1000 ml"
       ]
     ]
   },
@@ -495,7 +906,7 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Electric Load Required",
-        "1.5–2.5 KW"
+        "1.5\u20132.5 KW"
       ],
       [
         "Electric Consumption",
@@ -511,7 +922,7 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Gas Pressure Required",
-        "10–15 PSI"
+        "10\u201315 PSI"
       ],
       [
         "Contact Parts & Covers",
@@ -520,6 +931,26 @@ var JAGRUTI_PRODUCTS = [
       [
         "Motor HP",
         "0.5 x 1 Motor"
+      ],
+      [
+        "Motor",
+        "Standard Make"
+      ],
+      [
+        "Gear Box",
+        "Standard Make"
+      ],
+      [
+        "Bearing",
+        "SKF or Standard Make"
+      ],
+      [
+        "Electrical Parts",
+        "Schneider"
+      ],
+      [
+        "Electrical Wire",
+        "RR or Standard Make"
       ],
       [
         "Pressing Plate",
@@ -532,6 +963,10 @@ var JAGRUTI_PRODUCTS = [
       [
         "Machine Weight",
         "85 KG"
+      ],
+      [
+        "Machine Movable",
+        "Yes (4\" Castor Wheel)"
       ]
     ]
   },
@@ -567,7 +1002,7 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Electric Load Required",
-        "2–5 KW"
+        "2\u20135 KW"
       ],
       [
         "Electric Consumption",
@@ -594,6 +1029,26 @@ var JAGRUTI_PRODUCTS = [
         "0.5 x 1 Motor"
       ],
       [
+        "Motor",
+        "Standard Make"
+      ],
+      [
+        "Gear Box",
+        "Standard Make"
+      ],
+      [
+        "Bearing",
+        "SKF or Standard Make"
+      ],
+      [
+        "Electrical Parts",
+        "Schneider"
+      ],
+      [
+        "Electrical Wire",
+        "RR or Standard Make"
+      ],
+      [
         "Pressing Plate",
         "Ceramic Coating Plate"
       ],
@@ -604,6 +1059,10 @@ var JAGRUTI_PRODUCTS = [
       [
         "Machine Weight",
         "190 KG"
+      ],
+      [
+        "Machine Movable",
+        "Yes (4\" Castor Wheel)"
       ]
     ]
   },
@@ -639,11 +1098,11 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Electric Load Required",
-        "3–5 KW"
+        "3\u20135 KW"
       ],
       [
         "Electric Consumption",
-        "4–5 Unit / HR"
+        "4\u20135 Unit / HR"
       ],
       [
         "Gas Connection",
@@ -662,8 +1121,28 @@ var JAGRUTI_PRODUCTS = [
         "SS 202"
       ],
       [
+        "Motor HP",
+        "0.5 x 1 Motor"
+      ],
+      [
         "Motor",
         "Crompton"
+      ],
+      [
+        "Gear Box",
+        "Standard Make"
+      ],
+      [
+        "Bearing",
+        "SKF or Standard Make"
+      ],
+      [
+        "Electrical Parts",
+        "Schneider"
+      ],
+      [
+        "Electrical Wire",
+        "RR or Standard Make"
       ],
       [
         "Pressing Plate",
@@ -676,6 +1155,10 @@ var JAGRUTI_PRODUCTS = [
       [
         "Machine Weight",
         "300 KG"
+      ],
+      [
+        "Machine Movable",
+        "Yes (4\" Castor Wheel)"
       ]
     ]
   },
@@ -711,11 +1194,11 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Electric Load Required",
-        "6–8 KW"
+        "6\u20138 KW"
       ],
       [
         "Electric Consumption",
-        "4–5 Unit / HR"
+        "4\u20135 Unit / HR"
       ],
       [
         "Gas Connection",
@@ -742,6 +1225,22 @@ var JAGRUTI_PRODUCTS = [
         "Crompton"
       ],
       [
+        "Gear Box",
+        "Standard Make"
+      ],
+      [
+        "Bearing",
+        "SKF or Standard Make"
+      ],
+      [
+        "Electrical Parts",
+        "Schneider"
+      ],
+      [
+        "Electrical Wire",
+        "RR or Standard Make"
+      ],
+      [
         "Pressing Plate",
         "Ceramic Coating Plate"
       ],
@@ -752,6 +1251,10 @@ var JAGRUTI_PRODUCTS = [
       [
         "Machine Weight",
         "450 KG"
+      ],
+      [
+        "Machine Movable",
+        "Yes (4\" Castor Wheel)"
       ]
     ]
   },
@@ -787,7 +1290,7 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Electric Load Required",
-        "10–15 KW"
+        "10\u201315 KW"
       ],
       [
         "Electric Consumption",
@@ -799,11 +1302,11 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Gas Consumption",
-        "2–3 KG / HR"
+        "2\u20133 KG / HR"
       ],
       [
         "Gas Pressure Required",
-        "15–30 PSI"
+        "15\u201330 PSI"
       ],
       [
         "Contact Parts & Covers",
@@ -818,6 +1321,22 @@ var JAGRUTI_PRODUCTS = [
         "Crompton"
       ],
       [
+        "Gear Box",
+        "Standard Make"
+      ],
+      [
+        "Bearing",
+        "SKF or Standard Make"
+      ],
+      [
+        "Electrical Parts",
+        "Schneider"
+      ],
+      [
+        "Electrical Wire",
+        "RR or Standard Make"
+      ],
+      [
         "Pressing Plate",
         "Ceramic Coating Plate"
       ],
@@ -828,6 +1347,14 @@ var JAGRUTI_PRODUCTS = [
       [
         "Machine Weight",
         "620 KG"
+      ],
+      [
+        "Machine Movable",
+        "Yes (6\" Castor Wheel)"
+      ],
+      [
+        "Electric Safety",
+        "Emergency Stop Button"
       ]
     ]
   },
@@ -855,11 +1382,15 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Electric Consumption",
-        "0.25–0.50 Unit / HR"
+        "0.25\u20130.50 Unit / HR"
       ],
       [
         "Electric Load Required",
-        "2–5 KW"
+        "2\u20135 KW"
+      ],
+      [
+        "Electric Supply",
+        "230 Volt Single Phase"
       ],
       [
         "Chapati Size",
@@ -872,6 +1403,18 @@ var JAGRUTI_PRODUCTS = [
       [
         "Body Material",
         "SS 202 (1.5mm)"
+      ],
+      [
+        "Pressing Plate",
+        "Ceramic Coating Plate"
+      ],
+      [
+        "Control Panel",
+        "Push Button"
+      ],
+      [
+        "Gear Box",
+        "Standard Make"
       ]
     ]
   },
@@ -907,7 +1450,31 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Power Consumption",
-        "1.10–1.30 Unit/HR"
+        "1.10\u20131.30 Unit/HR"
+      ],
+      [
+        "Bowl",
+        "SS Food Grade Bowl"
+      ],
+      [
+        "Gear Box",
+        "Rotomotive"
+      ],
+      [
+        "Connecting Parts & Cover",
+        "SS 304 & Mild Steel"
+      ],
+      [
+        "Electric Supply",
+        "230 Volt Single Phase"
+      ],
+      [
+        "Electrical Wire",
+        "Polycab or RR Cable"
+      ],
+      [
+        "Electrical Parts",
+        "L & T & Schneider"
       ]
     ]
   },
@@ -923,7 +1490,7 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Production Capacity",
-        "2000–2200 Ball / HR"
+        "2000\u20132200 Ball / HR"
       ],
       [
         "Electric Supply",
@@ -932,6 +1499,10 @@ var JAGRUTI_PRODUCTS = [
       [
         "Electric Motor",
         "0.5 HP"
+      ],
+      [
+        "Motor",
+        "Crompton or Standard Make"
       ],
       [
         "Electric Consumption",
@@ -943,15 +1514,27 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Dough Ball Range",
-        "20 GM – 60 GM"
+        "20 GM \u2013 60 GM"
       ],
       [
         "Tolerance",
-        "± 2 Gram"
+        "\u00b1 2 Gram"
       ],
       [
         "Body Material",
         "SS 304"
+      ],
+      [
+        "Gear Box",
+        "Standard Make"
+      ],
+      [
+        "Electrical Parts",
+        "Standard Make"
+      ],
+      [
+        "Electrical Wires",
+        "Polycab & RR Cable"
       ],
       [
         "Weight of Machine",

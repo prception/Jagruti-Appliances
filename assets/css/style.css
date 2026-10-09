@@ -3473,7 +3473,14 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
 .pd-stage > img { position: relative; z-index: 1; display: block; }
 /* Held smaller than the column so more of the name shows on either side. */
 .pd-stage > img.is-cutout { width: 58%; max-height: 400px; margin: 0 auto; }
-@media (max-width: 640px) { .pd-stage > img.is-cutout { width: 64%; max-height: 300px; } }.pd-word {
+@media (max-width: 640px) { .pd-stage > img.is-cutout { width: 64%; max-height: 300px; } }
+/* Landscape (3:2) cut-outs - the mixer grinders with their jars set out side
+   by side - come out only two-thirds as tall as the square and upright
+   machines at the same 58% width, so they read noticeably smaller. Give them
+   a wider box so the machine carries the same visual weight. */
+.pd-stage > img.is-cutout.is-wide { width: 84%; max-height: 460px; }
+@media (max-width: 640px) { .pd-stage > img.is-cutout.is-wide { width: 94%; max-height: 320px; } }
+.pd-word {
   position: absolute;
   left: 50%;
   top: 46%;
@@ -9451,3 +9458,17 @@ body.page-products .pd-top { background: transparent; }
 }
 @media print { .to-top { display: none; } }
 
+
+/* Royal Plus 6.5 Kg is the taller cabinet of the pair, but both share one
+   photo shoot, so the card trims this image's padding to draw it larger than
+   the Royal 5 KG beside it while `contain` keeps it inside the tile. */
+.product-card .thumb img.is-cutout.is-tall,
+.grid-3[data-product-grid] .product-card .thumb img.is-cutout.is-tall {
+  padding: 1% 3%;
+}
+/* Royal 5 KG is the shorter cabinet: extra top padding shrinks it and keeps
+   its wheels on the same line as the Royal Plus beside it. */
+.product-card .thumb img.is-cutout.is-short,
+.grid-3[data-product-grid] .product-card .thumb img.is-cutout.is-short {
+  padding: 16% 6% 1%;
+}
