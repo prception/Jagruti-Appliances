@@ -511,9 +511,17 @@
       ]);
     }
 
+    var BROCHURES = {
+      "domestic-flour-mill": "assets/downloads/Jagruti%20Appliances%20-%20Brochure%20-%20Flourmill%20Products%20-2026.pdf",
+      "kitchen-appliances": "assets/downloads/Jagruti%20JMB%20Brochure_2026.pdf"
+    };
+
     function downloadsPanel() {
       return rowsPanel([
-        { label: "Catalogue", value: function () { return '<a href="catalogue.html">Download catalogue &rarr;</a>'; } },
+        { label: "Catalogue", value: function (p) {
+          var pdf = BROCHURES[p.category];
+          return pdf ? '<a href="' + pdf + '" target="_blank" rel="noopener">Download brochure (PDF) &rarr;</a>' : '<a href="catalogue.html">Download catalogue &rarr;</a>';
+        } },
         { label: "Specifications", value: function (p) { return '<a href="products/' + esc(p.slug) + '.html">On the product page &rarr;</a>'; } }
       ]);
     }
@@ -611,6 +619,67 @@
       var text = "Hi Jagruti Appliances, my name is " + name + " (" + phone + (email ? ", " + email : "") + ").\n" +
         "Enquiry type: " + type + "\nProduct of interest: " + product + "\nMessage: " + message;
       window.open(waLink(text), "_blank");
+    });
+  }
+
+  /* ---------------- Service request form → WhatsApp ----------------
+     The city field stays free text; picking a state only fills its
+     suggestion list with that state's larger cities. */
+  var SERVICE_CITIES = {
+    "Gujarat": ["Rajkot", "Ahmedabad", "Surat", "Vadodara", "Bhavnagar", "Jamnagar", "Junagadh", "Gandhinagar", "Anand", "Morbi", "Mehsana", "Bhuj", "Porbandar", "Amreli", "Gondal", "Navsari", "Vapi", "Bharuch", "Surendranagar", "Palanpur"],
+    "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad", "Solapur", "Kolhapur", "Thane", "Amravati", "Jalgaon"],
+    "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Ajmer", "Bikaner", "Bhilwara", "Alwar", "Sikar"],
+    "Madhya Pradesh": ["Indore", "Bhopal", "Jabalpur", "Gwalior", "Ujjain", "Ratlam", "Sagar"],
+    "Uttar Pradesh": ["Lucknow", "Kanpur", "Agra", "Varanasi", "Prayagraj", "Ghaziabad", "Noida", "Meerut", "Bareilly", "Gorakhpur"],
+    "Delhi": ["New Delhi", "Delhi"],
+    "Karnataka": ["Bengaluru", "Mysuru", "Hubballi", "Mangaluru", "Belagavi"],
+    "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem"],
+    "Telangana": ["Hyderabad", "Warangal", "Karimnagar", "Nizamabad"],
+    "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Tirupati", "Nellore"],
+    "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda"],
+    "Haryana": ["Gurugram", "Faridabad", "Panipat", "Ambala", "Hisar", "Karnal"],
+    "West Bengal": ["Kolkata", "Howrah", "Siliguri", "Durgapur", "Asansol"],
+    "Bihar": ["Patna", "Gaya", "Muzaffarpur", "Bhagalpur"],
+    "Kerala": ["Kochi", "Thiruvananthapuram", "Kozhikode", "Thrissur"],
+    "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela", "Sambalpur"],
+    "Chhattisgarh": ["Raipur", "Bhilai", "Bilaspur", "Durg"],
+    "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro"],
+    "Goa": ["Panaji", "Margao", "Vasco da Gama", "Mapusa"],
+    "Dadra and Nagar Haveli and Daman and Diu": ["Daman", "Diu", "Silvassa"]
+  };
+
+  function initServiceForm() {
+    var form = document.querySelector("[data-service-form]");
+    if (!form) return;
+    var state = form.querySelector("[data-state-select]");
+    var list = form.querySelector("#sf-city-list");
+    if (state && list) {
+      state.addEventListener("change", function () {
+        list.innerHTML = "";
+        (SERVICE_CITIES[state.value] || []).forEach(function (c) {
+          var o = document.createElement("option");
+          o.value = c;
+          list.appendChild(o);
+        });
+      });
+    }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var d = new FormData(form);
+      var get = function (k) { return (d.get(k) || "").toString().trim(); };
+      var date = get("purchase_date");
+      if (date) date = date.split("-").reverse().join("-");
+      var lines = [
+        "Hi Jagruti Appliances, I need service / repair support.",
+        "Name: " + get("name"),
+        "Phone: " + get("phone")
+      ];
+      if (get("email")) lines.push("Email: " + get("email"));
+      if (get("model")) lines.push("Model: " + get("model"));
+      if (date) lines.push("Purchase date: " + date);
+      lines.push("Address: " + get("address") + ", " + get("city") + ", " + get("state"));
+      lines.push("Problem: " + get("problem"));
+      window.open(waLink(lines.join("\n")), "_blank");
     });
   }
 
@@ -2721,6 +2790,7 @@
     initFaqNav();
     initBlogFilter();
     initContactForm();
+    initServiceForm();
     initYear();
     initScrollReveal();
     initMachinePosters();

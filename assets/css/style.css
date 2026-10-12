@@ -7794,6 +7794,11 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
   .support-hero .cat-hero-grid { align-items: start; }
 }
 
+/* Service & Repairs page: the machine sits on the right of this frame and the
+   copy on the open wall to its left, so the crop leans right to keep the
+   machine in view as the band narrows. */
+.service-hero .ch-img { object-position: 78% 50%; }
+
 /* ---------- Collection count bar (.range-bar) ----------
    The reference sets a hairline rule above the grid carrying the product
    count. The Filters control and the grid-density / Lookbook toggles beside
@@ -8019,6 +8024,8 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
 .grid-editorial .range-feature   { grid-column: 1 / span 2; grid-row: 1; }
 .grid-editorial .range-feature-2 { grid-column: 3 / span 2; grid-row: 2; }
 .grid-editorial .range-feature-3 { grid-column: 1 / span 2; grid-row: 3; }
+.grid-editorial .range-feature-4 { grid-column: 3 / span 2; grid-row: 4; }
+.grid-editorial .range-feature-5 { grid-column: 1 / span 2; grid-row: 5; }
 
 /* The final row holds the three products left over after the panels. Left in
    the 4-column flow they sit in columns 1-3 and leave a hole at the right.
@@ -8113,12 +8120,94 @@ body[data-nav="over-dark"]:has(> main > .contact-hero:first-child) .site-header:
   color: rgba(255,255,255,.92);
 }
 .grid-editorial .range-feature .btn { width: 100%; }
+/* .rf-panel: a range panel — photograph with the scroll parallax, copy
+   centred vertically and kept clear of the arrow's side. A left-to-right
+   scrim keeps the white copy readable over the bright kitchen photographs. */
+.grid-editorial .rf-panel { justify-content: center; padding-right: 120px; }
+.grid-editorial .range-feature-2.rf-panel,
+.grid-editorial .range-feature-4.rf-panel { padding-right: clamp(24px, 2.4vw, 40px); padding-left: 120px; }
+.grid-editorial .rf-panel .rf-content { align-items: flex-start; }
+.grid-editorial .rf-panel::after {
+  opacity: 1;
+  background: linear-gradient(90deg, rgba(4,14,22,.78) 0%, rgba(4,14,22,.5) 50%, rgba(4,14,22,.2) 100%);
+}
+.grid-editorial .rf-panel .rf-models { color: #9fd8f2; }
+/* The machine sits at the centre of each landscape photograph — keep it
+   centred in the panel. Copy: left on panels 1/3/5, right on panels 2/4. */
+.grid-editorial .rf-panel { --rf-pos: 50% center; }
+/* A light drift (data-parallax 0.08) so the photo is only slightly
+   oversized and not zoomed in. --px-travel must equal data-parallax so the
+   oversized photo never exposes an edge. */
+.grid-editorial .rf-panel img[data-parallax] { --px-travel: 8%; }
+.grid-editorial .range-feature-2.rf-panel .rf-content,
+.grid-editorial .range-feature-4.rf-panel .rf-content { align-items: flex-end; text-align: right; }
+.grid-editorial .range-feature-2.rf-panel .rf-title,
+.grid-editorial .range-feature-4.rf-panel .rf-title { align-self: flex-end; }
+.grid-editorial .range-feature-2.rf-panel::after,
+.grid-editorial .range-feature-4.rf-panel::after {
+  background: linear-gradient(270deg, rgba(4,14,22,.78) 0%, rgba(4,14,22,.5) 50%, rgba(4,14,22,.2) 100%);
+}
+/* Arrow pointing at the panel's products: panels on the left point right,
+   panels on the right (2 and 4) point left. */
+.grid-editorial .rf-arrow {
+  position: absolute; z-index: 2; top: 50%; right: clamp(16px, 1.6vw, 24px);
+  width: 72px; height: 72px; margin-top: -36px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--blue-700); color: #fff;
+  box-shadow: 0 8px 22px rgba(0,0,0,.35);
+  transition: transform .3s ease;
+}
+.grid-editorial .rf-arrow svg { width: 34px; height: 34px; }
+.grid-editorial .rf-panel:hover .rf-arrow { transform: translateX(4px); }
+.grid-editorial .range-feature-2 .rf-arrow,
+.grid-editorial .range-feature-4 .rf-arrow { right: auto; left: clamp(16px, 1.6vw, 24px); }
+.grid-editorial .range-feature-2 .rf-arrow svg,
+.grid-editorial .range-feature-4 .rf-arrow svg { transform: rotate(180deg); }
+.grid-editorial .range-feature-2:hover .rf-arrow,
+.grid-editorial .range-feature-4:hover .rf-arrow { transform: translateX(-4px); }
+/* Stacked on phones, the products sit below the panel — point down. */
+@media (max-width: 767px) {
+  .grid-editorial .rf-arrow,
+  .grid-editorial .range-feature-2 .rf-arrow,
+  .grid-editorial .range-feature-4 .rf-arrow {
+    top: auto; bottom: 16px; margin-top: 0;
+    left: 50%; right: auto; margin-left: -28px;
+    width: 56px; height: 56px;
+  }
+  .grid-editorial .rf-arrow svg,
+  .grid-editorial .range-feature-2 .rf-arrow svg,
+  .grid-editorial .range-feature-4 .rf-arrow svg { transform: rotate(90deg); }
+  .grid-editorial .rf-panel:hover .rf-arrow { transform: none; }
+  .grid-editorial .rf-panel,
+  .grid-editorial .range-feature-2.rf-panel,
+  .grid-editorial .range-feature-4.rf-panel { padding: 24px 24px 96px; justify-content: flex-end; }
+  .grid-editorial .range-feature-2.rf-panel .rf-content,
+  .grid-editorial .range-feature-4.rf-panel .rf-content { align-items: flex-start; text-align: left; }
+  .grid-editorial .range-feature-2.rf-panel .rf-title,
+  .grid-editorial .range-feature-4.rf-panel .rf-title { align-self: flex-start; }
+  .grid-editorial .rf-panel::after,
+  .grid-editorial .range-feature-2.rf-panel::after,
+  .grid-editorial .range-feature-4.rf-panel::after {
+    background: linear-gradient(0deg, rgba(4,14,22,.85) 0%, rgba(4,14,22,.55) 45%, rgba(4,14,22,.1) 80%);
+  }
+}
+/* The models that make up a range, set under the range name on its panel. */
+.grid-editorial .rf-models {
+  margin: 0;
+  font-size: clamp(16px, 1.4vw, 20px);
+  font-weight: 600;
+  line-height: var(--lh-title);
+  color: #fff;
+}
 
 @media (max-width: 767px) {
   .grid.grid-editorial { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grid-editorial .range-feature,
   .grid-editorial .range-feature-2,
-  .grid-editorial .range-feature-3 {
+  .grid-editorial .range-feature-3,
+  .grid-editorial .range-feature-4,
+  .grid-editorial .range-feature-5 {
     grid-column: 1 / -1;
     grid-row: auto;
     height: auto;
@@ -9471,4 +9560,143 @@ body.page-products .pd-top { background: transparent; }
 .product-card .thumb img.is-cutout.is-short,
 .grid-3[data-product-grid] .product-card .thumb img.is-cutout.is-short {
   padding: 16% 6% 1%;
+}
+
+/* ---------- Service & Repairs split (support/service.html) ----------
+   One section: the four-step process reads down the left as a timeline,
+   the request form sits beside it on the right. The left column is sticky
+   on desktop so the steps stay in view while the (taller) form scrolls. */
+.svc-split {
+  position: relative; overflow: hidden;
+  padding: var(--section-pad-y-tight) 0;
+  background:
+    radial-gradient(60% 50% at 0% 0%, rgba(19, 167, 236, .10), transparent 70%),
+    radial-gradient(50% 45% at 100% 100%, rgba(9, 101, 144, .10), transparent 70%),
+    var(--canvas);
+}
+.svc-grid {
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 4.5vw, 72px); align-items: center;
+}
+.svc-head.section-head { text-align: left; margin: 0 0 26px; max-width: 520px; }
+.svc-head .eyebrow { margin-bottom: 10px; }
+.svc-head.section-head h2 { font-size: clamp(1.75rem, 2.6vw, 2.4rem); }
+.svc-head h2 span { color: var(--blue-600); }
+.svc-head.section-head .svc-lead { margin: 10px 0 0; font-size: 1rem; line-height: 1.55; color: var(--ink-500); max-width: 44ch; }
+
+/* Timeline: numbered nodes threaded on a hairline that fills with brand
+   blue as the list reveals. */
+.svc-steps { list-style: none; margin: 0; padding: 0; position: relative; }
+.svc-steps::before,
+.svc-steps::after {
+  content: ""; position: absolute; left: 19px; top: 20px; bottom: 20px; width: 2px; border-radius: 2px;
+}
+.svc-steps::before { background: var(--blue-200); }
+.svc-steps::after {
+  background: linear-gradient(var(--blue-500), var(--blue-700));
+  transform-origin: top; transform: scaleY(1);
+  transition: transform 1.6s cubic-bezier(.22, .61, .36, 1) .2s;
+}
+.js .svc-steps[data-reveal]:not(.is-revealed)::after { transform: scaleY(0); }
+.svc-step {
+  position: relative; display: grid; grid-template-columns: 40px 1fr; gap: 16px;
+  padding: 0 0 18px; margin: 0;
+}
+.svc-step:last-child { padding-bottom: 0; }
+.svc-num {
+  position: relative; z-index: 1;
+  width: 40px; height: 40px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: .8125rem; font-weight: 600; letter-spacing: .02em; font-variant-numeric: tabular-nums;
+  color: var(--blue-700); background: var(--white);
+  border: 2px solid var(--blue-200);
+  box-shadow: 0 0 0 5px var(--canvas);
+  transition: background .3s ease, color .3s ease, border-color .3s ease, transform .3s ease;
+}
+.svc-step:hover .svc-num { background: var(--blue-600); border-color: var(--blue-600); color: #fff; transform: scale(1.06); }
+.svc-step h3 { font-size: 1rem; font-weight: 600; color: var(--blue-900); margin: 1px 0 2px; line-height: 1.3; }
+.svc-step p { font-size: .875rem; color: var(--ink-500); margin: 0; line-height: 1.5; }
+
+.svc-direct { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--blue-200); }
+.svc-direct-label { display: block; font-size: var(--fs-label); font-weight: var(--fw-label); color: var(--ink-500); margin-bottom: 10px; }
+.svc-direct-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; }
+.svc-call { display: inline-flex; align-items: center; gap: 12px; color: var(--blue-900); font-weight: 600; text-decoration: none; }
+.svc-call svg {
+  width: 40px; height: 40px; padding: 10px; border-radius: 50%;
+  background: var(--white); color: var(--blue-600); border: 1px solid var(--blue-200);
+  transition: background .25s ease, color .25s ease;
+}
+.svc-call:hover svg { background: var(--blue-600); color: #fff; }
+.svc-call span { display: flex; flex-direction: column; line-height: 1.25; }
+.svc-call small { font-size: var(--fs-caption); font-weight: 500; color: var(--ink-500); }
+
+/* The form card: white sheet with a brand-gradient top edge. */
+.service-form {
+  position: relative; background: var(--white);
+  border: 1px solid var(--blue-100); border-radius: 24px;
+  box-shadow: 0 30px 70px -30px rgba(5, 61, 87, .28), var(--shadow-sm);
+  padding: clamp(20px, 2.4vw, 32px);
+  overflow: hidden;
+}
+.service-form::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 5px;
+  background: var(--gradient-sheen);
+}
+.sf-head {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 16px;
+  padding-bottom: 14px; margin-bottom: 18px; border-bottom: 1px dashed var(--blue-200);
+}
+.sf-kicker { display: block; font-size: var(--fs-caption); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--blue-600); margin-bottom: 4px; }
+.sf-head h3 { margin: 0; font-size: 1.25rem; font-weight: 600; color: var(--blue-900); line-height: 1.2; }
+.sf-req { font-size: var(--fs-caption); color: var(--ink-500); white-space: nowrap; }
+
+.service-form .form-field { margin-bottom: 12px; }
+.service-form .form-row-2 { gap: 0 14px; }
+.service-form .form-field label { font-size: .75rem; font-weight: 600; color: var(--ink-700); margin-bottom: 5px; letter-spacing: .01em; }
+.service-form .form-field input,
+.service-form .form-field select,
+.service-form .form-field textarea {
+  background-color: var(--canvas); border: 1.5px solid transparent; border-radius: 10px;
+  padding: 10px 14px; font-size: .875rem; color: var(--ink-900);
+  transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+.service-form .form-field input::placeholder,
+.service-form .form-field textarea::placeholder { color: var(--ink-300); }
+.service-form .form-field input:hover,
+.service-form .form-field select:hover,
+.service-form .form-field textarea:hover { border-color: var(--blue-200); }
+.service-form .form-field input:focus,
+.service-form .form-field select:focus,
+.service-form .form-field textarea:focus {
+  background-color: var(--white); border-color: var(--blue-500);
+  box-shadow: 0 0 0 4px rgba(19, 167, 236, .14);
+}
+.service-form .form-field select {
+  appearance: none; -webkit-appearance: none; padding-right: 42px;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23607685' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; background-size: 16px;
+}
+.service-form textarea { resize: vertical; min-height: 76px; }
+.sf-submit {
+  margin-top: 4px; padding-top: .8rem; padding-bottom: .8rem;
+  background: var(--gradient-primary); font-weight: 600; letter-spacing: .02em;
+  box-shadow: 0 14px 30px -12px rgba(9, 101, 144, .6);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.sf-submit svg { width: 18px; height: 18px; transition: transform .25s ease; }
+.sf-submit:hover { transform: translateY(-2px); box-shadow: 0 18px 36px -12px rgba(9, 101, 144, .7); }
+.sf-submit:hover svg { transform: translateX(4px); }
+.service-form .form-note { text-align: center; margin: 10px 0 0; }
+
+@media (max-width: 1000px) {
+  .svc-grid { grid-template-columns: 1fr; }
+  .svc-head.section-head { max-width: none; }
+}
+@media (max-width: 600px) {
+  .service-form { border-radius: 20px; padding: 22px 16px; }
+  .sf-head { flex-direction: column; align-items: flex-start; }
+  .sf-head h3 { font-size: 1.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .svc-steps::after, .sf-submit, .sf-submit svg, .svc-num { transition: none; }
 }
