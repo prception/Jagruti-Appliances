@@ -841,10 +841,6 @@ var JAGRUTI_PRODUCTS = [
     "image": "assets/images/products/kitchen%20appliance/Pride%20Hand%20Blender.webp",
     "specs": [
       [
-        "Motor Type & No.",
-        "Blendcraft / Black"
-      ],
-      [
         "Motor Rating",
         "Heavy duty, 250 Watt on maximum load"
       ],
