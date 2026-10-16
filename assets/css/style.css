@@ -9548,20 +9548,6 @@ body.page-products .pd-top { background: transparent; }
 @media print { .to-top { display: none; } }
 
 
-/* Royal Plus 6.5 Kg is the taller cabinet of the pair, but both share one
-   photo shoot, so the card trims this image's padding to draw it larger than
-   the Royal 5 KG beside it while `contain` keeps it inside the tile. */
-.product-card .thumb img.is-cutout.is-tall,
-.grid-3[data-product-grid] .product-card .thumb img.is-cutout.is-tall {
-  padding: 1% 3%;
-}
-/* Royal 5 KG is the shorter cabinet: extra top padding shrinks it and keeps
-   its wheels on the same line as the Royal Plus beside it. */
-.product-card .thumb img.is-cutout.is-short,
-.grid-3[data-product-grid] .product-card .thumb img.is-cutout.is-short {
-  padding: 16% 6% 1%;
-}
-
 /* ---------- Service & Repairs split (support/service.html) ----------
    One section: the four-step process reads down the left as a timeline,
    the request form sits beside it on the right. The left column is sticky

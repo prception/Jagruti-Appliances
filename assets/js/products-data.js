@@ -846,7 +846,7 @@ var JAGRUTI_PRODUCTS = [
       ],
       [
         "Motor Rating",
-        "Heavy duty, 180 Watt on maximum load"
+        "Heavy duty, 250 Watt on maximum load"
       ],
       [
         "Power Supply",
