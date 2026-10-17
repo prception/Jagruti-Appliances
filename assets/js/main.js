@@ -854,8 +854,42 @@
     // A visitor who prefers reduced motion gets the last scene, no movement.
     var quiet = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    /* A video scene holds for the length of its film rather than HOLD: it
+       plays from the start when it arrives and the sequence moves on when it
+       ends. Leaving the scene pauses and rewinds it. */
+    var videos = scenes.map(function (el) { return el.querySelector("video"); });
+    var inView = true;
+
+    function playVideo(i) {
+      var v = videos[i];
+      if (!v) return;
+      v.preload = "auto";
+      try { v.currentTime = 0; } catch (e) {}
+      var p = v.play();
+      // Autoplay refused or file failed: fall back to an ordinary hold.
+      if (p && p.catch) p.catch(function () { if (current === i) scheduleHold(); });
+    }
+
+    videos.forEach(function (v, i) {
+      if (!v) return;
+      v.addEventListener("ended", function () {
+        if (current !== i || paused) return;
+        apply((current + 1) % scenes.length, false);
+        schedule();
+      });
+      v.addEventListener("error", function () { if (current === i) scheduleHold(); });
+    });
+
     function apply(next, isFirst) {
       var prev = current;
+      videos.forEach(function (v, i) {
+        if (v && i !== next) v.pause();
+      });
+      // Start fetching the film one scene early so it is ready on arrival.
+      var upcoming = videos[(next + 1) % scenes.length];
+      if (upcoming && upcoming.preload === "none") { upcoming.preload = "auto"; upcoming.load(); }
+      stage.classList.toggle("is-video", !!videos[next]);
+      document.documentElement.classList.toggle("hero-video-on", !!videos[next]);
       scenes.forEach(function (el, i) {
         // A jump can land mid-climb, so drop any pending un-clip first - it
         // would otherwise fire against whatever state this scene is in now.
@@ -911,7 +945,7 @@
       current = next;
     }
 
-    function schedule() {
+    function scheduleHold() {
       clearTimeout(timer);
       if (paused || quiet) return;
       // Runs continuously: past the last scene it wraps back to the first.
@@ -919,6 +953,14 @@
         apply((current + 1) % scenes.length, false);
         schedule();
       }, HOLD);
+    }
+
+    function schedule() {
+      clearTimeout(timer);
+      if (paused || quiet || !inView) return;
+      // A video scene advances on its own "ended" event instead of a timer.
+      if (videos[current]) { playVideo(current); return; }
+      scheduleHold();
     }
 
     function goTo(i) {
@@ -950,7 +992,10 @@
     });
 
     if (quiet) {
-      apply(scenes.length - 1, true);
+      // The last still scene, not the film - nothing should autoplay.
+      var lastStill = scenes.length - 1;
+      while (lastStill > 0 && videos[lastStill]) lastStill--;
+      apply(lastStill, true);
       return;
     }
     apply(0, true);
@@ -961,8 +1006,17 @@
     if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
-          if (entry.isIntersecting) { if (!paused) schedule(); }
-          else clearTimeout(timer);
+          inView = entry.isIntersecting;
+          if (inView) {
+            if (paused) return;
+            // A film paused off screen picks up where it left off.
+            var v = videos[current];
+            if (v && v.paused && v.currentTime > 0 && !v.ended) v.play().catch(function () {});
+            else schedule();
+          } else {
+            clearTimeout(timer);
+            if (videos[current]) videos[current].pause();
+          }
         });
       }, { threshold: 0.2 }).observe(stage);
     }

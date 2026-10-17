@@ -1457,6 +1457,8 @@ html.menu-open { overflow: hidden; }
 /* The portrait-only leaf frame (see index.html). Desktop keeps the leaf
    plane that ships inside each scene's own canvas, so this stays off here. */
 .hero-leafframe { display: none; }
+/* The brand-film scene is full-frame footage: no corner foliage over it. */
+.hero-parallax.is-video .hero-leafframe { visibility: hidden; }
 
 /* --- Scene stacking and state ---------------------------------------
    The sequence is driven by JS (initHeroScenes in main.js), not by a fixed
@@ -9685,4 +9687,25 @@ body.page-products .pd-top { background: transparent; }
 }
 @media (prefers-reduced-motion: reduce) {
   .svc-steps::after, .sf-submit, .sf-submit svg, .svc-num { transition: none; }
+}
+
+/* ================= HERO BRAND-FILM SCENE =================
+   While the film scene is on screen (html.hero-video-on, set by
+   initHeroScenes) it plays clean and full-bleed: the film ends on its own
+   Jagruti logo, so the header wordmark and its dark scrim step aside, and
+   the vignette, scene tabs, scroll cue and bottom wash all fade out. */
+.site-header::before,
+.hero-parallax::before,
+.hero-parallax > .hero-fade,
+.hero-dots,
+.hero-scrollcue { transition: opacity .5s ease, visibility .5s; }
+html.hero-video-on body[data-nav] .site-header:not(.is-scrolled)::before { opacity: 0; }
+html.hero-video-on .site-header .logo {
+  opacity: 0; visibility: hidden; pointer-events: none;
+}
+html.hero-video-on .hero-parallax::before,
+html.hero-video-on .hero-parallax > .hero-fade,
+html.hero-video-on .hero-parallax .hero-dots,
+html.hero-video-on .hero-parallax .hero-scrollcue {
+  opacity: 0; visibility: hidden; pointer-events: none;
 }
