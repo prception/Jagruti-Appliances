@@ -11,87 +11,87 @@
 
 ## Company
 
-- [About Jagruti Appliances](https://www.jagrutiappliances.com/about.html): History, certifications and what the company makes
-- [Why Jagruti](https://www.jagrutiappliances.com/why-jagruti.html): Reasons customers choose Jagruti machines
-- [Manufacturing](https://www.jagrutiappliances.com/manufacturing.html): The Rajkot manufacturing facility and capabilities
-- [Contact](https://www.jagrutiappliances.com/contact.html): Phone numbers, address and WhatsApp support
+- [About Jagruti Appliances](https://www.jagrutiappliances.com/about): History, certifications and what the company makes
+- [Why Jagruti](https://www.jagrutiappliances.com/why-jagruti): Reasons customers choose Jagruti machines
+- [Manufacturing](https://www.jagrutiappliances.com/manufacturing): The Rajkot manufacturing facility and capabilities
+- [Contact](https://www.jagrutiappliances.com/contact): Phone numbers, address and WhatsApp support
 
 ## Product ranges
 
-- [All products](https://www.jagrutiappliances.com/products/products.html): The complete Jagruti product range
-- [Domestic flour mills](https://www.jagrutiappliances.com/products/domestic-flour-mill.html): Fully automatic home atta chakkis
-- [Pulverizers](https://www.jagrutiappliances.com/products/pulverizer.html): Pulverizer machines for fine, consistent grinding
-- [Roti making machines](https://www.jagrutiappliances.com/products/roti-maker-machine.html): Automatic roti machines from 300 to 2000 rotis per hour
-- [Food processing machinery](https://www.jagrutiappliances.com/products/food-processing-machinery.html): Machines for restaurants and food businesses
-- [Kitchen appliances](https://www.jagrutiappliances.com/products/kitchen-appliances.html): Mixer grinders, juicer mixer grinders and hand blenders
-- [Compare products](https://www.jagrutiappliances.com/compare.html): Compare two or three machines side by side
-- [Catalogue](https://www.jagrutiappliances.com/catalogue.html): Downloadable product catalogues
+- [All products](https://www.jagrutiappliances.com/products/products): The complete Jagruti product range
+- [Domestic flour mills](https://www.jagrutiappliances.com/products/domestic-flour-mill): Fully automatic home atta chakkis
+- [Pulverizers](https://www.jagrutiappliances.com/products/pulverizer): Pulverizer machines for fine, consistent grinding
+- [Roti making machines](https://www.jagrutiappliances.com/products/roti-maker-machine): Automatic roti machines from 300 to 2000 rotis per hour
+- [Food processing machinery](https://www.jagrutiappliances.com/products/food-processing-machinery): Machines for restaurants and food businesses
+- [Kitchen appliances](https://www.jagrutiappliances.com/products/kitchen-appliances): Mixer grinders, juicer mixer grinders and hand blenders
+- [Compare products](https://www.jagrutiappliances.com/compare): Compare two or three machines side by side
+- [Catalogue](https://www.jagrutiappliances.com/catalogue): Downloadable product catalogues
 
 ## Domestic flour mills
 
-- [Royal](https://www.jagrutiappliances.com/products/royal.html): 5 KG, 1HP motor, ms cutter, 5 years motor warranty
-- [Royal Plus](https://www.jagrutiappliances.com/products/royal-plus.html): 6.5 KG, 1HP motor, ms cutter, 5 years motor warranty
-- [Supreme](https://www.jagrutiappliances.com/products/supreme.html): 6 KG, 1HP motor, ms cutter, 5 years motor warranty
-- [Supreme Plus](https://www.jagrutiappliances.com/products/supreme-plus.html): 8 KG, 1HP motor, ms cutter, 5 years motor warranty
-- [Kerona](https://www.jagrutiappliances.com/products/kerona.html): 6 KG, 1HP motor, diamond cutter, 10 years motor warranty
-- [Kerona Plus](https://www.jagrutiappliances.com/products/kerona-plus.html): 8 KG, 1HP motor, diamond cutter, 10 years motor warranty
-- [Aura](https://www.jagrutiappliances.com/products/aura.html): 6 KG, 1HP motor, ss cutter, 10 years motor warranty
-- [Aura Plus](https://www.jagrutiappliances.com/products/aura-plus.html): 8 KG, 1HP motor, ss cutter, 10 years motor warranty
-- [Gelanto 2HP](https://www.jagrutiappliances.com/products/gelanto-2hp.html): 6.5 KG, 2HP motor, diamond cutter, 1 year motor warranty
+- [Royal](https://www.jagrutiappliances.com/products/royal): 5 KG, 1HP motor, ms cutter, 5 years motor warranty
+- [Royal Plus](https://www.jagrutiappliances.com/products/royal-plus): 6.5 KG, 1HP motor, ms cutter, 5 years motor warranty
+- [Supreme](https://www.jagrutiappliances.com/products/supreme): 6 KG, 1HP motor, ms cutter, 5 years motor warranty
+- [Supreme Plus](https://www.jagrutiappliances.com/products/supreme-plus): 8 KG, 1HP motor, ms cutter, 5 years motor warranty
+- [Kerona](https://www.jagrutiappliances.com/products/kerona): 6 KG, 1HP motor, diamond cutter, 10 years motor warranty
+- [Kerona Plus](https://www.jagrutiappliances.com/products/kerona-plus): 8 KG, 1HP motor, diamond cutter, 10 years motor warranty
+- [Aura](https://www.jagrutiappliances.com/products/aura): 6 KG, 1HP motor, ss cutter, 10 years motor warranty
+- [Aura Plus](https://www.jagrutiappliances.com/products/aura-plus): 8 KG, 1HP motor, ss cutter, 10 years motor warranty
+- [Gelanto 2HP](https://www.jagrutiappliances.com/products/gelanto-2hp): 6.5 KG, 2HP motor, diamond cutter, 1 year motor warranty
 
 ## Pulverizers
 
-- [Eco Pulverizer](https://www.jagrutiappliances.com/products/eco-pulverizer.html): Fully automatic pulverizer, 3 capacity options
-- [Premium Pulverizer](https://www.jagrutiappliances.com/products/premium-pulverizer.html): Fully automatic pulverizer with MS heavy-duty structure
+- [Eco Pulverizer](https://www.jagrutiappliances.com/products/eco-pulverizer): Fully automatic pulverizer, 3 capacity options
+- [Premium Pulverizer](https://www.jagrutiappliances.com/products/premium-pulverizer): Fully automatic pulverizer with MS heavy-duty structure
 
 ## Roti making machinery
 
-- [ECO 300](https://www.jagrutiappliances.com/products/roti-maker-eco-300.html): 300 rotis per hour
-- [ECO 500](https://www.jagrutiappliances.com/products/roti-maker-eco-500.html): 500 rotis per hour
-- [PREMIUM 600](https://www.jagrutiappliances.com/products/roti-maker-premium-600.html): 600 rotis per hour
-- [PREMIUM 1000](https://www.jagrutiappliances.com/products/roti-maker-premium-1000.html): 1000 rotis per hour
-- [PREMIUM 2000](https://www.jagrutiappliances.com/products/roti-maker-premium-2000.html): 2000 rotis per hour, triple-motor SS 304 line
-- [Roti Pressing Machine](https://www.jagrutiappliances.com/products/roti-pressing-machine.html): 500 to 1000 rotis per hour, models RPM ECO and RPM PRE
-- [Dough Kneader](https://www.jagrutiappliances.com/products/dough-kneader-machine.html): 5 kg to 40 kg capacity, models DK-5 to DK-40
-- [Dough Ball Cutting Machine](https://www.jagrutiappliances.com/products/dough-ball-cutting-machine.html): 2000-2200 balls per hour, model DBC
+- [ECO 300](https://www.jagrutiappliances.com/products/roti-maker-eco-300): 300 rotis per hour
+- [ECO 500](https://www.jagrutiappliances.com/products/roti-maker-eco-500): 500 rotis per hour
+- [PREMIUM 600](https://www.jagrutiappliances.com/products/roti-maker-premium-600): 600 rotis per hour
+- [PREMIUM 1000](https://www.jagrutiappliances.com/products/roti-maker-premium-1000): 1000 rotis per hour
+- [PREMIUM 2000](https://www.jagrutiappliances.com/products/roti-maker-premium-2000): 2000 rotis per hour, triple-motor SS 304 line
+- [Roti Pressing Machine](https://www.jagrutiappliances.com/products/roti-pressing-machine): 500 to 1000 rotis per hour, models RPM ECO and RPM PRE
+- [Dough Kneader](https://www.jagrutiappliances.com/products/dough-kneader-machine): 5 kg to 40 kg capacity, models DK-5 to DK-40
+- [Dough Ball Cutting Machine](https://www.jagrutiappliances.com/products/dough-ball-cutting-machine): 2000-2200 balls per hour, model DBC
 
 ## Food processing machinery
 
-- [Gravy Machine](https://www.jagrutiappliances.com/products/gravy-machine.html): Fully automatic commercial gravy machine
-- [Masala Grinder](https://www.jagrutiappliances.com/products/masala-grinder.html): High-speed dry grinding machine, 6 capacities
-- [Chilly Cutter](https://www.jagrutiappliances.com/products/chilly-cutter.html): Fully automatic chilly cutting machine
-- [Vegetable Cutter](https://www.jagrutiappliances.com/products/vegetable-cutter.html): Heavy-duty stainless steel vegetable cutting machine
-- [Potato Peeler](https://www.jagrutiappliances.com/products/potato-peeler.html): Heavy-duty stainless steel potato peeling machine
-- [Potato Slicer](https://www.jagrutiappliances.com/products/potato-slicer.html): Heavy-duty stainless steel potato slicing machine
-- [Sugarcane Juicer](https://www.jagrutiappliances.com/products/sugarcane-juicer.html): Fully automatic sugarcane juice machine
+- [Gravy Machine](https://www.jagrutiappliances.com/products/gravy-machine): Fully automatic commercial gravy machine
+- [Masala Grinder](https://www.jagrutiappliances.com/products/masala-grinder): High-speed dry grinding machine, 6 capacities
+- [Chilly Cutter](https://www.jagrutiappliances.com/products/chilly-cutter): Fully automatic chilly cutting machine
+- [Vegetable Cutter](https://www.jagrutiappliances.com/products/vegetable-cutter): Heavy-duty stainless steel vegetable cutting machine
+- [Potato Peeler](https://www.jagrutiappliances.com/products/potato-peeler): Heavy-duty stainless steel potato peeling machine
+- [Potato Slicer](https://www.jagrutiappliances.com/products/potato-slicer): Heavy-duty stainless steel potato slicing machine
+- [Sugarcane Juicer](https://www.jagrutiappliances.com/products/sugarcane-juicer): Fully automatic sugarcane juice machine
 
 ## Kitchen appliances
 
-- [Supreme 900 Mixer Grinder](https://www.jagrutiappliances.com/products/mixer-grinder.html)
-- [Supreme Gold Juicer Mixer Grinder](https://www.jagrutiappliances.com/products/juicer-mixer-grinder.html)
-- [Pride Portable Hand Blender](https://www.jagrutiappliances.com/products/hand-blender.html)
+- [Supreme 900 Mixer Grinder](https://www.jagrutiappliances.com/products/mixer-grinder)
+- [Supreme Gold Juicer Mixer Grinder](https://www.jagrutiappliances.com/products/juicer-mixer-grinder)
+- [Pride Portable Hand Blender](https://www.jagrutiappliances.com/products/hand-blender)
 
 ## Support
 
-- [Support home](https://www.jagrutiappliances.com/support.html)
-- [Warranty](https://www.jagrutiappliances.com/support/warranty.html)
-- [Service and repairs](https://www.jagrutiappliances.com/support/service.html)
-- [Spare parts](https://www.jagrutiappliances.com/support/spare-parts.html)
-- [FAQ](https://www.jagrutiappliances.com/faq.html): Common questions on products, buying, warranty and delivery
+- [Support home](https://www.jagrutiappliances.com/support)
+- [Warranty](https://www.jagrutiappliances.com/support/warranty)
+- [Service and repairs](https://www.jagrutiappliances.com/support/service)
+- [Spare parts](https://www.jagrutiappliances.com/support/spare-parts)
+- [FAQ](https://www.jagrutiappliances.com/faq): Common questions on products, buying, warranty and delivery
 
 ## Guides
 
-- [Best flour mill for home](https://www.jagrutiappliances.com/blog/best-flour-mill-for-home.html)
-- [How to choose a roti making machine](https://www.jagrutiappliances.com/blog/how-to-choose-roti-making-machine.html)
-- [ECO 300 vs ECO 500 vs PREMIUM 600](https://www.jagrutiappliances.com/blog/eco-300-vs-eco-500-vs-premium-600.html)
-- [Aura vs Aura Plus](https://www.jagrutiappliances.com/blog/aura-vs-aura-plus.html)
-- [How to clean and maintain a flour mill](https://www.jagrutiappliances.com/blog/how-to-clean-maintain-flour-mill.html)
-- [Benefits of freshly ground flour](https://www.jagrutiappliances.com/blog/benefits-of-freshly-ground-flour.html)
-- [Grains you can grind at home](https://www.jagrutiappliances.com/blog/grains-you-can-grind-at-home.html)
+- [Best flour mill for home](https://www.jagrutiappliances.com/blog/best-flour-mill-for-home)
+- [How to choose a roti making machine](https://www.jagrutiappliances.com/blog/how-to-choose-roti-making-machine)
+- [ECO 300 vs ECO 500 vs PREMIUM 600](https://www.jagrutiappliances.com/blog/eco-300-vs-eco-500-vs-premium-600)
+- [Aura vs Aura Plus](https://www.jagrutiappliances.com/blog/aura-vs-aura-plus)
+- [How to clean and maintain a flour mill](https://www.jagrutiappliances.com/blog/how-to-clean-maintain-flour-mill)
+- [Benefits of freshly ground flour](https://www.jagrutiappliances.com/blog/benefits-of-freshly-ground-flour)
+- [Grains you can grind at home](https://www.jagrutiappliances.com/blog/grains-you-can-grind-at-home)
 
 ## Optional
 
-- [Privacy policy](https://www.jagrutiappliances.com/legal/privacy-policy.html)
-- [Terms and conditions](https://www.jagrutiappliances.com/legal/terms-conditions.html)
-- [Shipping and delivery](https://www.jagrutiappliances.com/legal/shipping-delivery.html)
-- [Cancellation and refund](https://www.jagrutiappliances.com/legal/cancellation-refund.html)
+- [Privacy policy](https://www.jagrutiappliances.com/legal/privacy-policy)
+- [Terms and conditions](https://www.jagrutiappliances.com/legal/terms-conditions)
+- [Shipping and delivery](https://www.jagrutiappliances.com/legal/shipping-delivery)
+- [Cancellation and refund](https://www.jagrutiappliances.com/legal/cancellation-refund)

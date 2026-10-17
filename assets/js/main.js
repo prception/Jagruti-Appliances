@@ -415,7 +415,7 @@
                     '<img src="' + esc(shotOf(p)) + '" alt="" loading="lazy" decoding="async"></button>';
           }
           html += '</div>';
-          html += '<h3><a href="products/' + esc(p.slug) + '.html">' + esc(p.name) + '</a></h3>';
+          html += '<h3><a href="products/' + esc(p.slug) + '">' + esc(p.name) + '</a></h3>';
           html += '<p class="cs-col-desc">' + esc(catLabel(p.category)) + '</p>';
           html += '<a class="btn btn-outline" href="' + waLink("Hi Jagruti Appliances, I'm interested in the " + p.name + ". I'd like to know the current price, availability, warranty and delivery details.") + '" target="_blank" rel="noopener">Get Price &rarr;</a>';
         } else {
@@ -507,7 +507,7 @@
     function featuresPanel() {
       return rowsPanel([
         { label: "Category", value: function (p) { return esc(catLabel(p.category)); } },
-        { label: "Full Details", value: function (p) { return '<a href="products/' + esc(p.slug) + '.html">View product page &rarr;</a>'; } }
+        { label: "Full Details", value: function (p) { return '<a href="products/' + esc(p.slug) + '">View product page &rarr;</a>'; } }
       ]);
     }
 
@@ -520,17 +520,17 @@
       return rowsPanel([
         { label: "Catalogue", value: function (p) {
           var pdf = BROCHURES[p.category];
-          return pdf ? '<a href="' + pdf + '" target="_blank" rel="noopener">Download brochure (PDF) &rarr;</a>' : '<a href="catalogue.html">Download catalogue &rarr;</a>';
+          return pdf ? '<a href="' + pdf + '" target="_blank" rel="noopener">Download brochure (PDF) &rarr;</a>' : '<a href="catalogue">Download catalogue &rarr;</a>';
         } },
-        { label: "Specifications", value: function (p) { return '<a href="products/' + esc(p.slug) + '.html">On the product page &rarr;</a>'; } }
+        { label: "Specifications", value: function (p) { return '<a href="products/' + esc(p.slug) + '">On the product page &rarr;</a>'; } }
       ]);
     }
 
     function supportPanel() {
       return rowsPanel([
         { label: "Warranty", value: function (p) { return esc(specValue(p, "Warranty")); } },
-        { label: "Service", value: function () { return '<a href="support/service.html">Service &amp; repairs &rarr;</a>'; } },
-        { label: "Spare Parts", value: function () { return '<a href="support/spare-parts.html">Spare parts &rarr;</a>'; } },
+        { label: "Service", value: function () { return '<a href="support/service">Service &amp; repairs &rarr;</a>'; } },
+        { label: "Spare Parts", value: function () { return '<a href="support/spare-parts">Spare parts &rarr;</a>'; } },
         { label: "Customer Care", value: function () { return '<a href="tel:+919512305922">+91 95123 05922</a>'; } }
       ]);
     }
