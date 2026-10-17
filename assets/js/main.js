@@ -857,7 +857,10 @@
     /* A video scene holds for the length of its film rather than HOLD: it
        plays from the start when it arrives and the sequence moves on when it
        ends. Leaving the scene pauses and rewinds it. */
-    var videos = scenes.map(function (el) { return el.querySelector("video"); });
+    var videos = scenes.map(function (el) {
+      var film = el.getAttribute("data-film") && document.getElementById(el.getAttribute("data-film"));
+      return (film || el).querySelector("video");
+    });
     var inView = true;
 
     function playVideo(i) {

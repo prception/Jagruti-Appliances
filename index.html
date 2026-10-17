@@ -401,13 +401,19 @@
       </div>
     </div>
 
-    <!-- Scene 5 (brand film). Plays after the four product scenes; main.js
-         starts it when the scene arrives and moves on when it ends. The file
-         is large, so preload stays "none" until scene 4 is on screen. -->
-    <div class="hero-scene hero-scene-5 hero-scene-video" id="hero-scene-5" role="tabpanel">
-      <div class="hero-plate">
-        <video class="hl hl-bg hl-video" src="assets/images/Home%20page/hero%20section/Jagruti.mp4?v=2" muted playsinline preload="none" aria-label="Jagruti Appliances brand film"></video>
-      </div>
+    <!-- Scene 5 (brand film). The scene itself is only a marker in the
+         sequence; the film plays in .hero-film below, OUTSIDE the stage, so it
+         is framed against the whole hero rather than the zoomed-in 16:9
+         stage the artwork uses on portrait screens. -->
+    <div class="hero-scene hero-scene-5 hero-scene-video" id="hero-scene-5" role="tabpanel" data-film="hero-film"></div>
+  </div>
+
+  <!-- BRAND FILM. Fills the whole hero at its true shape (object-fit:
+       cover, never stretched); on screens wider or taller than 16:9 the
+       overflow is trimmed evenly off the edges. main.js plays it. -->
+  <div class="hero-film" id="hero-film">
+    <div class="hero-film-inner">
+      <video class="hero-film-video" src="assets/images/Home%20page/hero%20section/Jagruti.mp4?v=2" muted playsinline preload="none" aria-label="Jagruti Appliances brand film"></video>
     </div>
   </div>
 

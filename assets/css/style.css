@@ -4841,12 +4841,23 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
     transform-origin: 50% 80%;
     scale: .9;
     translate: 0 3svh;
-    /* Shrinking the plate pulls the artwork's top edge down below the
-       stage's own edge fade, where it showed as a hard horizontal cut.
-       The plate carries its own fade so that edge dissolves into the
-       sky ground the same way the other scenes' edges do. */
-    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 22%);
-            mask-image: linear-gradient(180deg, transparent 0, #000 22%);
+  }
+  /* Shrinking the plate pulls the artwork's top edge down below the stage's
+     own edge fade, where it showed as a hard horizontal cut. Unlike the other
+     scenes, whose tops are open sky in the ground's own colour, this one is
+     a dark kitchen wall (~#1f62a6) against the pale ground, so a short fade
+     still read as a seam. The fade has to be long - but the machine's top
+     sits at ~16% of the canvas, so a long fade on the whole plate would wash
+     the machine out too. It goes on the background layer alone instead,
+     eased so the dark wall thins out gradually into the sky ground while
+     the machine above it stays crisp. */
+  .hero-scene-4 .hl-bg {
+    -webkit-mask-image: linear-gradient(180deg,
+      transparent 0, rgba(0,0,0,.18) 10%, rgba(0,0,0,.5) 20%,
+      rgba(0,0,0,.82) 30%, #000 40%);
+            mask-image: linear-gradient(180deg,
+      transparent 0, rgba(0,0,0,.18) 10%, rgba(0,0,0,.5) 20%,
+      rgba(0,0,0,.82) 30%, #000 40%);
   }
 
   .hero-dots .hd { font-size: 0; gap: 0; padding: 6px 3px; }
@@ -9709,3 +9720,43 @@ html.hero-video-on .hero-parallax .hero-dots,
 html.hero-video-on .hero-parallax .hero-scrollcue {
   opacity: 0; visibility: hidden; pointer-events: none;
 }
+
+/* The film layer sits over the stage (z-0) and under the vignette, frame,
+   wash and controls - all of which are hidden while it plays. It arrives
+   with the same window reveal as a scene climb (outer box rises, inner
+   content counter-moves so the picture itself stays put), and leaves by
+   fading while the next scene climbs underneath it. */
+.hero-film {
+  position: absolute; inset: 0; z-index: 3;
+  overflow: hidden;
+  background: #232426;
+  opacity: 0; visibility: hidden;
+  transition: opacity .9s ease, visibility 0s linear .9s;
+}
+.hero-film-inner { position: absolute; inset: 0; }
+.hero-parallax.is-video .hero-film {
+  opacity: 1; visibility: visible;
+  transition: none;
+  animation: heroSceneUp 1200ms cubic-bezier(.22,.7,.24,1) both;
+}
+.hero-parallax.is-video .hero-film-inner {
+  animation: heroPlateHold 1200ms cubic-bezier(.22,.7,.24,1) both;
+}
+/* The film's own travel is always the full section height, whatever the
+   portrait stage overrides --scene-travel to. */
+.hero-film { --scene-travel: 100%; }
+.hero-film-video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  /* Fills the hero at its true shape - never stretched; any overflow
+     beyond 16:9 is trimmed evenly off the edges. */
+  object-fit: cover;
+  /* Trim a little less off the top than the bottom: the film's closing
+     logo sits close to its top edge, while the line-up's feet have more
+     room below them. */
+  object-position: 50% 40%;
+  pointer-events: none;
+}
+/* The film's marker scene is empty; dark rather than the hero blue, so the
+   handover back to scene 1 fades from the film to dark, not to a blue sheet. */
+.hero-scene-5 { background: #232426; }
