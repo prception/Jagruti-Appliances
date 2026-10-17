@@ -4125,9 +4125,12 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
   gap: 6px 24px;
   border-top: 1px solid rgba(255,255,255,.14);
   padding-top: 16px;
+  /* Just enough to keep the credit clear of the back-to-top pill. */
+  padding-right: 10px;
   font-size: var(--fs-caption);
   color: rgba(255,255,255,.55);
 }
+.footer-credit a { color: #5eead4; text-decoration: none; font-weight: 800; padding-left: 2px; }
 
 /* ---------- Legal ---------- */
 .legal-body { max-width: 800px; margin: 0 auto; }
@@ -4156,7 +4159,8 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
     max-height: none;
     overflow: visible;
   }
-  .site-footer > .container { padding-top: 52px; padding-bottom: 24px; }
+  /* Clear the fixed call/WhatsApp bar so it doesn't cover the copyright line. */
+  .site-footer > .container { padding-top: 52px; padding-bottom: calc(24px + var(--mobile-bar-h)); }
   .footer-top { grid-template-columns: 1fr; gap: 40px; }
   .footer-nav { grid-template-columns: repeat(4, minmax(120px, 1fr)); }
   .footer-wordmark { padding: 34px 0; }
@@ -7116,14 +7120,17 @@ html:not(.js) .stage-actions { justify-content: center; }
 body:has(> main > .connect-band-section:last-child) .site-footer {
   position: sticky;
   bottom: 0;
-  z-index: -1;
+  /* 0 with <main> at 1 (below) gives the same "behind the page" stacking as
+     -1 did, but keeps the footer above body for hit-testing — at -1 every
+     footer link on the homepage was unclickable. */
+  z-index: 0;
 }
 /* A z-index:-1 element is painted behind its stacking context, so the page
    background would cover the footer. The background is moved off body onto
    the content above it, leaving body transparent for the footer to show
    through — this is the one rule the reveal depends on. */
 body:has(> main > .connect-band-section:last-child) { background: transparent; }
-body:has(> main > .connect-band-section:last-child) > main { background: var(--page-bg); position: relative; z-index: 0; }
+body:has(> main > .connect-band-section:last-child) > main { background: var(--page-bg); position: relative; z-index: 1; }
 
 /* Full-bleed photographic ground. It settles from a slight over-scale as the
    band enters view — enough to feel alive behind the slab, not enough to
@@ -9491,7 +9498,8 @@ body.page-products .pd-top { background: transparent; }
 .to-top {
   --tt-fill: 0;
   position: fixed; z-index: 60;
-  right: 18px;
+  /* Tight to the edge so it clears the footer's "Designed by" credit. */
+  right: 4px;
   bottom: calc(var(--mobile-bar-h) + 18px);
   width: 36px; height: 54px;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
