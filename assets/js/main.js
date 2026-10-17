@@ -863,9 +863,37 @@
     });
     var inView = true;
 
+    /* Portrait screens get the film's own portrait cut (3:4 tablet, 9:16
+       phone) instead of a heavily cropped 16:9. Same breakpoints as the
+       portrait hero artwork in style.css. Nothing has been fetched yet
+       (preload="none"), so swapping src here costs nothing; on a later
+       rotation/resize the swap waits until the film is not playing. */
+    var mqTablet = window.matchMedia && window.matchMedia("(max-aspect-ratio: 1/1) and (min-width: 561px) and (max-width: 1024px)");
+    var mqMobile = window.matchMedia && window.matchMedia("(max-aspect-ratio: 1/1) and (max-width: 560px)");
+    function pickFilmSources() {
+      videos.forEach(function (v) {
+        if (!v) return;
+        if (!v._srcDesktop) v._srcDesktop = v.getAttribute("src");
+        var want = (mqMobile && mqMobile.matches && v.getAttribute("data-src-mobile")) ||
+                   (mqTablet && mqTablet.matches && v.getAttribute("data-src-tablet")) ||
+                   v._srcDesktop;
+        if (v.getAttribute("src") === want) return;
+        if (!v.paused && !v.ended) return; // picked up by the next playVideo
+        v.setAttribute("src", want);
+        if (v.preload !== "none") v.load();
+      });
+    }
+    pickFilmSources();
+    [mqTablet, mqMobile].forEach(function (mq) {
+      if (!mq) return;
+      if (mq.addEventListener) mq.addEventListener("change", pickFilmSources);
+      else if (mq.addListener) mq.addListener(pickFilmSources);
+    });
+
     function playVideo(i) {
       var v = videos[i];
       if (!v) return;
+      pickFilmSources();
       v.preload = "auto";
       try { v.currentTime = 0; } catch (e) {}
       var p = v.play();

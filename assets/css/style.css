@@ -4284,20 +4284,7 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
   .hero .hero-cta { margin-top: 28px; }
   .hero-cats { grid-template-columns: 1fr 1fr; gap: 6px 0; }
   .hero-cats > a:nth-child(2n) { border-right: 0; }
-  /* Stats on tablets: five items never split evenly across a row, so the
-     dividers are dropped for a tile grid - 2 up, with the fifth stat
-     spanning the full width so no orphan is left dangling. */
-  .hero-stats { flex-wrap: wrap; justify-content: center; gap: 16px 0; }
-  .hero-stats > div { flex: 0 0 50%; }
-  .hero-stats > div + div::before { display: none; }
-  .hero-stats > div {
-    justify-content: flex-start;
-    gap: 14px;
-    padding: 16px 18px;
-  }
-  .hero-stats > div:last-child { flex: 0 0 100%; justify-content: center; }
-  /* 2-up tiles: sized so "35,000+ sq.ft." still fits a half-width tile. */
-  .hero-stats strong { font-size: clamp(22px, 3.6vw, 32px); }
+  /* Stats on tablets: see the 601–900px block after the phone query. */
   .cs-columns { grid-template-columns: 1fr; }
   .cs-tabs { grid-template-columns: repeat(2, 1fr); }
   .compare-table td.attr { width: 40%; }
@@ -4399,6 +4386,46 @@ body[data-nav="flow"] main > .pd-top:first-child { padding-top: 76px; }
     padding: 14px 16px;
   }
   .hero-stats > div:last-child div { align-items: flex-start; text-align: left; }
+}
+/* Stats on tablets: five items never split evenly, and the old 2-2-1 grid
+   left-aligned two columns over one lone centred stat. Instead a six-track
+   grid gives a balanced 3 + 2: the first three tiles span two tracks, the
+   last two span three. Each stat is a soft centred card (icon over figure
+   over label) so the rows read as one set. Scoped to 601px+ so the phone
+   flex layout above is untouched. */
+@media (min-width: 601px) and (max-width: 900px) {
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .hero-stats > div { grid-column: span 2; }
+  .hero-stats > div:nth-child(n+4) { grid-column: span 3; }
+  .hero-stats > div + div::before { display: none; }
+  .hero-stats > div {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+    padding: 22px 12px;
+    background: #fff;
+    border: 1px solid rgba(15, 76, 129, .10);
+    border-radius: 14px;
+    box-shadow: 0 6px 18px -12px rgba(15, 50, 90, .25);
+  }
+  .hero-stats div div { align-items: center; gap: 4px; }
+  .hero-stats .ic {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(30, 110, 190, .08);
+  }
+  .hero-stats .ic svg { width: 26px; height: 26px; }
+  /* Third-width tiles: sized so "35,000+ sq.ft." stays on one line at 601px. */
+  .hero-stats strong { font-size: clamp(18px, 2.9vw, 26px); }
 }
 
 /* --- FULL-BLEED PORTRAIT HERO (phones + portrait tablets) ----------------
@@ -7057,6 +7084,29 @@ html:not(.js) .stage-actions { justify-content: center; }
   .stage-feats { gap: 10px 8px; justify-content: center; justify-items: center; }
   .stage-feats li { width: clamp(52px, 21vw, 72px); font-size: .5875em; gap: 6px; }
   .stage-feats svg { width: 19px; height: 19px; }
+}
+
+/* Portrait tablets: the 860px block sizes everything for a phone, which
+   left the copy, pills and callouts tiny on an iPad with a wide empty band
+   between the CTAs and the callout row. Here the type, pills and callouts
+   step up to tablet scale and the machine takes back some of that height.
+   Gated on min-height so a short window keeps the compact phone stack. */
+@media (min-width: 601px) and (max-width: 860px) and (min-height: 700px) {
+  .section.stage { --stage-mach-h: clamp(260px, 36vh, 480px); }
+  .stage-copy { max-width: 620px; margin: 0 auto; }
+  .stage-copy .cat-tag { font-size: .95rem; margin-bottom: 10px; }
+  .stage-copy h3 { font-size: clamp(1.75rem, 3.6vw, 2.25rem); margin-bottom: 10px; }
+  .stage-copy .desc { font-size: clamp(1rem, 2vw, 1.15rem); margin-bottom: 16px; }
+  .stage-copy .spec-chip { font-size: .95rem; padding: 7px 14px; }
+  .stage-copy .stage-actions { margin-top: 24px; gap: 14px; }
+  .stage-actions .btn {
+    min-height: 48px;
+    padding: .75rem 1.5rem;
+    font-size: 1rem;
+  }
+  .stage-feats { gap: 22px; }
+  .stage-feats li { width: clamp(96px, 15vw, 130px); font-size: .9rem; gap: 10px; }
+  .stage-feats svg { width: 28px; height: 28px; }
 }
 
 /* Stillness: the column layout has no pinned scene, so these simply sit in

@@ -410,10 +410,15 @@
 
   <!-- BRAND FILM. Fills the whole hero at its true shape (object-fit:
        cover, never stretched); on screens wider or taller than 16:9 the
-       overflow is trimmed evenly off the edges. main.js plays it. -->
+       overflow is trimmed evenly off the edges. main.js plays it, swapping in
+       the portrait cut (data-src-tablet / data-src-mobile) on the same
+       portrait breakpoints the hero artwork uses. -->
   <div class="hero-film" id="hero-film">
     <div class="hero-film-inner">
-      <video class="hero-film-video" src="assets/images/Home%20page/hero%20section/Jagruti.mp4?v=2" muted playsinline preload="none" aria-label="Jagruti Appliances brand film"></video>
+      <video class="hero-film-video" src="assets/images/Home%20page/hero%20section/Jagruti.mp4?v=2"
+             data-src-tablet="assets/images/Home%20page/hero%20section/Jagruti%20tablet.mp4?v=1"
+             data-src-mobile="assets/images/Home%20page/hero%20section/Jagruti%20mobile.mp4?v=1"
+             muted playsinline preload="none" aria-label="Jagruti Appliances brand film"></video>
     </div>
   </div>
 
@@ -1159,7 +1164,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
 <script src="assets/js/products-data.js"></script>
-<script src="assets/js/main.js?v=20261007c"></script>
+<script src="assets/js/main.js?v=20261017a"></script>
 
 </body>
 </html>
